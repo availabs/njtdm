@@ -1,0 +1,47 @@
+<leaflet height="100%" width="100%" center="center" layers="layers" event-broadcast="events"></leaflet>
+<div class="info_overlay">
+  <tabset>
+    <tab heading="Overview">
+      <div class="info_container">
+        <label class="info_label">Scenario Template</label>
+        <select ui-select2   ng-model="current_template_index" class='template_select'>
+       	  <option ng-repeat="scenario in allScenarios" value="{{ $index }}">{{ scenario.name }}</option>
+  		  </select> 
+      <label class="info_label">Overview</label>
+      <table class="table table-striped table-hover">
+        <tr>
+          <td>Trips Planned</td><td>{{ trip_table.length | number }}</td>
+        </tr>
+        <tr>
+          <td>Number of Tracts </td><td>{{ tracts.length | number }}</td>
+        </tr>
+      </table>
+     <label class="info_label">Census Data</label>
+     <table class="table table-striped table-hover">
+        <tr ng-repeat="(name,value) in census_vars">
+          <td>{{ name }}</td><td>{{ value | number }}</td>
+        </tr>
+      </table>
+      </div>
+    </tab>
+    <tab heading="GTFS">
+        <div class="info_container">
+        Bus Routes
+        </div>
+    </tab>
+    <tab heading="Trip Table">
+      <div class="info_container">
+        <select ui-select2   ng-model="model_type" class='template_select'>
+          <option value="0" selected>LEHD Origin-Destination Employment Statistics</option>
+          <option value="1">Atlantic City Survey</option>
+          <table class="table table-striped table-hover">
+            <tr ng-repeat="trip in trip_table | limitTo: 10">
+              <td>{{trip.id}}</td><td>{{trip.from_geoid}}</td><td>{{trip.to_geoid}}</td>
+            </tr>
+          </table>
+        </select>
+         
+      </div>
+    </tab> 
+  </tabset>
+</div>

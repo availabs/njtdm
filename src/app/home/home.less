@@ -1,0 +1,19 @@
+
+/* ---------- Geography & SVG ------------------------ */
+.tract									{fill:#fff;stroke:#ccc;opacity:0.4}
+.tract:hover							{stroke-width:3px;fill:#f00}
+.selected_tract							{fill:#00f;stroke:#ccc;opacity:0.2}
+.selected_tract:hover					{stroke-width:3px;fill:#0f0}
+
+
+/*-------------Layout ----------------------------------*/
+.angular-leaflet-map					{left:0; height:100%; position:fixed; top:0; width:100%;z-index:-1;}
+.info_overlay							{position:fixed;top:75px;left:10px;height:85%;width:315px;z-index:2;background: rgba(255, 255, 255, .7);overflow: auto;box-shadow: 5px 5px 5px #888888;}
+.template_select						{width:100%}
+.info_container							{padding:15px}
+.info_label								{font-weight:bold;}
+
+
+/*-------------Info----------------------------------*/
+#info									{background:#fff; border-top:5px solid #222; border-bottom:1px solid #222; color:#222; display:none; font-size:.875em; padding:10px 15px 5px 15px; position:absolute; width:300px; z-index:99;}
+#info p									{font-size:1em; line-height:1.4; margin:0 0 10px 0;}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html ng-app="njTDM" ng-controller="AppCtrl">
+  <head>
+    <title ng-bind="pageTitle"></title>
+
+    <!-- social media tags -->
+    <meta property="og:title" content="NJTransit - Transit Demand Modeling" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://njt.availabs.org" />
+    
+    <!-- font awesome from BootstrapCDN -->
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+    <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
+    <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
+
+    <!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
+    <script type="text/javascript" src="<%= file %>"></script><% }); %>
+
+    <!-- Custom Javascripts and CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/css/leaflet.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/select2.css">
+
+    <script src="assets/js/leaftlet.js"></script>
+    <script src="assets/js/topojson.js"></script>
+    <script src="assets/js/d3.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/njTracts.js"></script>
+    <script src="assets/js/ui-bootstrap-tpls.js"></script>
+       
+  </head>
+<body>
+    <div id="map" class="map" ui-view="main" ng-mousemove="setLocation($event)"></div>
+    <div id="info"></div>
+  </body>
+</html>
