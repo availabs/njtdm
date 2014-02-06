@@ -28,7 +28,7 @@ angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData ) {
-  $scope.api = 'http://localhost:1337/';
+  $scope.api = 'http://lor.availabs.org:1338/';
 
   //------------------------------------------
   //Map Setup
