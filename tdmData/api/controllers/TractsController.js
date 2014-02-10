@@ -65,6 +65,7 @@ acs : function(req,res){
 	
 },
 surveyTrips : function(req,res){
+	console.log("Survey");
 	if (!req.param('tracts') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to tracts');
 	}
@@ -101,6 +102,7 @@ surveyTrips : function(req,res){
 	});
 },
 lehdTrips : function(req,res){
+	console.log("LEHD");
 	if (!req.param('tracts') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to tracts');
 	}
@@ -150,10 +152,10 @@ lehdTrips : function(req,res){
 					trip.from_coords = [];
 					trip.to_coords = [];
 					if(tract.home_tract in origin_points){
-						trip.from_coords = origin_points[tract.home_tract][random(0,origin_points[tract.home_tract].length)];
+						trip.from_coords = origin_points[tract.home_tract][random(0,origin_points[tract.home_tract].length-1)];
 					}
 					if(tract.work_tract in destination_points){
-						trip.to_coords = destination_points[tract.work_tract][random(0,destination_points[tract.work_tract].length)];
+						trip.to_coords = destination_points[tract.work_tract][random(0,destination_points[tract.work_tract].length-1)];
 					}
 					trip.time = random(6,9)+":"+random(0,59)+'am';
 					trip.source ="LEHD";

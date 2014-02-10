@@ -1,6 +1,11 @@
 $(function(){
 	var popup = {
 		init : function() {
+			$("#legend h2 a").on("click", function() {
+				$(this).toggleClass("closed");
+				$("#legend-detail").slideToggle(300);
+				return false;
+			});
 			windowW = $(window).width();
 			$("#map").on("mousemove", function(e) {
 				
@@ -22,5 +27,6 @@ $(function(){
 
 	};
 	popup.init();
+	
 });
 

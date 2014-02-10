@@ -20,18 +20,46 @@
     <!-- Custom Javascripts and CSS -->
     <link rel="stylesheet" type="text/css" href="assets/css/leaflet.css">
     <link rel="stylesheet" type="text/css" href="assets/css/select2.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
 
     <script src="assets/js/leaftlet.js"></script>
     <script src="assets/js/topojson.js"></script>
     <script src="assets/js/d3.js"></script>
     <script src="assets/js/popup.js"></script>
-    <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/njTracts.js"></script>
     <script src="assets/js/ui-bootstrap-tpls.js"></script>
+    <script src="assets/js/colorbrewer.js"></script>
        
   </head>
 <body>
     <div id="map" class="map" ui-view="main" ng-mousemove="setLocation($event)"></div>
     <div id="info"></div>
+    <div id="legend">
+        <h2><a href="javascript:void()" class="closed">Legend</a></h2>
+        <div id="legend-detail">
+            <ul>
+                <li><svg width="20" height="20"><path d="M0 10 L20 10 Z" stroke="#2C7BC9" stroke-width="2"></path></svg><span>route<span></span></span></li>
+                <li><svg width="20" height="20"><circle cx="10" cy="10" r="7" fill="#ED3A2D" class='legend_circle'></circle></svg><span>stop</span></li>
+            </ul>
+            <hr>
+            <ul>
+                <li>
+                    <svg width="170" height="30" class='stopLegend'>
+                        <circle class='legend_circle' cx="3" cy="15" r="3" fill="#ED3A2D"></circle>
+                        <circle class='legend_circle' cx="155" cy="15" r="15" fill="#ED3A2D"></circle>
+                    </svg>
+                    <span class="c-01">less people<br><span class="stops_legend"></span></span>
+                    <span class="c-02">more people<br><span class="stops_legend" style="float:right;"></span></span>
+                </li>
+            </ul>
+            <hr>
+            <div id="choro_legend">
+            </div>
+            <!-- <hr>
+                Color Scale : <select id="colorbrews"></select> 
+            -->
+        </div>
+    </div>
   </body>
 </html>

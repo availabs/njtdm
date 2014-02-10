@@ -63,6 +63,7 @@ module.exports = {
   vendor_files: {
     js: [
       'vendor/jquery/jquery.min.js',
+      'vendor/jquery/jquery.min.map',
       'vendor/select2/select2.min.js',
       'vendor/angular/angular.js',
       'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
@@ -73,6 +74,7 @@ module.exports = {
       
     ],
     css: [
+      //'vendor/bootstrap/docs/assets/css/bootstrap.css'
     ],
     assets: [
     ]
