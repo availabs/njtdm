@@ -40,13 +40,38 @@
         <td ng-click="choropleth('bus_to_work')" >  {{ census_vars.bus_to_work | number }} <i class="fa fa-bar-chart-o"></i></td>
         <td ng-click="choropleth('bus_to_work','travel_to_work_total')" > {{ census_vars.bus_to_work / census_vars.travel_to_work_total *100 | number }}% <i class="fa fa-bar-chart-o"></i></td>
       </tr>
+    
+    <tr>
+        <td colspan=3><center><strong>Industry</strong></center> </td>
+    <tr>
+      <tr>
+        <td> Industry Total</td>
+        <td ng-click="choropleth('travel_to_work_total')" > {{ census_vars.industry_total | number }} <i class="fa fa-bar-chart-o"></i> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>  Agriculture</td>
+        <td ng-click="choropleth('bus_to_work')" >  {{ census_vars.agriculture | number }} <i class="fa fa-bar-chart-o"></i></td>
+        <td ng-click="choropleth('bus_to_work','industry_total')" > {{ census_vars.agriculture / census_vars.industry_total *100 | number }}% <i class="fa fa-bar-chart-o"></i></td>
+      </tr>
+      <tr>
+        <td>  Construction</td>
+        <td ng-click="choropleth('contrsuction')" >  {{ census_vars.contrsuction | number }} <i class="fa fa-bar-chart-o"></i></td>
+        <td ng-click="choropleth('contrsuction','industry_total')" > {{ census_vars.contrsuction / census_vars.industry_total *100 | number }}% <i class="fa fa-bar-chart-o"></i></td>
+      </tr>
+       <tr>
+        <td>  Manufacturing</td>
+        <td ng-click="choropleth('manufacturing')" >  {{ census_vars.manufacturing | number }} <i class="fa fa-bar-chart-o"></i></td>
+        <td ng-click="choropleth('manufacturing','industry_total')" > {{ census_vars.manufacturing / census_vars.industry_total *100 | number }}% <i class="fa fa-bar-chart-o"></i></td>
+      </tr>
+       <tr>
+        <td>  Wholesale</td>
+        <td ng-click="choropleth('wholesale')" >  {{ census_vars.wholesale | number }} <i class="fa fa-bar-chart-o"></i></td>
+        <td ng-click="choropleth('wholesale','industry_total')" > {{ census_vars.wholesale / census_vars.industry_total *100 | number }}% <i class="fa fa-bar-chart-o"></i></td>
+      </tr>
+
     </table>
-    <table class="table table-hover">
-        <tr ng-repeat="(name,value) in census_vars">
-          <td>{{ name }}</td><td>{{ value | number }}</td>
-        </tr>
-      </table>
-      </div>
+    </div>
     </tab>
     <tab heading="GTFS">
         <div class="info_container">
@@ -61,24 +86,20 @@
         </select>
         <label class="info_label">Trips</label>
           <table class="table table-striped table-hover trip-display">
-            <thead>
               <tr>
                 <td>Id</td>
                 <td >Time</td>
                 <td colspan=2>From</td>
                 <td colspan=2>To</td>
               </tr>
-            </thead>
             <input type="text" ng-model="tt_search.from_geoid" placeholder="Search Origin FIPS" class="tt_search">
             <input type="text" ng-model="tt_search.to_geoid"  placeholder="Search Destination FIPS" class="tt_search">
-            <tbody>
               <tr ng-repeat="trip in trip_table | filter: tt_search | startFrom:tt_currentPage*tt_pageSize | limitTo:tt_pageSize">
                 <td>{{trip.id}}</td>
                 <td>{{trip.time}}</td>
                 <td>{{trip.from_coords}}</td><td>{{trip.from_geoid.substr(5,6)}}</td>
                 <td>{{trip.to_coords}}</td><td>{{trip.from_geoid.substr(5,6)}}</td>
               </tr>
-            </tbody>
           </table>
           <button ng-disabled="tt_currentPage == 0" ng-click="tt_currentPage=currentPage-1"><-</button>
             {{ tt_currentPage*tt_pageSize}} - {{ (tt_currentPage*tt_pageSize)+tt_pageSize }} of {{ tt_total }} <button class="btn-info rounded" ng-disabled="tt_currentPage >= tt_total/tt_pageSize - 1" ng-click="tt_currentPage=tt_currentPage+1"> -> </button>

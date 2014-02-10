@@ -43,7 +43,7 @@ angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter ) {
-  $scope.api = 'http://localhost:1337/';
+  $scope.api = 'http://lor.availabs.org:1338/';
   $scope.current_template_index = 0;
   /**********************************************
   *
@@ -67,7 +67,7 @@ angular.module( 'njTDM.home', [
   //------------------------------------------
   angular.extend($scope, {
     center: {lat: 39.349667,lng: -74.465093,zoom: 12},
-    layers: {baselayers:{}},// {mapbox:{name:'mapbox',url:'http://{s}.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png',type:'xyz'}}},
+    layers: {baselayers: {mapbox:{name:'mapbox',url:'http://{s}.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png',type:'xyz'}}},
     events: {map: {enable: ['load','zoomstart', 'drag', 'click', 'mousemove'],logic: 'emit'}}
   });
 
@@ -134,6 +134,7 @@ angular.module( 'njTDM.home', [
     if(typeof divisor == 'undefined'){
       console.log('single var2');
       censusGeo.choropleth_single(input);
+      $('.selected_tracts').css('opacity',0.8);
 
     }else{
       censusGeo.choropleth_percent(input,divisor);
@@ -353,6 +354,22 @@ censusData = {
     censusData.variables.bus_to_work = 0;
     censusData.variables.travel_to_work_total = 0;
     censusData.variables.car_to_work = 0;
+    censusData.variables.industry_total = 0;
+    censusData.variables.agriculture = 0;
+    censusData.variables.contrsuction = 0;
+    censusData.variables.manufacturing = 0;
+    censusData.variables.wholesale = 0;
+    censusData.variables.retail = 0;
+    censusData.variables.transportation = 0;
+    censusData.variables.information = 0;
+    censusData.variables.finance = 0;
+    censusData.variables.professional = 0;
+    censusData.variables.educational = 0;
+    censusData.variables.arts = 0;
+    censusData.variables.public_admin = 0;
+    censusData.variables.army= 0;
+
+
     tracts.forEach(function(tract){
       censusData.acs[tract.geoid] = {};
       censusData.acs[tract.geoid].total_population = tract.b01003_001e;
@@ -372,6 +389,49 @@ censusData = {
 
       censusData.acs[tract.geoid].car_to_work = tract.b08301_002e;
       censusData.variables.car_to_work += censusData.acs[tract.geoid].car_to_work;
+
+      censusData.acs[tract.geoid].industry_total = tract.b08126_001e;
+      censusData.variables.industry_total += censusData.acs[tract.geoid].industry_total;
+
+      censusData.acs[tract.geoid].agriculture = tract.b08126_002e;
+      censusData.variables.agriculture += censusData.acs[tract.geoid].agriculture;
+
+      censusData.acs[tract.geoid].contrsuction = tract.b08126_003e;
+      censusData.variables.contrsuction += censusData.acs[tract.geoid].contrsuction;
+
+      censusData.acs[tract.geoid].manufacturing = tract.b08126_004e;
+      censusData.variables.manufacturing += censusData.acs[tract.geoid].manufacturing;
+
+      censusData.acs[tract.geoid].wholesale = tract.b08126_005e;
+      censusData.variables.wholesale += censusData.acs[tract.geoid].wholesale;
+
+      censusData.acs[tract.geoid].retail = tract.b08126_006e;
+      censusData.variables.retail += censusData.acs[tract.geoid].retail;
+
+      censusData.acs[tract.geoid].transportation = tract.b08126_007e;
+      censusData.variables.transportation += censusData.acs[tract.geoid].transportation;
+
+      censusData.acs[tract.geoid].information = tract.b08126_008e;
+      censusData.variables.information += censusData.acs[tract.geoid].information;
+
+      censusData.acs[tract.geoid].finance = tract.b08126_009e;
+      censusData.variables.finance += censusData.acs[tract.geoid].finance;
+
+      censusData.acs[tract.geoid].professional = tract.b08126_010e;
+      censusData.variables.professional += censusData.acs[tract.geoid].professional;
+
+      censusData.acs[tract.geoid].educational = tract.b08126_011e;
+      censusData.variables.educational += censusData.acs[tract.geoid].educational;
+
+      censusData.acs[tract.geoid].arts = tract.b08126_012e;
+      censusData.variables.arts += censusData.acs[tract.geoid].arts;
+
+      censusData.acs[tract.geoid].public_admin = tract.b08126_014e;
+      censusData.variables.public_admin += censusData.acs[tract.geoid].public_admin;
+
+      censusData.acs[tract.geoid].army = tract.b08126_014e;
+      censusData.variables.army += censusData.acs[tract.geoid].army;
+
     });
   }
 };
@@ -477,8 +537,8 @@ censusGeo = {
             var textTitle = "<p>";
             textTitle += "<strong>Geo ID:</strong>" + d.properties.geoid + "<br>";
             textTitle += "<strong>Population:</strong> "+ number_format(censusData.acs[d.properties.geoid].total_population) +" <br>";
-            textTitle += "<strong>Employment:</strong> "+ number_format(censusData.acs[d.properties.geoid].employed) +" <br>";
-            textTitle += "<strong>Unemployment:</strong> "+ number_format(censusData.acs[d.properties.geoid].unemployed) +" <br>";
+            // textTitle += "<strong>Employment:</strong> "+ number_format(censusData.acs[d.properties.geoid].employed) +" <br>";
+            // textTitle += "<strong>Unemployment:</strong> "+ number_format(censusData.acs[d.properties.geoid].unemployed) +" <br>";
             textTitle += "<strong>Bus to Work:</strong> "+ number_format(censusData.acs[d.properties.geoid].bus_to_work) +" ("+ number_format((censusData.acs[d.properties.geoid].bus_to_work/censusData.acs[d.properties.geoid].travel_to_work_total*100).toFixed(2)) +"%) <br>";
             textTitle += "<strong>Trip Table inbound:</strong> "+ number_format(tripTable.tt[d.properties.geoid].inbound_trips) +" <br>";
             textTitle += "<strong>Trip Table outbound:</strong> "+ number_format(tripTable.tt[d.properties.geoid].outbound_trips) +" <br>";
