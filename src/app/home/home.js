@@ -63,6 +63,7 @@ angular.module( 'njTDM.home', [
   $scope.census_vars = censusData.variables;
   $scope.census_categories = censusData.categories;
   $scope.model_type = 'lehd';
+  $scope.model_message = '';
   
   /**********************************************
   *
@@ -146,7 +147,6 @@ angular.module( 'njTDM.home', [
     * 0 - LEHD
     * 1 - AC Survey
     */
-    console.log('loadtriptable',model_type);
     var promise = [];
     if(model_type == 'lehd'){
       promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts}).then(function(data){
@@ -158,6 +158,18 @@ angular.module( 'njTDM.home', [
       });
     }
     return promise;
+  };
+
+  $scope.newModel =function(){
+    console.log('new model');
+    setTimeout(function() {
+      console.log('timed out');
+    $scope.model_message = 'Running Model for '+$scope.scenario.name+ '...';
+      setTimeout(function() {
+       $scope.model_message +='0/'+ tripTable.tt_array.length;
+      },1000);
+    }, 1000);
+
   };
 
   $scope.choropleth = function(input,divisor){
@@ -189,11 +201,9 @@ angular.module( 'njTDM.home', [
 
     //Get Scenarios & Load the first one
       $scope.allScenarios = Scenario.query(function(){
-        console.log('all',$scope.allScenarios);
         $scope.current_template= $scope.allScenarios[$scope.current_template_index];
         $scope.loadScenario($scope.current_template);
         $scope.scenario_select= function(index){
-          console.log('seleceted index',index);
           $scope.loadScenario($scope.allScenarios[index]);
         };
       });
