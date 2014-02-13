@@ -38,8 +38,8 @@ stateTracts: function(req,res,$http){
 			routeFeature.properties.geoid = route.geoid;
 			routesCollection.features.push(routeFeature);
 		});
-		var topology = topojson.topology({tracts: routesCollection},{"property-transform":preserveProperties});
-		res.send(JSON.stringify(topology));
+		//var topology = topojson.topology({tracts: routesCollection},{"property-transform":preserveProperties});
+		res.send(JSON.stringify(routesCollection));
 		//res.send(JSON.stringify(routesCollection));
 	});
 },

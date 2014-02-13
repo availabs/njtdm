@@ -637,5 +637,4 @@ module.exports = function ( grunt ) {
       }
     });
   });
-
 };

@@ -1,0 +1,41 @@
+
+/* ---------- Geography & SVG ------------------------ */
+.tract									{fill:#fff;stroke:#ccc;opacity:0.4}
+.tract:hover							{stroke-width:3px;fill:#f00}
+.selected_tract							{fill:#00f;stroke:#ccc;opacity:0.6}
+.selected_tract:hover					{stroke-width:3px;fill:#0f0}
+.route									{display:block;stroke:#ED3A2D;opacity:.6; stroke-width:3px;fill:none;}
+.trip  									{opacity: 0.6}
+
+/*-------------Layout ----------------------------------*/
+.angular-leaflet-map					{left:0; height:100%; position:fixed; top:0; width:100%;z-index:-1;}
+.info_overlay							{position:fixed;top:75px;left:10px;height:85%;width:375px;z-index:2;background: rgba(255, 255, 255, .7);overflow: auto;box-shadow: 5px 5px 5px #888888;}
+.template_select						{width:100%}
+.info_container							{padding:15px}
+.info_label								{font-weight:bold;}
+.trip-display							{font-size: 9px}
+.tt_search								{width:135px;margin-right:5px;display:inline}
+
+/*-------------Info----------------------------------*/
+#info									{background:#fff; border-top:5px solid #222; border-bottom:1px solid #222; color:#222; display:none; font-size:.875em; padding:10px 15px 5px 15px; position:absolute; width:300px; z-index:99;}
+#info p									{font-size:1em; line-height:1.4; margin:0 0 10px 0;}
+/*-------------Legend------------------------------------*/
+#legend												{z-index:100;background:#fff; color:#666; float:right; position:fixed; right:0%; width:200px; top:0;}
+#legend h2											{font-size:1em; margin:0; text-align:center;}
+#legend h2 a										{background:url(arrows.png) 15px 11px #ddd no-repeat; color:#222; display:block; padding:5px 0 8px 0;
+													-webkit-transition:background .2s ease-in;  
+													-moz-transition:background .2s ease-in;  
+													-o-transition:background .2s ease-in;  
+													transition:background .2s ease-in;
+}
+#legend h2 a:hover									{background-color:#eee; background-position:15px 9px; color:#222;}
+#legend h2 a.closed									{background:url(arrows.png) 15px -57px #ddd no-repeat; color:#222;}
+#legend h2 a.closed:hover							{background-color:#eee; background-position:15px -55px;}
+#legend h3 											{font-size:.75em; font-weight:700; margin:0 0 5px 0; text-transform:uppercase;}
+#legend hr 											{border-top:1px dotted #ccc; margin:15px 0;}
+#legend-detail										{border-bottom:1px solid #999; display:none; line-height:1.25; padding:10px 15px; width:170px;}
+#legend-detail li									{font-size:.75em; margin:0 0 5px 0; overflow:hidden;}
+#legend-detail li svg			    				{display:block; float:left; margin:0 5px 0 0;}
+#legend-detail li span			    				{display:block; float:left; padding:2px 0 0 0;}
+#legend-detail li span.c-01			    			{width:85px;}
+#legend-detail li span.c-02			    			{text-align:right; width:85px;}
