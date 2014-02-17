@@ -12,10 +12,10 @@
  	planTrip($trip['from_coords'][0],$trip['from_coords'][1],$trip['to_coords'][0],$trip['to_coords'][1],$trip[$time],$trip);
  }
  echo json_encode($model);
- echo "FINISHED"
+ echo "FINISHED";
  
 
-function  planTrip ($from_lat,$from_lon,$to_lat,$to_lon,$departure_time,$trip){
+function  planTrip($from_lat,$from_lon,$to_lat,$to_lon,$departure_time,$trip){
 	
 
 	$otp_url = "http://localhost:8080/opentripplanner-api-webapp/ws/plan?";
