@@ -9,6 +9,7 @@
  $model['successful_trips'] = array();
  $model['failed_trips'] = array();
  foreach($trips as $trip){
+ 	echo $trip['from_coords'][0]." ".$trip['from_coords'][1]." ".$trip['to_coords'][0]." ".$trip['to_coords'][1]." ".$trip['time'];
  	planTrip($trip['from_coords'][0],$trip['from_coords'][1],$trip['to_coords'][0],$trip['to_coords'][1],$trip['time'],$trip);
  }
  echo json_encode($model);
