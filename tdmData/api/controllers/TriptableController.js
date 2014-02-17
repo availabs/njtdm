@@ -22,7 +22,7 @@ module.exports = {
   
 
 	runModel: function(req,res){
-		var result = sh.exec('ls');
+		var result = sh.exec('pwd');
 		console.log('return code ' + result.code);
 		console.log('stdout + stderr ' + result.stdout);
 		res.send('done');
