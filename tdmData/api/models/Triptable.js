@@ -9,9 +9,9 @@
 module.exports = {
 
   attributes: {
-	trips:'text',
+	trips:'ARRAY',
 	model_type:'string',
-	model_time:'ampm'
+	model_time:'string'
   }
 
 };
