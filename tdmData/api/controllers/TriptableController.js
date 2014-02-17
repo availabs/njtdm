@@ -23,8 +23,8 @@ module.exports = {
 
 	runModel: function(req,res){
 		var result = sh.exec('pwd');
-		console.log('return code ' + result.code);
 		console.log('stdout + stderr ' + result.stdout);
+		var running = sh.run('php5 -f cliRunModel.php '+req.params('id')+' > '+result.stdout+'model.log &');
 		res.send('done');
 	},
   /**
@@ -32,6 +32,5 @@ module.exports = {
    * (specific to TriptableController)
    */
   _config: {}
-
   
 };
