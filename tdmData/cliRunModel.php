@@ -4,7 +4,7 @@
  $sql = "SELECT trips FROM triptable where id = ".$argv[1];
  $result = pg_query($dbh, $sql);
  $row = pg_fetch_array($result);
- $trips = json_decode($row['trips']);
+ $trips = json_decode($row['trips'],true);
  $model = array();
  $model['successful_trips'] = array();
  $model['failed_trips'] = array();
