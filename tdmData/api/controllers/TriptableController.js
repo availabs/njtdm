@@ -15,11 +15,18 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
+var sh = require('execSync');
+
 module.exports = {
     
   
 
-
+	runModel: function(req,res){
+		var result = sh.exec('ls');
+		console.log('return code ' + result.code);
+		console.log('stdout + stderr ' + result.stdout);
+		res.send('done');
+	},
   /**
    * Overrides for the settings in `config/controllers.js`
    * (specific to TriptableController)
