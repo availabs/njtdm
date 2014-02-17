@@ -9,7 +9,7 @@
 module.exports = {
 
   attributes: {
-	trips:'JSON'
+	trips:'text'
   }
 
 };
