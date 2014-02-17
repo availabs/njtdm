@@ -10,7 +10,6 @@
  $model['failed_trips'] = array();
  foreach($trips as $trip){
  	//print_r($trip['from_coords']);
-
  	planTrip($trip['from_coords'][0],$trip['from_coords'][1],$trip['to_coords'][0],$trip['to_coords'][1],$trip['time'],$trip);
  }
  echo json_encode($model);
@@ -35,20 +34,20 @@ function  planTrip($from_lat,$from_lon,$to_lat,$to_lon,$departure_time,$trip){
   	$otp_url .= "&preferredRoutes=";
   	$otp_url .= "&unpreferredRoutes=";
   	
-  	//echo $otp_url.'<br>';
+  	echo $otp_url.'<br>';
   // 	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
 
-  processTrip(json_decode(curl_download($otp_url),$trip));
+  processTrip(json_decode(curl_download($otp_url),true),$trip);
 }
 
-function processTrip($data,$trip){
+function processTrip($data,$trip_input){
 
 	global $model;	
 	if(count($data['plan']['itineraries']) > 0){
 		array_push($model['successful_trips'],$data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)]);
 	}else{
 
-		array_push($model['failed_trips'],$trip);
+		array_push($model['failed_trips'],$trip_input);
 	}
 }
 
