@@ -50,6 +50,18 @@ function processTrip($data,$trip_input){
 	global $model;	
 	if(count($data['plan']['itineraries']) > 0){
 		array_push($model['successful_trips'],$data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)]);
+		$current = array();
+		$current['start_time'] = date('Y-m-d H:i:s',$trip['startTime']/1000);
+		$current['end_tine'] = date('Y-m-d H:i:s',$trip['startTime']/1000);
+		$current['duration'] = $trip['duration'];
+		$current['transit_time'] = $trip['transitTime'];
+		$current['waiting_time'] = $trip['waitingTime'];
+		$current['walk_time'] = $trip['walkTime'];
+		$current ['walk_distance'] = $trip['walkDistance'];
+		$current['legs'] = array();
+
+ 			$sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance,from_lat,from_lon,to_lat,to_lon) VALUES $insert_data";
+			
 	}else{
 
 		array_push($model['failed_trips'],$trip_input);
