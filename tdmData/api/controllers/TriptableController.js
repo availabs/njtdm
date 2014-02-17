@@ -24,7 +24,7 @@ module.exports = {
 	runModel: function(req,res){
 		var result = sh.exec('pwd');
 		console.log('stdout + stderr ' + result.stdout);
-		var command = 'php5 -f cliRunModel.php '+req.param('id')+' > '+result.stdout+'/model.log &';
+		var command = 'php5 -f cliRunModel.php '+req.param('id')+' > '+result.stdout.substring(0, result.stdout.length - 1);+'/model.log &';
 		console.log(command);
 		var running = sh.run(command);
 		res.send('done');
