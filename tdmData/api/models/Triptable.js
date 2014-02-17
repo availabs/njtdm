@@ -9,7 +9,9 @@
 module.exports = {
 
   attributes: {
-	trips:'text'
+	trips:'text',
+	model_type:'string',
+	model_time:'ampm'
   }
 
 };
