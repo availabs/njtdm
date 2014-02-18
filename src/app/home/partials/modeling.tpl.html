@@ -5,8 +5,8 @@
   <div class="info_container">
     <label class="info_label">Scenario Template</label>
       <select ui-select2   ng-model="current_template_index" class='template_select' ng-change='scenario_select(current_template_index)'>
-        <option  ng-repeat="scenario in allScenarios" value="{{ $index }}" ng-selected="{{ $index*1 == current_template_index*1 }}">{{ scenario.name }},{{ $index }},{{current_template_index}}</option>
-      </select> 
+        <option  ng-repeat="scenario in allScenarios" value="{{ $index }}" ng-selected="{{ $index == current_template_index }}">{{ scenario.name }},{{ $index }},{{current_template_index}}</option>
+      </select>
       <label class="info_label">Overview</label>
       <table class="table table-hover">
         <tr>
@@ -28,7 +28,7 @@
       </select>
       <br><br>
       <a class="btn btn-info" ng-click="newTripTable(model_type)">Update Trip Table</a>
-      <a class="btn btn-info" ng-click="newModel()">Run Model</a>
+      <a class="btn btn-info" ng-click="newModel()" ng-disable="active_run">Run Model</a>
       <br><br>
       {{ model_message }}
   </div>

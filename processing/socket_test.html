@@ -1,0 +1,12 @@
+<script src="../src/assets/js/socket.io.js"></script>
+<script>
+  console.log('ok..checking')
+  var socket = io('http://availabs.org:1338/triptable');
+  socket.on('connect', function(){
+  	console.log('connected')
+    socket.on('event', function(data){
+    	console.log(data);
+    });
+    socket.on('disconnect', function(){});
+  });
+</script>

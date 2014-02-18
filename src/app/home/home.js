@@ -46,7 +46,19 @@ angular.module( 'njTDM.home', [
         "http://lor.availabs.org\\:1338/scenario/:id",
         {id: "@id" },
         {
-            "update": {method: "PUT"}
+            //"update": {method: "PUT"}
+            //"reviews": {'method': 'GET', 'params': {'reviews_only': "true"}, isArray: true}
+ 
+        }
+    );
+})
+.factory("TripTable", function ($resource) {
+   //var api = 'http://lor.availabs.org:1338/'
+    return $resource(
+        "http://lor.availabs.org\\:1338/triptable/:id",
+        {id: "@id" },
+        {
+            //"update": {method: "PUT"}
             //"reviews": {'method': 'GET', 'params': {'reviews_only': "true"}, isArray: true}
  
         }
@@ -56,7 +68,7 @@ angular.module( 'njTDM.home', [
 /**
  * CONTROLLER
  */
-.controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario ) {
+.controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario,TripTable,$modal) {
   $scope.api = 'http://lor.availabs.org:1338/';
   $scope.current_template_index = 0;
   $scope.model_time = 'am';
@@ -64,6 +76,7 @@ angular.module( 'njTDM.home', [
   $scope.census_categories = censusData.categories;
   $scope.model_type = 'lehd';
   $scope.model_message = '';
+  $scope.active_run = false;
   
   /**********************************************
   *
@@ -87,7 +100,7 @@ angular.module( 'njTDM.home', [
   //------------------------------------------
   angular.extend($scope, {
     center: {lat: 39.349667,lng: -74.465093,zoom: 12},
-    layers: {baselayers: {mapbox:{name:'mapbox',url:'http://{s}.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png',type:'xyz'}}},
+    layers: {baselayers: {}},// {mapbox:{name:'mapbox',url:'http://{s}.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png',type:'xyz'}}},
     events: {map: {enable: ['load','zoomstart', 'drag', 'click', 'mousemove'],logic: 'emit'}}
   });
 
@@ -111,7 +124,8 @@ angular.module( 'njTDM.home', [
           //tripTable.draw_trips();
           censusData.update_data(tract_data);
           censusGeo.update_scenario();
-          gtfsGeo.routeData = route_data.routes;
+          console.log(route_data);
+          gtfsGeo.routeData = route_data;
           gtfsGeo.drawRoutes();
           
           //two way data binding, lol
@@ -161,14 +175,35 @@ angular.module( 'njTDM.home', [
   };
 
   $scope.newModel =function(){
-    console.log('new model');
-    setTimeout(function() {
-      console.log('timed out');
-    $scope.model_message = 'Running Model for '+$scope.scenario.name+ '...';
-      setTimeout(function() {
-       $scope.model_message +='0/'+ tripTable.tt_array.length;
-      },1000);
-    }, 1000);
+
+    var modalInstance = $modal.open({
+      templateUrl: 'home/partials/new_model.tpl.html',
+      controller: ModalInstanceCtrl
+    });
+
+    modalInstance.result.then(function (model_name) {
+      console.log($scope.scenario);
+      var newTT = new TripTable({trips:$scope.trip_table,model_type:$scope.model_type,model_time:$scope.model_time});
+      newTT.$save();
+      console.log(newTT);
+      var newScenario = new Scenario({name:model_name,center:$scope.scenario.center,parent:$scope.scenario.id,routes:$scope.scenario.routes,tracts:$scope.scenario.tracts,trip_table_id:newTT.id});
+      newScenario.$save();
+      $scope.allScenarios.push(newScenario);
+      $scope.current_template_index = allScenarios.length-1;
+
+      
+
+    }, function () {
+      console.log('Modal dismissed at: ' + new Date());
+    });
+
+    // setTimeout(function() {
+    //   console.log('timed out');
+    // $scope.model_message = 'Running Model for '+$scope.scenario.name+ '...';
+    //   setTimeout(function() {
+    //    $scope.model_message +='0/'+ tripTable.tt_array.length;
+    //   },1000);
+    // }, 1000);
 
   };
 
@@ -442,6 +477,7 @@ gtfsGeo = {
      gtfsGeo.g = censusGeo.g;
   },
   drawRoutes : function(){
+    console.log('route data',gtfsGeo.routeData);
     var geo = topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
     path = d3.geo.path().projection(gtfsGeo.project);
     var bounds = d3.geo.bounds(geo);
@@ -669,6 +705,7 @@ censusGeo = {
 
       censusGeo.g.selectAll("path.selected_tract")
         .transition().duration(1000)
+        .style('fill','none')
         .attr("class", function(d){
         if(censusGeo.scenario_tracts.indexOf(d.properties.geoid) !== -1){
           return "selected_tract";
@@ -697,6 +734,19 @@ censusGeo = {
       
   }
 };
+
+//--------------------------------------------------------------
+var ModalInstanceCtrl = function ($scope, $modalInstance) {
+
+  $scope.ok = function (info) {
+    $modalInstance.close(info);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+
 /**********************
 ** Utils
 ***********************/
