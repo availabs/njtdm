@@ -80,8 +80,8 @@ function processTrip($data,$flat,$flon,$tlat,$tlon){
       $sql = "INSERT into model_legs (run_id,trip_id, mode,duration,distance,route,route_id,gtfs_trip_id,on_stop_code,on_stop_id,off_stop_code,off_stop_id) VALUES $leg_data";
       pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
     }else{
-      $sql = "Update model_trip_table set routed = 0 where id = $itin_id";
-      pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
+      // $sql = "Update model_trip_table set routed = 0 where id = $itin_id";
+      // pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
     }
   }
 
