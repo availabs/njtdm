@@ -51,9 +51,10 @@ function  planTrip($from_lat,$from_lon,$to_lat,$to_lon,$departure_time,$trip){
   processTrip(json_decode(curl_download($otp_url),true),$from_lat,$from_lon,$to_lat,$to_lon);
 }
 
-function processTrip($data,$flat,$flon,$tlat,$tlon,$itin_id){
+function processTrip($data,$flat,$flon,$tlat,$tlon){
     
     global $dbh,$model_id;
+    echo "process trip $model_id";
     if(count($data['plan']['itineraries']) > 0){
       $trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
       $insert_data = "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['startTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].",$flat,$flon,$tlat,$tlon)";
