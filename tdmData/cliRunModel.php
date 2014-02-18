@@ -61,7 +61,7 @@ function processTrip($data,$flat,$flon,$tlat,$tlon){
       $sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance,from_lat,from_lon,to_lat,to_lon) VALUES $insert_data";
       $insert_result = pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
       $insert_row = pg_fetch_row($result);
-      $insert_trip_id = $insert_row['id'];
+      $insert_trip_id = $insert_row[12];
       $leg_data = '';
       foreach ($trip['legs'] as $index => $leg) {
 
