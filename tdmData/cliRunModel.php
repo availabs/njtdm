@@ -52,6 +52,7 @@ function processTrip($data,$trip_input,$flat,$flon,$tlat,$tlon){
 	global $trip_insert_data,$x,$model_id;
 
 	if(count($data['plan']['itineraries']) > 0){
+    $trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
 		$trip_insert_data .= "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['startTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].",$flat,$flon,$tlat,$tlon),";
  			
 	}else{
