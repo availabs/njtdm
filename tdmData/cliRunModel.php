@@ -13,14 +13,18 @@
  $model_id = $argv[1];
  foreach($trips as $trip){
  	//print_r($trip['from_coords']);
- 	if($trip['from_coords'][0] && $trip['to_coords'][0] && $trip['from_coords'][1] && $trip['to_coords'][1]){
+ 	if(count($trip['from_coords']) == 2 && count($trip['to_coords']) == 2){
  	  planTrip($trip['from_coords'][0],$trip['from_coords'][1],$trip['to_coords'][0],$trip['to_coords'][1],$trip['time'],$trip);
- 	}
+ 	}else{
+    error_log("skip");
+  }
  	error_log ($x);
+  $x+=1;
  }
 
- echo json_encode($model);
- echo "FINISHED";
+ echo "FINISHED $model_id";
+ $sql = "Update triptable set model_finished = 1 where id = ".$model_id;
+ 
  
 
 function  planTrip($from_lat,$from_lon,$to_lat,$to_lon,$departure_time,$trip){
@@ -44,33 +48,41 @@ function  planTrip($from_lat,$from_lon,$to_lat,$to_lon,$departure_time,$trip){
   	//echo $otp_url.'<br>';
   // 	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
 
-  processTrip(json_decode(curl_download($otp_url),true),$trip,$from_lat,$from_lon,$to_lat,$to_lon);
+  processTrip(json_decode(curl_download($otp_url),true),$from_lat,$from_lon,$to_lat,$to_lon);
 }
 
-function processTrip($data,$trip_input,$flat,$flon,$tlat,$tlon){
+function processTrip($data,$flat,$flon,$tlat,$tlon,$itin_id){
+    
+    global $dbh,$model_id;
+    if(count($data['plan']['itineraries']) > 0){
+      $trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
+      $insert_data = "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['startTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].",$flat,$flon,$tlat,$tlon)";
+      $sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance,from_lat,from_lon,to_lat,to_lon) VALUES $insert_data";
+      pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
+      $insert_trip_id =  mysql_insert_id();
+      $leg_data = '';
+      foreach ($trip['legs'] as $index => $leg) {
 
-	global $trip_insert_data,$x,$model_id;
+        if($leg['mode'] == 'BUS'){
+          //echo "Route:" .$leg['route']." ".$leg['tripId']."<br>";
+          $leg_data .= "(".$model_id.",$insert_trip_id,'".$leg['mode']."',".$leg['duration'].",'".$leg['distance']."','".$leg['route']."','".$leg['routeId']."','".$leg['tripId']."','".$leg['from']['stopCode']."','".$leg['from']['stopId']['id']."','".$leg['to']['stopCode']."','".$leg['to']['stopId']['id']."'),";
+        
+        }
+        else if($leg['mode'] == 'WALK'){
 
-	if(count($data['plan']['itineraries']) > 0){
-    $trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
-		$trip_insert_data .= "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['startTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].",$flat,$flon,$tlat,$tlon),";
- 			
-	}else{
-
-		//array_push($model['failed_trips'],$trip_input);
-	}
-  $x++;
-  if($x >= 200){
-    insertData();
-    echo "INSERT";
-    $x = 0;
+          //echo "WALK<br>";
+          $leg_data .= "(".$model_id.",$insert_trip_id,'".$leg['mode']."',".$leg['duration'].",'".$leg['distance']."','','','','','','',''),";
+        }
+        
+      }
+      $leg_data = substr($leg_data, 0,-1);
+      $sql = "INSERT into model_legs (run_id,trip_id, mode,duration,distance,route,route_id,gtfs_trip_id,on_stop_code,on_stop_id,off_stop_code,off_stop_id) VALUES $leg_data";
+      pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
+    }else{
+      $sql = "Update model_trip_table set routed = 0 where id = $itin_id";
+      pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
+    }
   }
-}
-
-function insertData(){
-  global $trip_insert_data;
-  echo $trip_insert_data;
-}
 
 function curl_download($Url){ 
     // is cURL installed yet?

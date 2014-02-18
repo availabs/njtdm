@@ -11,7 +11,11 @@ module.exports = {
   attributes: {
 	trips:'ARRAY',
 	model_type:'string',
-	model_time:'string'
+	model_time:'string',
+	model_finished:{
+		type:'integer',
+		defaultsTo:0
+	}
   }
 
 };
