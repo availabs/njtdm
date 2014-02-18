@@ -58,7 +58,7 @@ function processTrip($data,$flat,$flon,$tlat,$tlon){
     if(count($data['plan']['itineraries']) > 0){
       $trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
       $insert_data = "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['startTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].",$flat,$flon,$tlat,$tlon)";
-      $sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance,from_lat,from_lon,to_lat,to_lon) VALUES $insert_data";
+      $sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance,from_lat,from_lon,to_lat,to_lon) VALUES $insert_data RETURNING id";
       $insert_result = pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
       $insert_row = pg_fetch_row($dbh, $insert_result);
       $insert_trip_id = $insert_row[12];
