@@ -9,14 +9,16 @@
  $model['successful_trips'] = array();
  $model['failed_trips'] = array();
  $x = 0;
+ $trip_insert_data = '';
+ $model_id = $argv[1];
  foreach($trips as $trip){
  	//print_r($trip['from_coords']);
- 	if($trip['from_coords'][0] && $trip['to_coords'][0]){
- 	planTrip($trip['from_coords'][0],$trip['from_coords'][1],$trip['to_coords'][0],$trip['to_coords'][1],$trip['time'],$trip);
+ 	if($trip['from_coords'][0] && $trip['to_coords'][0] && $trip['from_coords'][1] && $trip['to_coords'][1]){
+ 	  planTrip($trip['from_coords'][0],$trip['from_coords'][1],$trip['to_coords'][0],$trip['to_coords'][1],$trip['time'],$trip);
  	}
  	error_log ($x);
- 	$x++;
  }
+
  echo json_encode($model);
  echo "FINISHED";
  
@@ -42,30 +44,31 @@ function  planTrip($from_lat,$from_lon,$to_lat,$to_lon,$departure_time,$trip){
   	//echo $otp_url.'<br>';
   // 	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
 
-  processTrip(json_decode(curl_download($otp_url),true),$trip);
+  processTrip(json_decode(curl_download($otp_url),true),$trip,$from_lat,$from_lon,$to_lat,$to_lon);
 }
 
-function processTrip($data,$trip_input){
+function processTrip($data,$trip_input,$flat,$flon,$tlat,$tlon){
 
-	global $model;	
+	global $trip_insert_data,$x,$model_id;
+
 	if(count($data['plan']['itineraries']) > 0){
-		array_push($model['successful_trips'],$data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)]);
-		$current = array();
-		$current['start_time'] = date('Y-m-d H:i:s',$trip['startTime']/1000);
-		$current['end_tine'] = date('Y-m-d H:i:s',$trip['startTime']/1000);
-		$current['duration'] = $trip['duration'];
-		$current['transit_time'] = $trip['transitTime'];
-		$current['waiting_time'] = $trip['waitingTime'];
-		$current['walk_time'] = $trip['walkTime'];
-		$current ['walk_distance'] = $trip['walkDistance'];
-		$current['legs'] = array();
-
- 			$sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance,from_lat,from_lon,to_lat,to_lon) VALUES $insert_data";
-			
+		$trip_insert_data .= "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['startTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].",$flat,$flon,$tlat,$tlon),";
+ 			
 	}else{
 
-		array_push($model['failed_trips'],$trip_input);
+		//array_push($model['failed_trips'],$trip_input);
 	}
+  $x++;
+  if($x >= 200){
+    insertData();
+    echo "INSERT";
+    $x = 0;
+  }
+}
+
+function insertData(){
+  global $trip_insert_data;
+  echo $trip_insert_data;
 }
 
 function curl_download($Url){ 
