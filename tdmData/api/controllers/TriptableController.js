@@ -20,7 +20,6 @@ var sh = require('execSync');
 module.exports = {
     
 	runModel: function(req,res){
-		console.log('model_run')
 		var result = sh.exec('pwd');
 		var command = 'php5 -f cliRunModel.php '+req.param('id')+' > '+result.stdout.slice(0,-1)+'/model.log &';
 		var running = sh.run(command);
@@ -29,7 +28,10 @@ module.exports = {
 	runStatus: function(req,res){
 		console.log("status");
 		Triptable.find(req.param('id')).exec(function (err, trip) {
-			//console.log(trip);
+			
+			for(var key in trip){
+				console.log(key);
+			}
 			if (err) {
 				res.send('{status:"error",message:"'+err+'"}',500);
 				return console.log(err);
@@ -38,7 +40,7 @@ module.exports = {
 				res.send({"status":"finished"});
 			}else{
 				
-				var total = trip.trips.length;
+				
 				var sql = 'select count(*) as num from model_trips where run_id = '+req.param('id');
 				Gtfs.query(sql,{},function(err,data){
 				if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
