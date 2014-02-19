@@ -77,6 +77,8 @@ angular.module( 'njTDM.home', [
   $scope.model_type = 'lehd';
   $scope.model_message = '';
   $scope.active_run = false;
+  $scope.run_progress = 0;
+  $scope.run_max = 100;
   
   /**********************************************
   *
@@ -182,12 +184,15 @@ angular.module( 'njTDM.home', [
     });
 
     modalInstance.result.then(function (model_name) {
-      console.log($scope.scenario);
       var newTT = new TripTable({trips:$scope.trip_table,model_type:$scope.model_type,model_time:$scope.model_time});
       newTT.$save();
-      console.log(newTT);
       var newScenario = new Scenario({name:model_name,center:$scope.scenario.center,parent:$scope.scenario.id,routes:$scope.scenario.routes,tracts:$scope.scenario.tracts,trip_table_id:newTT.id});
       newScenario.$save();
+      $http.post($scope.api+'triptable/'+ newTT.id+'/run').success(function(data){
+        $scope.active_run = true;
+        $scope.getRunStatus(newTT.id);
+      });
+
       $scope.allScenarios.push(newScenario);
       $scope.current_template_index = allScenarios.length-1;
 
@@ -196,6 +201,19 @@ angular.module( 'njTDM.home', [
     }, function () {
       console.log('Modal dismissed at: ' + new Date());
     });
+    $scope.getRunStatus = function(id){
+      $http.post($scope.api+'triptable/'+id+'/run').success(function(data){
+        if(data.status == "finished"){
+          $scope.active_run = false;
+        }else{
+          $scope.run_progress = data.runs_processed;
+          $scope.run_max = data.total;
+          setTimeout(function() {
+            $scope.getRunStatus(id);
+          },3000);
+        }
+      });
+    };
 
     // setTimeout(function() {
     //   console.log('timed out');

@@ -16,7 +16,7 @@
  	if(count($trip['from_coords']) == 2 && count($trip['to_coords']) == 2){
  	  planTrip($trip['from_coords'][0],$trip['from_coords'][1],$trip['to_coords'][0],$trip['to_coords'][1],$trip['time'],$trip);
  	}else{
-    error_log("skip");
+    //error_log("skip");
   }
  	//error_log ($x);
   $x+=1;
@@ -24,6 +24,7 @@
 
  echo "FINISHED $model_id";
  $sql = "Update triptable set model_finished = 1 where id = ".$model_id;
+ pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
  
  
 
@@ -54,7 +55,6 @@ function  planTrip($from_lat,$from_lon,$to_lat,$to_lon,$departure_time,$trip){
 function processTrip($data,$flat,$flon,$tlat,$tlon){
     
     global $dbh,$model_id;
-    echo "process trip $model_id";
     if(count($data['plan']['itineraries']) > 0){
       $trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
       $insert_data = "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['startTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].",$flat,$flon,$tlat,$tlon)";
