@@ -29,6 +29,7 @@ module.exports = {
 	runStatus: function(req,res){
 		console.log("status");
 		Triptable.find(req.param('id')).exec(function (err, trip) {
+			console.log(trip);
 			if (err) {
 				res.send('{status:"error",message:"'+err+'"}',500);
 				return console.log(err);
@@ -36,6 +37,7 @@ module.exports = {
 			if(trip.model_finished == 1){
 				res.send({"status":"finished"});
 			}else{
+				
 				var total = JSON.parse(trip.trips).length;
 				var sql = 'select count(*) as num from model_trips where run_id = '+req.param('id');
 				Gtfs.query(sql,{},function(err,data){
