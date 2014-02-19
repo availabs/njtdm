@@ -29,7 +29,7 @@ module.exports = {
 		console.log("status");
 		Triptable.find(req.param('id')).exec(function (err, trip) {
 			if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
-			for(var key in trip){
+			for(var key in trip[0]){
 				console.log(key);
 			}
 			if(trip.model_finished == 1){
@@ -38,7 +38,7 @@ module.exports = {
 				var sql = 'select count(*) as num from model_trips where run_id = '+req.param('id');
 				Gtfs.query(sql,{},function(err,data){
 				
-					res.send({"status":"running","runs_processed":data.rows[0].num});
+					res.send({"status":"running","runs_processed":data.rows[0].num,"total":trip[0].trips.length});
 				});
 			}
 		});
