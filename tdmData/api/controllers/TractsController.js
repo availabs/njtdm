@@ -102,6 +102,7 @@ surveyTrips : function(req,res){
 	});
 },
 lehdTrips : function(req,res){
+	var version = "0.0.1"
 	console.log("LEHD");
 	if (!req.param('tracts') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to tracts');
@@ -158,7 +159,7 @@ lehdTrips : function(req,res){
 						trip.to_coords = destination_points[tract.work_tract][random(0,destination_points[tract.work_tract].length-1)];
 					}
 					trip.time = random(6,9)+":"+random(0,59)+'am';
-					trip.source ="LEHD";
+					trip.source ="LEHD"+version;
 					trip_table.push(trip);
 				}
 			});

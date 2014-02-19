@@ -7,7 +7,6 @@ angular.module( 'njTDM.home', [
   'ui.bootstrap',
   'ui.select2',
   'ngResource'
-  //'ngResource'
 ])
 .filter('startFrom', function() {
   return function(input, start) {
@@ -46,7 +45,7 @@ angular.module( 'njTDM.home', [
         "http://lor.availabs.org\\:1338/scenario/:id",
         {id: "@id" },
         {
-            //custom routes
+            //custom route
             //"reviews": {'method': 'GET', 'params': {'reviews_only': "true"}, isArray: true}
  
         }
@@ -185,11 +184,12 @@ angular.module( 'njTDM.home', [
     modalInstance.result.then(function (model_name) {
       //Save Trip Table and Start Model Run
       var newTT = new TripTable({trips:$scope.trip_table,model_type:$scope.model_type,model_time:$scope.model_time});
+      newTT.$save(function(){
           $http.post($scope.api+'triptable/'+ newTT.id+'/run').success(function(data){
             $scope.active_run = true;
             $scope.getRunStatus(newTT.id);
           });
-
+      });
       //Save Scenario And Make it currently selected
       var newScenario = new Scenario({name:model_name,center:$scope.scenario.center,parent:$scope.scenario.id,routes:$scope.scenario.routes,tracts:$scope.scenario.tracts,trip_table_id:newTT.id});
       newScenario.$save();
