@@ -26,7 +26,6 @@ module.exports = {
 		res.send('done');
 	},
 	runStatus: function(req,res){
-		console.log("status");
 		Triptable.find(req.param('id')).exec(function (err, trip) {
 			if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
 			if(trip.model_finished == 1){

@@ -46,7 +46,7 @@ angular.module( 'njTDM.home', [
         "http://lor.availabs.org\\:1338/scenario/:id",
         {id: "@id" },
         {
-            //"update": {method: "PUT"}
+            //custom routes
             //"reviews": {'method': 'GET', 'params': {'reviews_only': "true"}, isArray: true}
  
         }
@@ -58,9 +58,7 @@ angular.module( 'njTDM.home', [
         "http://lor.availabs.org\\:1338/triptable/:id",
         {id: "@id" },
         {
-            //"update": {method: "PUT"}
-            //"reviews": {'method': 'GET', 'params': {'reviews_only': "true"}, isArray: true}
- 
+          //custom routes
         }
     );
 })
@@ -176,6 +174,7 @@ angular.module( 'njTDM.home', [
     return promise;
   };
 
+  //Click On The Run Model Button
   $scope.newModel =function(){
 
     var modalInstance = $modal.open({
@@ -184,45 +183,34 @@ angular.module( 'njTDM.home', [
     });
 
     modalInstance.result.then(function (model_name) {
+      //Save Trip Table and Start Model Run
       var newTT = new TripTable({trips:$scope.trip_table,model_type:$scope.model_type,model_time:$scope.model_time});
-      newTT.$save();
+          $http.post($scope.api+'triptable/'+ newTT.id+'/run').success(function(data){
+            $scope.active_run = true;
+            $scope.getRunStatus(newTT.id);
+          });
+
+      //Save Scenario And Make it currently selected
       var newScenario = new Scenario({name:model_name,center:$scope.scenario.center,parent:$scope.scenario.id,routes:$scope.scenario.routes,tracts:$scope.scenario.tracts,trip_table_id:newTT.id});
       newScenario.$save();
-      $http.post($scope.api+'triptable/'+ newTT.id+'/run').success(function(data){
-        $scope.active_run = true;
-        $scope.getRunStatus(newTT.id);
-      });
-
       $scope.allScenarios.push(newScenario);
-      $scope.current_template_index = allScenarios.length-1;
-
-      
-
+      $scope.current_template_index = $scope.allScenarios.length-1;
     }, function () {
       console.log('Modal dismissed at: ' + new Date());
     });
-    $scope.getRunStatus = function(id){
-      $http.post($scope.api+'triptable/'+id+'/run').success(function(data){
-        if(data.status == "finished"){
-          $scope.active_run = false;
-        }else{
-          $scope.run_progress = data.runs_processed;
-          $scope.run_max = data.total;
-          setTimeout(function() {
-            $scope.getRunStatus(id);
-          },3000);
-        }
-      });
-    };
 
-    // setTimeout(function() {
-    //   console.log('timed out');
-    // $scope.model_message = 'Running Model for '+$scope.scenario.name+ '...';
-    //   setTimeout(function() {
-    //    $scope.model_message +='0/'+ tripTable.tt_array.length;
-    //   },1000);
-    // }, 1000);
+  };
 
+  $scope.getRunStatus = function(id){
+    $http.post($scope.api+'triptable/'+id+'/status').success(function(data){
+      if(data.status == "finished"){
+        $scope.active_run = false;
+      }else{
+        $scope.run_progress = data.runs_processed;
+        $scope.run_max = data.total;
+        setTimeout(function() { $scope.getRunStatus(id);},3000);
+      }
+    });
   };
 
   $scope.choropleth = function(input,divisor){
