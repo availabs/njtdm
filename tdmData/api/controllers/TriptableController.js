@@ -28,7 +28,7 @@ module.exports = {
 	runStatus: function(req,res){
 		Triptable.find(req.param('id')).exec(function (err, trip) {
 			if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
-			if(trip.model_finished == 1){
+			if(trip[0].model_finished == 1){
 				res.send({"status":"finished"});
 			}else{
 				var sql = 'select count(*) as num from model_trips where run_id = '+req.param('id');
