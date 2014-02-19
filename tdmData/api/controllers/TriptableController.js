@@ -20,16 +20,20 @@ var sh = require('execSync');
 module.exports = {
     
 	runModel: function(req,res){
+		console.log('model_run')
 		var result = sh.exec('pwd');
-		// console.log('stdout + stderr ' + result.stdout+'hello');
-		// console.log(result.stdout.slice(0,-1)+'test');
 		var command = 'php5 -f cliRunModel.php '+req.param('id')+' > '+result.stdout.slice(0,-1)+'/model.log &';
 		var running = sh.run(command);
 		res.send('done');
 	},
 	runStatus: function(req,res){
+		console.log("status");
 		Triptable.find(req.param('id')).exec(function (err, trip) {
-			if(trip.model_finished === 1){
+			if (err) {
+				res.send('{status:"error",message:"'+err+'"}',500);
+				return console.log(err);
+			}
+			if(trip.model_finished == 1){
 				res.send({"status":"finished"});
 			}else{
 				var total = JSON.parse(trip.trips).length;
