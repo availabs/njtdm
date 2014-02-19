@@ -18,7 +18,7 @@
  	}else{
     error_log("skip");
   }
- 	error_log ($x);
+ 	//error_log ($x);
   $x+=1;
  }
 

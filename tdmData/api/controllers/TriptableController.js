@@ -19,16 +19,27 @@ var sh = require('execSync');
 
 module.exports = {
     
-  
-
 	runModel: function(req,res){
 		var result = sh.exec('pwd');
-		console.log('stdout + stderr ' + result.stdout+'hello');
-		console.log(result.stdout.slice(0,-1)+'test');
+		// console.log('stdout + stderr ' + result.stdout+'hello');
+		// console.log(result.stdout.slice(0,-1)+'test');
 		var command = 'php5 -f cliRunModel.php '+req.param('id')+' > '+result.stdout.slice(0,-1)+'/model.log &';
 		var running = sh.run(command);
-		Triptable.publish(req,[{running:req.param('id')}]);
 		res.send('done');
+	},
+	runStatus: function(req,res){
+		Triptable.find(req.param('id')).exec(function (err, trip) {
+			if(trip.model_finished === 1){
+				res.send({"status":"finished"});
+			}else{
+				var total = JSON.parse(trip.trips).length;
+				var sql = 'select count(*) as num from model_trips where run_id = '+req.param('id');
+				Gtfs.query(sql,{},function(err,data){
+				if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
+					rest.send({"status":"running","runs_processed":data.rows[0].num};
+				});
+			}
+		});
 	},
   /**
    * Overrides for the settings in `config/controllers.js`
