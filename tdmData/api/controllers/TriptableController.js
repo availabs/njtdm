@@ -36,7 +36,7 @@ module.exports = {
 				var sql = 'select count(*) as num from model_trips where run_id = '+req.param('id');
 				Gtfs.query(sql,{},function(err,data){
 				if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
-					rest.send({"status":"running","runs_processed":data.rows[0].num};
+					rest.send({"status":"running","runs_processed":data.rows[0].num});
 				});
 			}
 		});
