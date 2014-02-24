@@ -97,6 +97,15 @@ module.exports.routes = {
       methods: 'GET, POST, HEAD',
       headers: 'content-type,X-Requested-With'
     }
+  },
+  '/triptable/finished':{
+    controller : 'TriptableController',
+    action : 'models',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
   }
   /*
   // But what if you want your home page to display

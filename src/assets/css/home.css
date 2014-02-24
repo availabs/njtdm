@@ -10,6 +10,7 @@
 /*-------------Layout ----------------------------------*/
 .angular-leaflet-map					{left:0; height:100%; position:fixed; top:0; width:100%;z-index:-1;}
 .info_overlay							{position:fixed;top:75px;left:10px;height:85%;width:375px;z-index:2;background: rgba(255, 255, 255, .7);overflow: auto;box-shadow: 5px 5px 5px #888888;}
+.model_overlay							{position:fixed;bottom:5%;right:10px;height:55%;width:375px;z-index:2;background: rgba(255, 255, 255, .7);overflow: auto;box-shadow: 5px 5px 5px #888888;}
 .template_select						{width:100%}
 .info_container							{padding:15px}
 .info_label								{font-weight:bold;}

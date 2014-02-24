@@ -97,7 +97,6 @@ function curl_download($Url){
    	$ch = curl_init();
    	$headers = array('Accept: application/json');
    	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); 
-	//curl_setopt($ch, CURLOPT_HEADER, 1); 
    	curl_setopt($ch, CURLOPT_URL, $Url);
    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
    	$output = curl_exec($ch);

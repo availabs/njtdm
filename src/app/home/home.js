@@ -46,7 +46,7 @@ angular.module( 'njTDM.home', [
         {id: "@id" },
         {
             //custom route
-            //"reviews": {'method': 'GET', 'params': {'reviews_only': "true"}, isArray: true}
+            "templates": {'method': 'GET', 'params': {'where': {'name':null}}}
  
         }
     );
@@ -189,12 +189,13 @@ angular.module( 'njTDM.home', [
             $scope.active_run = true;
             $scope.getRunStatus(newTT.id);
           });
+          var newScenario = new Scenario({name:model_name,center:$scope.scenario.center,parent:$scope.scenario.id,routes:$scope.scenario.routes,tracts:$scope.scenario.tracts,trip_table_id:newTT.id});
+          newScenario.$save();
+          // $scope.allScenarios.push(newScenario);
+          // $scope.current_template_index = $scope.allScenarios.length-1;
       });
       //Save Scenario And Make it currently selected
-      var newScenario = new Scenario({name:model_name,center:$scope.scenario.center,parent:$scope.scenario.id,routes:$scope.scenario.routes,tracts:$scope.scenario.tracts,trip_table_id:newTT.id});
-      newScenario.$save();
-      $scope.allScenarios.push(newScenario);
-      $scope.current_template_index = $scope.allScenarios.length-1;
+      
     }, function () {
       console.log('Modal dismissed at: ' + new Date());
     });
