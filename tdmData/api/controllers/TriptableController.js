@@ -41,10 +41,10 @@ module.exports = {
 	models: function(req,res){
 		var sql = 'SELECT scenario.name,triptable.id FROM scenario join triptable on scenario.trip_table_id = triptable.id where triptable.model_finished = 1';
 		Gtfs.query(sql,{},function(err,data){
-			res.send({"status":"running","runs_processed":data.rows[0].num*1,"total":trip[0].trips.length});
+			res.send(data.rows);
 		});
 
-	}
+	},
   /**
    * Overrides for the settings in `config/controllers.js`
    * (specific to TriptableController)
