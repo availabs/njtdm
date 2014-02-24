@@ -98,6 +98,15 @@ module.exports.routes = {
       headers: 'content-type,X-Requested-With'
     }
   },
+  '/triptable/:id/modeldata':{
+    controller : 'TriptableController',
+    action : 'modelData',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
   '/triptable/finished':{
     controller : 'TriptableController',
     action : 'models',
