@@ -248,7 +248,7 @@ var getStopsOD = function(fips_in,callback){
 			}
 			
 		});
-		callback(stop_points,destination_points);
+		callback(stop_points);
 	});
 };
 
