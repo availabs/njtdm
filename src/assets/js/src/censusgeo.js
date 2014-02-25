@@ -99,10 +99,10 @@ censusGeo = {
         // range is selected.
         censusGeo.color = function(val) {
           censusGeo.color.range = function() {
-            return colorbrewer[censusGeo.brewer[censusGeo.brewer_index]][censusGeo.ll]
+            return colorbrewer[censusGeo.brewer[censusGeo.brewer_index]][censusGeo.ll];
           };
           censusGeo.color.domain = function() {
-            return censusGeo.legend_domain.quantiles()
+            return censusGeo.legend_domain.quantiles();
           };
 
           var domain = censusGeo.color.domain(),
@@ -136,32 +136,34 @@ censusGeo = {
 
   setLegend:function(){
     var color, label, label2, i; // temp variables
-    var domain = censusGeo.color.domain(),
-        range = censusGeo.color.range();
-    // create legend label
-    var legendText = '<h3>'+censusGeo.current_map+'</h3>';
-    // start unordered list
-    legendText += '<ul id="censusGeo_legend">';
-    // add first list element
-    color = range[0];
-    label = domain[0];
-    legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>&lt;= '+label.toFixed(0)+'</span></li>'
-    // iterate through color domain, appending list elements
-    for (i = 1; i < domain.length; i++) {
+    if(typeof censusGeo.color.domain == 'function'){
+      var domain = censusGeo.color.domain(),
+          range = censusGeo.color.range();
+      // create legend label
+      var legendText = '<h3>'+censusGeo.current_map+'</h3>';
+      // start unordered list
+      legendText += '<ul id="censusGeo_legend">';
+      // add first list element
+      color = range[0];
+      label = domain[0];
+      legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>&lt;= '+label.toFixed(0)+'</span></li>';
+      // iterate through color domain, appending list elements
+      for (i = 1; i < domain.length; i++) {
+        color = range[i];
+        label = domain[i];
+        label2 = domain[i-1]+1;
+        legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>'+label2.toFixed(0)+'-'+label.toFixed(0)+'</span></li>';
+      }
+      // add last label
       color = range[i];
-      label = domain[i];
-      label2 = domain[i-1]+1;
-      legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>'+label2.toFixed(0)+'-'+label.toFixed(0)+'</span></li>'
-    };
-    // add last label
-    color = range[i];
-    label = domain[i-1];
-    legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>&gt; '+label.toFixed(0)+'</span></li>';
+      label = domain[i-1];
+      legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>&gt; '+label.toFixed(0)+'</span></li>';
 
-    // close unordered list tag
-    legendText += '</ul>';
+      // close unordered list tag
+      legendText += '</ul>';
 
-    $('#choro_legend').html(legendText);
+      $('#choro_legend').html(legendText);
+    }
   },
 
   choropleth_single:function(var_name){

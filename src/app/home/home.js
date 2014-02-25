@@ -160,6 +160,7 @@ angular.module( 'njTDM.home', [
       $scope.show_trips = true;
     }else{
       if($scope.show_trips){
+        tripTable.update_trips();
         $('circle.dest').css('display','none');
         $('circle.origin').css('display','none');
         $scope.show_trips = false;
@@ -175,7 +176,9 @@ angular.module( 'njTDM.home', [
     $scope.loadTripTable(type,$scope.scenario.tracts).then(function(trip_table){
       $scope.trip_table = trip_table.data;
       tripTable.update_data(trip_table.data);
-      tripTable.update_trips();
+      if($scope.show_trips){
+        tripTable.update_trips();
+      }
       censusGeo.choropleth_trip_table('outbound_trips');
     });
   };
