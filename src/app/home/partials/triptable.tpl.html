@@ -22,6 +22,11 @@
        <option value="lehdbus" selected>LEHD + ACS % Bus Trips</option>
        <option value="survey">Atlantic City Survey</option>
       </select>
+      <label>OD Source</label>
+      <select ui-select2   ng-model="model_od" class='template_select'ng-show="model_type == lehd || model_type == lehdbus">
+       <option value="stops" selected>Bus Stops</option>
+       <option value="survey">Survey</option>
+      </select>
        <label>Model Time</label>
       <select ui-select2   ng-model="model_time" class='template_select'>
        <option value="am" selected>AM Peak</option>

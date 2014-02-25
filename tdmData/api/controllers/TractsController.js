@@ -69,6 +69,10 @@ surveyTrips : function(req,res){
 	if (!req.param('tracts') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to tracts');
 	}
+	var odtype = "stops";
+	if(typeof req.param('od') != 'undefined'){
+		odtype =req.param('od');
+	}
 	output = [];
 	var fips_in = "(";
 	req.param('tracts').forEach(function(tract){
@@ -102,10 +106,14 @@ surveyTrips : function(req,res){
 	});
 },
 lehdTrips : function(req,res){
-	var version = "0.0.1"
+	var version = "0.0.2";
 	console.log("LEHD");
 	if (!req.param('tracts') instanceof Array) {
-		res.send('Must post Array of 11 digit fips codes to tracts');
+		res.send('Must post Array of 11 digit fips codes to LEHD Trip Table');
+	}
+	var odtype = "stops";
+	if(typeof req.param('od') != 'undefined'){
+		odtype =req.param('od');
 	}
 
 	output = [];
@@ -120,36 +128,64 @@ lehdTrips : function(req,res){
 	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where CAST(s000/20 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
-		getSurveyOD(fips_in,function(origin_points,destination_points){
-
-			console.log('after callback');
-			console.log(origin_points);
-			var id = 0;
-			tracts_data.rows.forEach(function(tract){
-				var percent_trips = 0.05;
-				if(typeof req.param('buspercent') != 'undefined'){
-					percent_trips = req.param('buspercent')[tract.home_tract];
-				}
-				num_trips = Math.round(tract.bus_total*percent_trips);
-				for(var i = 0; i < num_trips;i++){
-					var trip = {};
-					trip.id = id;
-					id += 1;
-					trip.from_geoid = tract.home_tract;
-					trip.to_geoid = tract.work_tract;
-					trip.from_coords = [];
-					trip.to_coords = [];
-					if(tract.home_tract in origin_points && tract.work_tract in destination_points){
-						trip.from_coords = origin_points[tract.home_tract][random(0,origin_points[tract.home_tract].length-1)];
-						trip.to_coords = destination_points[tract.work_tract][random(0,destination_points[tract.work_tract].length-1)];
-						trip.time = random(6,9)+":"+random(0,59)+'am';
-						trip.source ="LEHD"+version;
-						trip_table.push(trip);
+		if(odtype == "survey"){
+			getSurveyOD(fips_in,function(origin_points,destination_points){
+				var id = 0;
+				tracts_data.rows.forEach(function(tract){
+					var percent_trips = 0.05;
+					if(typeof req.param('buspercent') != 'undefined'){
+						percent_trips = req.param('buspercent')[tract.home_tract];
 					}
-				}
+					num_trips = Math.round(tract.bus_total*percent_trips);
+					for(var i = 0; i < num_trips;i++){
+						var trip = {};
+						trip.id = id;
+						id += 1;
+						trip.from_geoid = tract.home_tract;
+						trip.to_geoid = tract.work_tract;
+						trip.from_coords = [];
+						trip.to_coords = [];
+						if(tract.home_tract in origin_points && tract.work_tract in destination_points){
+							trip.from_coords = origin_points[tract.home_tract][random(0,origin_points[tract.home_tract].length-1)];
+							trip.to_coords = destination_points[tract.work_tract][random(0,destination_points[tract.work_tract].length-1)];
+							trip.time = random(6,9)+":"+random(0,59)+'am';
+							trip.source ="LEHD"+version;
+							trip_table.push(trip);
+						}
+					}
+				});
+				res.send(trip_table);
 			});
-			res.send(trip_table);
-		});
+		}else if(odtype == "stops"){
+			getStopsOD(fips_in,function(stop_points){
+				var id = 0;
+				tracts_data.rows.forEach(function(tract){
+					var percent_trips = 0.05;
+					if(typeof req.param('buspercent') != 'undefined'){
+						percent_trips = req.param('buspercent')[tract.home_tract];
+					}
+					num_trips = Math.round(tract.bus_total*percent_trips);
+					for(var i = 0; i < num_trips;i++){
+						var trip = {};
+						trip.id = id;
+						id += 1;
+						trip.from_geoid = tract.home_tract;
+						trip.to_geoid = tract.work_tract;
+						trip.from_coords = [];
+						trip.to_coords = [];
+						if(tract.home_tract in stop_points){
+							trip.from_coords = stop_points[tract.home_tract][random(0,stop_points[tract.home_tract].length-1)];
+							trip.to_coords = stop_points[tract.work_tract][random(0,stop_points[tract.work_tract].length-1)];
+							trip.time = random(6,9)+":"+random(0,59)+'am';
+							trip.source ="LEHD"+version;
+							trip_table.push(trip);
+						}
+					}
+				});
+				res.send(trip_table);
+			});
+
+		}
 	});
 },
   /**
@@ -191,6 +227,31 @@ var getSurveyOD = function(fips_in,callback){
 		callback(origin_points,destination_points);
 	});
 };
+
+var getStopsOD = function(fips_in,callback){
+	var sql = "SELECT a.geoid11,b.stop_lat,b.stop_lon FROM stop_fips as a join \"njtransit_bus_07-12-2013\".stops as b on a.stop_id  = cast(b.stop_id as integer) where a.geoid in "+fips_in;
+	
+	Gtfs.query(sql,{},function(err,points_data){
+
+		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+		
+		var stop_points = {};
+		
+		points_data.rows.forEach(function(trip){
+			
+			if(trip.geoid11 in origin_points){
+				stop_points[trip.geoid11].push([trip.stop_lat*1,trip.stop_lon*1]);
+			}else{
+				
+				stop_points[trip.geoid11] = [];
+				stop_points[trip.geoid11].push([trip.stop_lat*1,trip.stop_lon*1]);
+			}
+			
+		});
+		callback(stop_points,destination_points);
+	});
+};
+
 
 var preserveProperties = function(properties, key, value) {
 	properties[key] = value;
