@@ -239,7 +239,7 @@ var getStopsOD = function(fips_in,callback){
 		
 		points_data.rows.forEach(function(trip){
 			
-			if(trip.geoid11 in origin_points){
+			if(trip.geoid11 in stop_points){
 				stop_points[trip.geoid11].push([trip.stop_lat*1,trip.stop_lon*1]);
 			}else{
 				
