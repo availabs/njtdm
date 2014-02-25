@@ -229,7 +229,7 @@ var getSurveyOD = function(fips_in,callback){
 };
 
 var getStopsOD = function(fips_in,callback){
-	var sql = "SELECT a.geoid11,b.stop_lat,b.stop_lon FROM stop_fips as a join \"njtransit_bus_07-12-2013\".stops as b on a.stop_id  = cast(b.stop_id as integer) where a.geoid in "+fips_in;
+	var sql = "SELECT a.geoid11,b.stop_lat,b.stop_lon FROM stop_fips as a join \"njtransit_bus_07-12-2013\".stops as b on a.stop_id  = cast(b.stop_id as integer) where a.geoid11 in "+fips_in;
 	
 	Gtfs.query(sql,{},function(err,points_data){
 
