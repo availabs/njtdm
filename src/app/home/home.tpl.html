@@ -10,21 +10,21 @@
     <tab heading="Census">
       <div class="info_container">
         <label class="info_label">Census Data</label>
-     
         <accordion close-others="true">
           <accordion-group heading="Total Population" is-open="true">
             <table class="table table-striped table-hover">
               <tr>
                 <td> Total Population </td>
-                <td ng-click="choropleth('total_population')"> {{ census_vars.total_population | number }} <i class="fa fa-bar-chart-o"></i> </td>
+                <td ng-click="choropleth('total_population')"> {{ census_vars.total_population.value | number }} <i class="fa fa-bar-chart-o"></i> </td>
                 <td> </td>
               </tr>
             </table>
           </accordion-group>
           <accordion-group heading="{{name}}" ng-repeat="(name,vars) in census_categories" style="background-color:#fff">
+
             <table class="table table-hover">
               <tr ng-repeat="var in vars">
-                <td>{{ census_vars. }} {{  var }}</td>
+                <td> {{  var }}</td>
                 <td ng-click="choropleth(var)" >  {{ census_vars[var].value | number }} <i class="fa fa-bar-chart-o"></i> </td>
               </tr>
             </table>

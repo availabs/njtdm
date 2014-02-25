@@ -103,11 +103,15 @@ module.exports = {
 		}
 	},
 	stops: function(req,res){
-
+		console.log("GET STOPS");
 		var stopsCollection = {};
 		stopsCollection.type = "FeatureCollection";
 		stopsCollection.features = [];
-		var sql = 'select ST_AsGeoJSON(geom) as stop_shape,stop_name,stop_id,stop_code from "njtransit_bus_07-12-201.zip".stops';
+		var sql =   "SELECT ST_AsGeoJSON(geom) as stop_shape,stop_name,stop_id,stop_code FROM \"njtransit_bus_07-12-2013\".stops WHERE stop_id IN ( "+
+		 " SELECT DISTINCT stop_id FROM \"njtransit_bus_07-12-2013\".stop_times WHERE trip_id IN ("+
+		 "  SELECT trip_id FROM \"njtransit_bus_07-12-2013\".trips WHERE route_id IN("+
+		 " SELECT route_id from \"njtransit_bus_07-12-2013\".routes where route_short_name in ('319','501','502','504','505','507','508','509','551','552','553','554','559') )));";
+		
 		Gtfs.query(sql,{},function(err,data){
 			if (err) {
 				res.send('{status:"error",message:"'+err+'"}',500);
@@ -117,6 +121,7 @@ module.exports = {
 				var stopFeature = {};
 				stopFeature.type="Feature";
 				stopFeature.geometry = JSON.parse(stop.stop_shape);
+				//console.log(JSON.parse(stop.stop_shape));
 				stopFeature.properties = {};
 				stopFeature.properties.stop_id = stop.stop_id;
 				stopFeature.properties.stop_code = stop.stop_code;
@@ -126,7 +131,7 @@ module.exports = {
 			});
 			
 			var topology = topojson.topology({stops: stopsCollection},{"property-transform":preserveProperties,"quantization":2});
-			res.json(topojson);
+			res.json(topology);
 		});
 
 	},

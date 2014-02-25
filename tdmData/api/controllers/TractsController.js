@@ -46,7 +46,7 @@ stateTracts: function(req,res,$http){
 acs : function(req,res){
 	if (!req.param('tracts') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to tracts');
-	}
+	};
 	var fips_in = "(";
 	req.param('tracts').forEach(function(tract){
 		

@@ -16,6 +16,7 @@ censusGeo = {
   brewer:['YlGn','YlGnBu','GnBu','BuGn','PuBuGn','PuBu','BuPu','RdPu','PuRd','OrRd','YlOrRd','YlOrBr','Purples','Blues','Greens','Oranges','Reds','Greys','PuOr','BrBG','PRGn','PiYG','RdBu','RdGy','RdYlBu','Spectral','RdYlGn','Accent','Dark2','Paired','Pastel1','Pastel2','Set1','Set2','Set3'],
   brewer_index : 1,
   choropleth_var: undefined,
+  current_map : 'none',
   draw:function(){
     var geo = topojson.feature(censusGeo.geodata, censusGeo.geodata.objects.tracts);
     var bounds = d3.geo.bounds(geo);
@@ -77,6 +78,7 @@ censusGeo = {
         //console.log('running'+var_name);
         var max=0;
         var min=1000000;
+        censusGeo.current_map = "Trip Table "+var_name;
         censusGeo.scenario_tracts.forEach(function(d){
           if(typeof tripTable.tt[d] != 'undefined' ){
             if(tripTable.tt[d][var_name] > max){
@@ -91,10 +93,33 @@ censusGeo = {
           .domain([min,max])
           .range(colorbrewer[censusGeo.brewer[censusGeo.brewer_index]][censusGeo.ll]);
 
+        // this function iterates through the calculated quantiles. When the input val
+        // is less then or equal to a quantile, a color from the color range is selected.
+        // if the input value is greater than the last quantile then the last color
+        // range is selected.
+        censusGeo.color = function(val) {
+          censusGeo.color.range = function() {
+            return colorbrewer[censusGeo.brewer[censusGeo.brewer_index]][censusGeo.ll]
+          };
+          censusGeo.color.domain = function() {
+            return censusGeo.legend_domain.quantiles()
+          };
 
+          var domain = censusGeo.color.domain(),
+              colors = censusGeo.color.range();
+
+          for (var i = 0; i < domain.length; i++) {
+            if (val <= domain[i])
+              return colors[i];
+          }
+          return colors[i];
+        };
+
+        /*
         censusGeo.color = d3.scale.quantile()
             .domain(censusGeo.legend_domain.quantiles())
             .range(colorbrewer[censusGeo.brewer[censusGeo.brewer_index]][censusGeo.ll]);
+        */
 
         censusGeo.g.selectAll("path.selected_tract")
         .transition().duration(1000)
@@ -106,11 +131,41 @@ censusGeo = {
             }
 
         });
-        //viz.setLegend();
-
+        censusGeo.setLegend();
   },
-  choropleth_single:function(var_name){
 
+  setLegend:function(){
+    var color, label, label2, i; // temp variables
+    var domain = censusGeo.color.domain(),
+        range = censusGeo.color.range();
+    // create legend label
+    var legendText = '<h3>'+censusGeo.current_map+'</h3>';
+    // start unordered list
+    legendText += '<ul id="censusGeo_legend">';
+    // add first list element
+    color = range[0];
+    label = domain[0];
+    legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>&lt;= '+label.toFixed(0)+'</span></li>'
+    // iterate through color domain, appending list elements
+    for (i = 1; i < domain.length; i++) {
+      color = range[i];
+      label = domain[i];
+      label2 = domain[i-1]+1;
+      legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>'+label2.toFixed(0)+'-'+label.toFixed(0)+'</span></li>'
+    };
+    // add last label
+    color = range[i];
+    label = domain[i-1];
+    legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>&gt; '+label.toFixed(0)+'</span></li>';
+
+    // close unordered list tag
+    legendText += '</ul>';
+
+    $('#choro_legend').html(legendText);
+  },
+
+  choropleth_single:function(var_name){
+        censusGeo.current_map = "Census "+var_name;
         var max=0;
         var min=1000000;
         censusGeo.scenario_tracts.forEach(function(d){
@@ -141,7 +196,7 @@ censusGeo = {
             }
 
         });
-        //viz.setLegend();
+        censusGeo.setLegend();
 
   },
   choropleth_percent:function(var_name,divisor){

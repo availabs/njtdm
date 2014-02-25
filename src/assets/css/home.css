@@ -40,3 +40,4 @@
 #legend-detail li span			    				{display:block; float:left; padding:2px 0 0 0;}
 #legend-detail li span.c-01			    			{width:85px;}
 #legend-detail li span.c-02			    			{text-align:right; width:85px;}
+#censusGeo_legend									{list-style: none;}

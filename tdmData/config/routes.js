@@ -62,6 +62,15 @@ module.exports.routes = {
       headers: 'content-type,X-Requested-With'
     }
   },
+   '/gtfs/stops':{
+    controller : 'GtfsController',
+    action : 'stops',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
   '/tracts/lehdTrips':{
     controller : 'TractsController',
     action : 'lehdTrips',

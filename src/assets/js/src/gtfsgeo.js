@@ -4,6 +4,7 @@
 ***********************************************************************/
 gtfsGeo = {
   routeData:{},
+  stopData:{},
   g:{},
   init : function() {
      gtfsGeo.g = censusGeo.g;
@@ -27,6 +28,18 @@ gtfsGeo = {
         gtfsGeo.reset(bounds,feature);
       });
       gtfsGeo.reset(bounds,feature);
+      gtfsGeo.drawStops();
+  },
+  drawStops : function(){
+    //console.log(gtfsGeo.stopData);
+    // convert the topoJSON to geoJSON
+    var geoJSON = topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes),
+        geoCenter = d3.geo.centroid(geoJSON),
+        bounds = path.bounds(geoJSON),
+        path = d3.geo.path().projection(gtfsGeo.project);
+
+
+
   },
   project :function(x) {
       if(x.length != 2){ return [];}
