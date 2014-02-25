@@ -175,6 +175,7 @@ angular.module( 'njTDM.home', [
     $scope.loadTripTable(type,$scope.scenario.tracts).then(function(trip_table){
       $scope.trip_table = trip_table.data;
       tripTable.update_data(trip_table.data);
+      tripTable.update_trips();
       censusGeo.choropleth_trip_table('outbound_trips');
     });
   };
