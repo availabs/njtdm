@@ -1,0 +1,27 @@
+<div class="info_container">
+ Model Data
+  <select ui-select2   ng-model="current_model_index" class='template_select'>
+    <option  ng-repeat="model in finished_models" value="{{ model.id}}">{{ model.name }}</option>
+  </select>
+  <br><br>
+  <a class="btn btn-info" ng-click="loadModelData(current_model_index)" ng-disabled="active_run">View Model Data</a>
+  route_count
+  <table class="table table-hover">
+    <thead>
+      <tr>
+      <td>Route</td>
+      <td># Passengers</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="route in route_count">
+      <td>{{ route.key }}</td><td>{{  route.value }}</td>
+    </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>Total:</td>
+        <td>{{ route_total }}</td>
+      </tr></tfoot>
+  </table>
+</div>

@@ -1,9 +1,6 @@
 <leaflet height="100%" width="100%" center="center" layers="layers" event-broadcast="events"></leaflet>
 <div class="model_overlay">
-  Model Data
-  <select ui-select2   ng-model="current_model_index" class='template_select'>
-    <option  ng-repeat="model in finished_models" value="{{ model.id}}" ng-selected="{{ $index == current_template_index }}">{{ model.name }}</option>
-  </select>{{cure}}
+ <div ng-include="'home/partials/model_analysis.tpl.html'"></div>
 </div>
 <div class="info_overlay">
   <tabset>
