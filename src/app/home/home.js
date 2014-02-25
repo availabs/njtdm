@@ -104,7 +104,7 @@ angular.module( 'njTDM.home', [
   //------------------------------------------
   angular.extend($scope, {
     center: {lat: 39.349667,lng: -74.465093,zoom: 12},
-    layers: {baselayers: {}},// {mapbox:{name:'mapbox',url:'http://{s}.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png',type:'xyz'}}},
+    layers: {baselayers: {mapbox:{name:'mapbox',url:'http://{s}.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png',type:'xyz'}}},
     events: {map: {enable: ['load','zoomstart', 'drag', 'click', 'mousemove'],logic: 'emit'}}
   });
 
