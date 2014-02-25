@@ -114,14 +114,16 @@ lehdTrips : function(req,res){
 		fips_in += "'"+tract+"',";
 	});
 	
-	var origin_points = {};
-	var destination_points = {};
+	
 	var trip_table = [];
 	fips_in = fips_in.slice(0, -1)+")";
 	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where CAST(s000/20 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
 		getSurveyOD(fips_in,function(origin_points,destination_points){
+
+			console.log('after callback');
+			console.log(origin_points);
 			var id = 0;
 			tracts_data.rows.forEach(function(tract){
 				var percent_trips = 0.05;
@@ -164,6 +166,10 @@ var getSurveyOD = function(fips_in,callback){
 	Gtfs.query(sql,{},function(err,points_data){
 
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+		
+		var origin_points = {};
+		var destination_points = {};
+
 		points_data.rows.forEach(function(trip){
 			
 			if(trip.o_geoid10 in origin_points){
@@ -181,6 +187,7 @@ var getSurveyOD = function(fips_in,callback){
 			}
 			
 		});
+		console.log(origin_points);
 		callback(origin_points,destination_points);
 	});
 };
