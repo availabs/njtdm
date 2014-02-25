@@ -152,7 +152,7 @@ lehdTrips : function(req,res){
 					trip.to_geoid = tract.work_tract;
 					trip.from_coords = [];
 					trip.to_coords = [];
-					if(tract.home_tract in origin_points || tract.work_tract in destination_points){
+					if(tract.home_tract in origin_points && tract.work_tract in destination_points){
 						trip.from_coords = origin_points[tract.home_tract][random(0,origin_points[tract.home_tract].length-1)];
 						trip.to_coords = destination_points[tract.work_tract][random(0,destination_points[tract.work_tract].length-1)];
 						trip.time = random(6,9)+":"+random(0,59)+'am';
