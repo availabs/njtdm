@@ -121,7 +121,7 @@ lehdTrips : function(req,res){
 	
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
-		var sql = "select O_MAT_LAT as o_lat, O_MAT_LONG as o_lng,D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo where o_geoid10 in "+fips_in+" and d_geoid10 in "+fips_in+" and not O_MAT_LAT = 1 and not O_MAT_LONG = 0 and not D_MAT_LAT= 0 and not D_MAT_LONG = 0";
+		var sql = "select O_MAT_LAT as o_lat, O_MAT_LONG as o_lng,D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo where o_geoid10 in "+fips_in+" and d_geoid10 in "+fips_in+" and not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT= 0 and not D_MAT_LONG = 0";
 		Gtfs.query(sql,{},function(err,points_data){
 		
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
