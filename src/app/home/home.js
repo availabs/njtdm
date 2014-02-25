@@ -173,7 +173,6 @@ angular.module( 'njTDM.home', [
       //
       var busdata = {};
       for(var tract in censusData.acs){
-        console.log(tract);
         busdata[tract] = censusData.acs[tract].bus_to_work/censusData.acs[tract].travel_to_work_total;
       }
       promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata}).then(function(data){
