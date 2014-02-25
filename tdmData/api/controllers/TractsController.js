@@ -149,7 +149,7 @@ lehdTrips : function(req,res){
 					percent_trips = req.param('buspercent')[tract.home_tract];
 				}
 				num_trips = Math.round(tract.bus_total*percent_trips);
-				for(var i = 0; i < tract.bus_total;i++){
+				for(var i = 0; i < num_trips;i++){
 					var trip = {};
 					trip.id = id;
 					id += 1;
