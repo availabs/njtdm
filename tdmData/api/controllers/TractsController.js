@@ -175,7 +175,15 @@ lehdTrips : function(req,res){
 						trip.to_coords = [];
 						if(tract.home_tract in stop_points && tract.work_tract in stop_points){
 							trip.from_coords = stop_points[tract.home_tract][random(0,stop_points[tract.home_tract].length-1)];
+							var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+							trip.from_coords[0] += random(0,50)/1000*plusOrMinus;
+							plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+							trip.from_coords[1] += random(0,50)/1000*plusOrMinus;
 							trip.to_coords = stop_points[tract.work_tract][random(0,stop_points[tract.work_tract].length-1)];
+							plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+							trip.to_coords[0] += random(0,50)/1000*plusOrMinus;
+							plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+							trip.to_coords[1] += random(0,50)/1000*plusOrMinus;
 							trip.time = random(6,9)+":"+random(0,59)+'am';
 							trip.source ="LEHD"+version;
 							trip_table.push(trip);

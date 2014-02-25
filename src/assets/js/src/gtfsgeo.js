@@ -28,7 +28,7 @@ gtfsGeo = {
         gtfsGeo.reset(bounds,feature);
       });
       gtfsGeo.reset(bounds,feature);
-      gtfsGeo.drawStops();
+      //gtfsGeo.drawStops();
   },
   drawStops : function(){
     //console.log(gtfsGeo.stopData);
