@@ -178,7 +178,7 @@ lehdTrips : function(req,res){
 							var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
 							trip.from_coords[0] += random(0,50)/1000*plusOrMinus;
 							plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-							trip.from_coords[1] += random(0,50)/1000*plusOrMinus;
+							trip.from_coords[1] += random(0,10)/1000*plusOrMinus;
 							trip.to_coords = stop_points[tract.work_tract][random(0,stop_points[tract.work_tract].length-1)];
 							plusOrMinus = Math.random() < 0.5 ? -1 : 1;
 							trip.to_coords[0] += random(0,50)/1000*plusOrMinus;
