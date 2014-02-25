@@ -77,6 +77,8 @@ angular.module( 'njTDM.home', [
   $scope.run_progress = 0;
   $scope.run_max = 100;
   $scope.finished_models = [];
+  $scope.model_od = 'stops';
+
   /**********************************************
   *
   * Trip Table setup
@@ -86,6 +88,8 @@ angular.module( 'njTDM.home', [
   $scope.tt_currentPage = 0;
   $scope.tt_pageSize = 11;
   $scope.tt_total = 0;
+  $scope.trips_loaded = false;
+  $scope.show_trips = false;
   
   $scope.$watch('tt_search', function() {
       $scope.tt_total = $filter('filter')($scope.trip_table,$scope.tt_search).length;
@@ -145,7 +149,25 @@ angular.module( 'njTDM.home', [
       });
     });
   };
-  
+
+  $scope.mapTripTable =function(){
+    if(!$scope.trips_loaded){
+      tripTable.draw_trips();
+      $scope.trips_loaded = true;
+      $scope.show_trips = true;
+    }else{
+      if($scope.show_trips){
+        $('circle.dest').css('display','none');
+        $('circle.origin').css('display','none');
+        $scope.show_trips = false;
+      }else{
+         $('circle.dest').css('display','block');
+        $('circle.origin').css('display','block');
+        $scope.show_trips = true;
+      }
+    }
+  };
+
   $scope.newTripTable =function(type){
     $scope.loadTripTable(type,$scope.scenario.tracts).then(function(trip_table){
       $scope.trip_table = trip_table.data;
@@ -233,6 +255,15 @@ angular.module( 'njTDM.home', [
       censusGeo.choropleth_percent(input,divisor);
     }
   };
+  
+  $scope.showOD = function(type){
+    //console.log($scope.model_type);
+    if(type == 'lehd' || type == 'lehdbus'){
+      return true;
+    }
+    return false;
+  };
+
   $scope.loadModelData = function(id){
     
     $http.post($scope.api+'triptable/'+id+'/modeldata').success(function(data){
