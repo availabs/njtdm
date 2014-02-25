@@ -165,7 +165,20 @@ angular.module( 'njTDM.home', [
       promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts}).then(function(data){
         return data;
       });
-    }else if(model_type == 'survey'){
+    }
+    else if(model_type == 'lehdbus'){
+      //
+      var busdata = {};
+      for(var tract in censusData.acs){
+        console.log(tract);
+        busdata[tract] = censusData.acs[tract].bus_to_work/censusData.acs[tract].travel_to_work_total;
+      }
+      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata}).then(function(data){
+        return data;
+      });
+
+    }
+    else if(model_type == 'survey'){
       promise = $http.post($scope.api+'tracts/surveyTrips', {tracts:$scope.tracts}).then(function(data){
         return data;
       });

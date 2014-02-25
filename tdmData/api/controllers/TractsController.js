@@ -107,6 +107,7 @@ lehdTrips : function(req,res){
 	if (!req.param('tracts') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to tracts');
 	}
+
 	output = [];
 	var fips_in = "(";
 	req.param('tracts').forEach(function(tract){
@@ -117,8 +118,7 @@ lehdTrips : function(req,res){
 	var destination_points = {};
 	var trip_table = [];
 	fips_in = fips_in.slice(0, -1)+")";
-	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, CAST(s000/20 as integer) as bus_total from nj_od_j00_ct where CAST(s000/20 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
-	console.log(sql);
+	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, CAST(s000) as bus_total from nj_od_j00_ct where CAST(s000/20 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
 		var sql = "select O_MAT_LAT as o_lat, O_MAT_LONG as o_lng,D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo where o_geoid10 in "+fips_in+" and d_geoid10 in "+fips_in+" and not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT= 0 and not D_MAT_LONG = 0";
@@ -144,6 +144,11 @@ lehdTrips : function(req,res){
 			});
 			var id = 0;
 			tracts_data.rows.forEach(function(tract){
+				var percent_trips = 0.05;
+				if(typeof req.param('buspercent')[tract.home_tract] != 'undefined'){
+					percent_trips = req.param('buspercent')[tract.home_tract];
+				}
+				num_trips = Math.round(tract.bus_total*percent_trips);
 				for(var i = 0; i < tract.bus_total;i++){
 					var trip = {};
 					trip.id = id;
