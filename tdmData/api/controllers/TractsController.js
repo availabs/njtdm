@@ -233,7 +233,7 @@ var getStopsOD = function(fips_in,callback){
 	
 	Gtfs.query(sql,{},function(err,points_data){
 
-		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+		if (err) {  return console.log(err);}
 		
 		var stop_points = {};
 		
