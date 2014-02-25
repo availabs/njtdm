@@ -66,7 +66,8 @@ angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario,TripTable,$modal) {
-  $scope.api = 'http://lor.availabs.org:1338/';
+  //$scope.api = 'http://lor.availabs.org:1338/';
+  $scope.api = 'http://localhost:1337/';
   $scope.current_template_index = 0;
   $scope.model_time = 'am';
   $scope.census_vars = censusData.variables;
@@ -120,31 +121,33 @@ angular.module( 'njTDM.home', [
     censusGeo.scenario_tracts = $scope.tracts;
     $http.post($scope.api+'tracts/acs', {tracts:scenario.tracts}).success(function(tract_data){
       $http.post($scope.api+'gtfs/routes', {routes:scenario.routes}).success(function(route_data){
-        $scope.loadTripTable($scope.model_type).then(function(trip_table){
-          $scope.trip_table = trip_table.data;
-          $scope.tt_total = trip_table.data.length;
-          tripTable.update_data(trip_table.data);
-          //tripTable.draw_trips();
-          censusData.update_data(tract_data);
-          censusGeo.update_scenario();
-          console.log(route_data);
-          gtfsGeo.routeData = route_data;
-          gtfsGeo.drawRoutes();
-          
-          //two way data binding, lol
-          $scope.census_vars = censusData.variables;
-          censusData.variables = $scope.census_vars;
-          
-          $scope.$watch('tracts', function () {
-            $http.post($scope.api+'tracts/acs', {tracts:$scope.tracts}).success(function(data){
-              $scope.loadTripTable($scope.model_type).then(function(trip_table){
-                $scope.trip_table = trip_table.data;
-                tripTable.update_data(trip_table.data);
-                censusData.update_data(data);
-                censusGeo.choropleth_trip_table('outbound_trips');
+        $http.post($scope.api+'gtfs/stops', {routes:scenario.routes}).success(function(stop_data){
+          $scope.loadTripTable($scope.model_type).then(function(trip_table){
+            $scope.trip_table = trip_table.data;
+            $scope.tt_total = trip_table.data.length;
+            tripTable.update_data(trip_table.data);
+            //tripTable.draw_trips();
+            censusData.update_data(tract_data);
+            censusGeo.update_scenario();
+            gtfsGeo.routeData = route_data;
+            gtfsGeo.stopData = stop_data;
+            gtfsGeo.drawRoutes();
+            
+            //two way data binding, lol
+            $scope.census_vars = censusData.census_vars;
+            censusData.census_vars = $scope.census_vars;
+            
+            $scope.$watch('tracts', function () {
+              $http.post($scope.api+'tracts/acs', {tracts:$scope.tracts}).success(function(data){
+                $scope.loadTripTable($scope.model_type).then(function(trip_table){
+                  $scope.trip_table = trip_table.data;
+                  tripTable.update_data(trip_table.data);
+                  censusData.update_data(data);
+                  censusGeo.choropleth_trip_table('outbound_trips');
+                });
               });
-            });
-          }, true);
+            }, true);
+          });
         });
       });
     });
@@ -301,9 +304,9 @@ angular.module( 'njTDM.home', [
 
     //Get Scenarios & Load the first one
       $scope.allScenarios = Scenario.query(function(){
-        $scope.current_template= $scope.allScenarios[$scope.current_template_index];
+        $scope.current_template= $scope.allScenarios[0];
         $scope.loadScenario($scope.current_template);
-        $scope.scenario_select= function(index){
+        $scope.scenario_select = function(index){
           $scope.loadScenario($scope.allScenarios[index]);
         };
         $http.post($scope.api+'triptable/finished').success(function(data){
