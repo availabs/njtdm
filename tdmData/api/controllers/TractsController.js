@@ -121,27 +121,7 @@ lehdTrips : function(req,res){
 	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where CAST(s000/20 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
-		var sql = "select O_MAT_LAT as o_lat, O_MAT_LONG as o_lng,D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo where o_geoid10 in "+fips_in+" and d_geoid10 in "+fips_in+" and not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT= 0 and not D_MAT_LONG = 0";
-		Gtfs.query(sql,{},function(err,points_data){
-		
-		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
-			points_data.rows.forEach(function(trip){
-				
-				if(trip.o_geoid10 in origin_points){
-					origin_points[trip.o_geoid10].push([trip.o_lat*1,trip.o_lng*1]);
-				}else{
-					
-					origin_points[trip.o_geoid10] = [];
-					origin_points[trip.o_geoid10].push([trip.o_lat*1,trip.o_lng*1]);
-				}
-				if(trip.d_geoid10 in destination_points){
-					destination_points[trip.d_geoid10].push([trip.d_lat*1,trip.d_lng*1]);
-				}else{
-					destination_points[trip.d_geoid10] = [];
-					destination_points[trip.d_geoid10].push([trip.d_lat*1,trip.d_lng*1]);
-				}
-				
-			});
+		getSurveyOD(fips_in,function(origin_points,destination_points){
 			var id = 0;
 			tracts_data.rows.forEach(function(tract){
 				var percent_trips = 0.05;
@@ -179,6 +159,31 @@ lehdTrips : function(req,res){
   
 };
 
+var getSurveyOD = function(fips_in,callback){
+	var sql = "select O_MAT_LAT as o_lat, O_MAT_LONG as o_lng,D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo where o_geoid10 in "+fips_in+" and d_geoid10 in "+fips_in+" and not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT= 0 and not D_MAT_LONG = 0";
+	Gtfs.query(sql,{},function(err,points_data){
+
+		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+		points_data.rows.forEach(function(trip){
+			
+			if(trip.o_geoid10 in origin_points){
+				origin_points[trip.o_geoid10].push([trip.o_lat*1,trip.o_lng*1]);
+			}else{
+				
+				origin_points[trip.o_geoid10] = [];
+				origin_points[trip.o_geoid10].push([trip.o_lat*1,trip.o_lng*1]);
+			}
+			if(trip.d_geoid10 in destination_points){
+				destination_points[trip.d_geoid10].push([trip.d_lat*1,trip.d_lng*1]);
+			}else{
+				destination_points[trip.d_geoid10] = [];
+				destination_points[trip.d_geoid10].push([trip.d_lat*1,trip.d_lng*1]);
+			}
+			
+		});
+		callback(origin_points,destination_points);
+	});
+};
 
 var preserveProperties = function(properties, key, value) {
 	properties[key] = value;
