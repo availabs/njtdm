@@ -191,7 +191,7 @@ angular.module( 'njTDM.home', [
     */
     var promise = [];
     if(model_type == 'lehd'){
-      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts}).then(function(data){
+      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,od:$scope.model_od}).then(function(data){
         return data;
       });
     }
@@ -201,7 +201,7 @@ angular.module( 'njTDM.home', [
       for(var tract in censusData.acs){
         busdata[tract] = censusData.acs[tract].bus_to_work/censusData.acs[tract].travel_to_work_total;
       }
-      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata}).then(function(data){
+      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
         return data;
       });
 

@@ -115,7 +115,7 @@ lehdTrips : function(req,res){
 	if(typeof req.param('od') != 'undefined'){
 		odtype =req.param('od');
 	}
-
+	console.log(odtype);
 	output = [];
 	var fips_in = "(";
 	req.param('tracts').forEach(function(tract){
