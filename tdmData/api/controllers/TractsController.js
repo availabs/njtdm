@@ -156,12 +156,8 @@ ctppTrips : function(req,res){
 		}else if(odtype == "stops"){
 			getStopsOD(fips_in,function(stop_points){
 				var id = 0;
-				tracts_data.rows.forEach(function(tract){
-					var percent_trips = 0.05;
-					if(typeof req.param('buspercent') != 'undefined'){
-						percent_trips = req.param('buspercent')[tract.home_tract];
-					}
-					num_trips = Math.round(tract.bus_total*percent_trips);
+				
+					num_trips = tract.bus_total;
 					for(var i = 0; i < num_trips;i++){
 						var trip = {};
 						trip.id = id;
