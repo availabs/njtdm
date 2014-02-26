@@ -187,8 +187,11 @@ angular.module( 'njTDM.home', [
     /*******
     * Model Types
     * 0 - LEHD
+    * 1 - LEHD + % Bus
+    * 1 - CTPP Bus Trips
     * 1 - AC Survey
     */
+    console.log(model_type,$scope.model_od);
     var promise = [];
     if(model_type == 'lehd'){
       promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,od:$scope.model_od}).then(function(data){
@@ -203,7 +206,6 @@ angular.module( 'njTDM.home', [
       promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
         return data;
       });
-
     }
     else if(model_type == 'ctpp'){
       promise = $http.post($scope.api+'tracts/ctppTrips', {tracts:$scope.tracts,od:$scope.model_od}).then(function(data){
@@ -216,6 +218,9 @@ angular.module( 'njTDM.home', [
       });
     }
     return promise;
+  };
+  $scope.update_od = function(od){
+    $scope.model_od = od;
   };
 
   //Click On The Run Model Button
@@ -269,7 +274,7 @@ angular.module( 'njTDM.home', [
   
   $scope.showOD = function(type){
     //console.log($scope.model_type);
-    if(type == 'lehd' || type == 'lehdbus'){
+    if(type == 'lehd' || type == 'lehdbus' || type == 'ctpp'){
       return true;
     }
     return false;

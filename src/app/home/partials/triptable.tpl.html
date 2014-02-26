@@ -23,10 +23,11 @@
       </select>
       <div ng-show="showOD(model_type)">
         <label>OD Source</label>
-        <select ui-select2   ng-model="model_od" class='template_select'>
-         <option value="stops" selected>Bus Stops</option>
+        <select ui-select2   ng-model="model_od" class='template_select' ng-change="update_od(model_od)">
+         <option value="stops">Bus Stops</option>
          <option value="survey">Survey</option>
         </select>
+        {{model_od}}
       </div>
        <label>Model Time</label>
       <select ui-select2   ng-model="model_time" class='template_select'>
