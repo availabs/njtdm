@@ -125,7 +125,7 @@ ctppTrips : function(req,res){
 	
 	var trip_table = [];
 	fips_in = fips_in.slice(0, -1)+")";
-	var sql="SELECT from_tract as home_tract, to_tract as work_tract, est as bus_total from nj_od_j00_ct where (from_tract in "+fips_in+" or to_tract in "+fips_in+")";
+	var sql="SELECT from_tract as home_tract, to_tract as work_tract, est as bus_total from ctpp_a302103_tracts where (from_tract in "+fips_in+" or to_tract in "+fips_in+")";
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
 		if(odtype == "survey"){
