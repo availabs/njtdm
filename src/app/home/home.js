@@ -196,8 +196,17 @@ angular.module( 'njTDM.home', [
       });
     }
     else if(model_type == 'lehdbus'){
-      //
       var busdata = {};
+      for(var tract in censusData.acs){
+        busdata[tract] = censusData.acs[tract].bus_to_work/censusData.acs[tract].travel_to_work_total;
+      }
+      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
+        return data;
+      });
+
+    }
+    else if(model_type == 'ctpp'){
+      busdata = {};
       for(var tract in censusData.acs){
         busdata[tract] = censusData.acs[tract].bus_to_work/censusData.acs[tract].travel_to_work_total;
       }
