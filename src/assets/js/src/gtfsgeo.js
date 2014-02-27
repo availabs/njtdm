@@ -13,7 +13,7 @@ gtfsGeo = {
   drawRoutes : function(){
     var geo = topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
     var path = d3.geo.path().projection(gtfsGeo.project);
-    console.log(geo);
+    //console.log(geo);
 
     var routes = gtfsGeo.g.selectAll("path.route")
                   .data(geo.features);
@@ -23,18 +23,35 @@ gtfsGeo = {
 
     routes.exit().remove();
 
-    var feature = routes.attr("d", path);
+    //var feature = routes.attr("d", path);
 
-    gtfsGeo.reset(feature, path);
+    gtfsGeo.reset(routes, path);
      
     censusGeo.map.on("viewreset", function(){
-      gtfsGeo.reset(feature, path);
+      gtfsGeo.reset(routes, path);
     });
   },
   vizRoutes: function(inputData){
-    var routes = gtfsGeo.g.selectAll("path.route");
-    var routeWidth = d3.scale.
-    console.log(routes, inputData);
+    var routes = gtfsGeo.g.selectAll("path.route"),
+        min = d3.min(inputData, function(d) {return d.value}),
+        max = d3.max(inputData, function(d) {return d.value}),
+        width = d3.scale.linear()
+                        .domain([min, max])
+                        .range([3, 20]);
+
+    var routeWidth = {};
+
+    inputData.forEach(function(d, i) {
+      routeWidth[d.key] = width(d.value);
+    })
+    //console.log(routeWidth);
+    routes
+      .transition()
+      .duration(1000)
+      .style("stroke-width", function(d){
+        //console.log(d,d.route_short_name);
+        return routeWidth[d.properties.route_short_name];//routeWidth(d.key);
+      });
   },
   drawStops: function(){
     // convert the topoJSON to geoJSON
