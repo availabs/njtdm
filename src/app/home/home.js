@@ -80,6 +80,7 @@ angular.module( 'njTDM.home', [
   $scope.finished_models = [];
   $scope.model_od = 'stops';
 
+
   /**********************************************
   *
   * Trip Table setup
@@ -91,6 +92,7 @@ angular.module( 'njTDM.home', [
   $scope.tt_total = 0;
   $scope.trips_loaded = false;
   $scope.show_trips = false;
+  $scope.tt_search = {};
   
   $scope.$watch('tt_search', function() {
       $scope.tt_total = $filter('filter')($scope.trip_table,$scope.tt_search).length;
@@ -184,6 +186,7 @@ angular.module( 'njTDM.home', [
         tripTable.update_trips();
       }
       censusGeo.choropleth_trip_table('outbound_trips');
+      $scope.tt_total = trip_table.data.length;
     });
   };
 
