@@ -14,6 +14,10 @@
           <td>Number of Tracts </td><td>{{ tracts.length | number }}</td>
         </tr>
       </table>
+      <div class="btn-group">
+        <button class="btn btn-info" ng-click="tt_choropleth('outbound_trips')">Map Outbound Trips</button>
+        <button class="btn btn-info" ng-click="tt_choropleth('inbound_trips')">Map Inbound Trips</button>
+      </div>
       <label>Model Type</label>
       <select ui-select2   ng-model="model_type" class='template_select'>
        <option value="lehd" selected>LEHD 5%</option>

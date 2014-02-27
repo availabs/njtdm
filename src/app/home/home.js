@@ -153,6 +153,10 @@ angular.module( 'njTDM.home', [
     });
   };
 
+  $scope.tt_choropleth = function(var_name){
+    censusGeo.choropleth_trip_table(var_name);
+  };
+
   $scope.mapTripTable =function(){
     if(!$scope.trips_loaded){
       tripTable.draw_trips();

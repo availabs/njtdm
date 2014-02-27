@@ -29,6 +29,7 @@ censusGeo = {
       .enter()
       .append("path")
       .attr("d", path)
+      .attr("id",function(d){ return "tract_"+d.properties.geoid;})
       .attr("class", function(d){
         if(censusGeo.scenario_tracts.indexOf(d.properties.geoid) !== -1){
           return "selected_tract";
@@ -129,6 +130,7 @@ censusGeo = {
             }else{
               return censusGeo.color(tripTable.tt[d.properties.geoid][var_name]);
             }
+
 
         });
         censusGeo.setLegend();
