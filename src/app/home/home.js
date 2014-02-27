@@ -161,7 +161,7 @@ angular.module( 'njTDM.home', [
   };
 
   $scope.vizRoutes = function(){
-    console.log($scope.model_data.routes.all());
+    //console.log($scope.model_data.routes.all());
     gtfsGeo.vizRoutes($scope.model_data.routes.all());
   };
 
