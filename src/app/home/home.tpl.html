@@ -1,4 +1,16 @@
 <leaflet height="100%" width="100%" center="center" layers="layers" event-broadcast="events"></leaflet>
+<div id="legend">
+        <h2><a href="javascript:void()" class="closed">Legend</a></h2>
+        <div id="legend-detail">
+            <ul>
+                <li><svg width="20" height="20"><path d="M0 10 L20 10 Z" stroke="#2C7BC9" stroke-width="2"></path></svg><span>route<span></span></span></li>
+                <li><svg width="20" height="20"><circle cx="10" cy="10" r="7" fill="#ED3A2D" class='legend_circle'></circle></svg><span>stop</span></li>
+            </ul>
+            <hr>
+            <div id="choro_legend">
+            </div>
+        </div>
+    </div>
 <div class="model_overlay">
  <div ng-include="'home/partials/model_analysis.tpl.html'"></div>
 </div>

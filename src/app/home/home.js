@@ -46,7 +46,8 @@ angular.module( 'njTDM.home', [
         {id: "@id" },
         {
             //custom route
-            "templates": {'method': 'GET', 'params': {'where': {'name':null}}}
+            "templates": {'method': 'GET', 'params': {'where': {'name':null}}},
+            'update': { method:'PUT' }
  
         }
     );
@@ -194,6 +195,9 @@ angular.module( 'njTDM.home', [
       censusGeo.choropleth_trip_table('outbound_trips');
       $scope.tt_total = trip_table.data.length;
     });
+  };
+  $scope.saveScenario = function(){
+    Scenario.update({id:$scope.scenario.id },$scope.scenario);
   };
 
   $scope.loadTripTable = function(model_type){
