@@ -208,7 +208,7 @@ lehdTrips : function(req,res){
 	
 	var trip_table = [];
 	fips_in = fips_in.slice(0, -1)+")";
-	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where CAST(s000/20 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
+	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where CAST(s000/5 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
 		if(odtype == "survey"){
