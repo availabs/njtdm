@@ -104,7 +104,7 @@ angular.module( 'njTDM.home', [
   //------------------------------------------
   angular.extend($scope, {
     center: {lat: 39.349667,lng: -74.465093,zoom: 12},
-    layers: {baselayers: {}},// {mapbox:{name:'mapbox',url:'http://{s}.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png',type:'xyz'}}},
+    layers: {baselayers: {mapbox:{name:'mapbox',url:'http://{s}.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png',type:'xyz'}}},
     events: {map: {enable: ['load','zoomstart', 'drag', 'click', 'mousemove'],logic: 'emit'}}
   });
 
@@ -154,6 +154,10 @@ angular.module( 'njTDM.home', [
     });
   };
 
+  $scope.tt_choropleth = function(var_name){
+    censusGeo.choropleth_trip_table(var_name);
+  };
+
   $scope.mapTripTable =function(){
     if(!$scope.trips_loaded){
       tripTable.draw_trips();
@@ -161,6 +165,7 @@ angular.module( 'njTDM.home', [
       $scope.show_trips = true;
     }else{
       if($scope.show_trips){
+        tripTable.update_trips();
         $('circle.dest').css('display','none');
         $('circle.origin').css('display','none');
         $scope.show_trips = false;
@@ -176,7 +181,9 @@ angular.module( 'njTDM.home', [
     $scope.loadTripTable(type,$scope.scenario.tracts).then(function(trip_table){
       $scope.trip_table = trip_table.data;
       tripTable.update_data(trip_table.data);
-      tripTable.update_trips();
+      if($scope.show_trips){
+        tripTable.update_trips();
+      }
       censusGeo.choropleth_trip_table('outbound_trips');
     });
   };
@@ -185,24 +192,30 @@ angular.module( 'njTDM.home', [
     /*******
     * Model Types
     * 0 - LEHD
+    * 1 - LEHD + % Bus
+    * 1 - CTPP Bus Trips
     * 1 - AC Survey
     */
+    console.log(model_type,$scope.model_od);
     var promise = [];
     if(model_type == 'lehd'){
-      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts}).then(function(data){
+      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,od:$scope.model_od}).then(function(data){
         return data;
       });
     }
     else if(model_type == 'lehdbus'){
-      //
       var busdata = {};
       for(var tract in censusData.acs){
         busdata[tract] = censusData.acs[tract].bus_to_work/censusData.acs[tract].travel_to_work_total;
       }
-      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata}).then(function(data){
+      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
         return data;
       });
-
+    }
+    else if(model_type == 'ctpp'){
+      promise = $http.post($scope.api+'tracts/ctppTrips', {tracts:$scope.tracts,od:$scope.model_od}).then(function(data){
+        return data;
+      });
     }
     else if(model_type == 'survey'){
       promise = $http.post($scope.api+'tracts/surveyTrips', {tracts:$scope.tracts}).then(function(data){
@@ -210,6 +223,9 @@ angular.module( 'njTDM.home', [
       });
     }
     return promise;
+  };
+  $scope.update_od = function(od){
+    $scope.model_od = od;
   };
 
   //Click On The Run Model Button
@@ -263,7 +279,7 @@ angular.module( 'njTDM.home', [
   
   $scope.showOD = function(type){
     //console.log($scope.model_type);
-    if(type == 'lehd' || type == 'lehdbus'){
+    if(type == 'lehd' || type == 'lehdbus' || type == 'ctpp'){
       return true;
     }
     return false;

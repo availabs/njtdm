@@ -12,6 +12,8 @@ tripTable = {
   dests : {},
   init : function() {
      tripTable.g = censusGeo.g;
+      $('circle.dest').css('display','none');
+      $('circle.origin').css('display','none');
   },
   update_data:function(trips){
     tripTable.tt = {};

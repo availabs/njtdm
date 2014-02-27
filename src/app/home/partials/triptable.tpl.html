@@ -14,18 +14,24 @@
           <td>Number of Tracts </td><td>{{ tracts.length | number }}</td>
         </tr>
       </table>
+      <div class="btn-group">
+        <button class="btn btn-info" ng-click="tt_choropleth('outbound_trips')">Map Outbound Trips</button>
+        <button class="btn btn-info" ng-click="tt_choropleth('inbound_trips')">Map Inbound Trips</button>
+      </div>
       <label>Model Type</label>
       <select ui-select2   ng-model="model_type" class='template_select'>
        <option value="lehd" selected>LEHD 5%</option>
        <option value="lehdbus" selected>LEHD + ACS % Bus Trips</option>
+       <option value="ctpp" selected>CTPP 2010 Bus Trips</option>
        <option value="survey">Atlantic City Survey</option>
       </select>
       <div ng-show="showOD(model_type)">
         <label>OD Source</label>
-        <select ui-select2   ng-model="model_od" class='template_select'>
-         <option value="stops" selected>Bus Stops</option>
+        <select ui-select2   ng-model="model_od" class='template_select' ng-change="update_od(model_od)">
+         <option value="stops">Bus Stops</option>
          <option value="survey">Survey</option>
         </select>
+        {{model_od}}
       </div>
        <label>Model Time</label>
       <select ui-select2   ng-model="model_time" class='template_select'>
@@ -66,5 +72,10 @@
         <button ng-disabled="tt_currentPage == 0" ng-click="tt_currentPage=currentPage-1"><-</button>
           {{ tt_currentPage*tt_pageSize}} - {{ (tt_currentPage*tt_pageSize)+tt_pageSize }} of {{ tt_total }} <button class="btn-info rounded" ng-disabled="tt_currentPage >= tt_total/tt_pageSize - 1" ng-click="tt_currentPage=tt_currentPage+1"> -> </button>
     </div>
+  </tab>
+  <tab heading="Landmarks">
+      <div class="info_container">
+      Landmarks Interface
+      </div>
   </tab>
 </tabset>

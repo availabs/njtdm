@@ -25,6 +25,11 @@
  * For convenience, you can also connect routes directly to views or external URLs.
  *
  */
+var accessible =  {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    };
 
 module.exports.routes = {
 
@@ -35,96 +40,68 @@ module.exports.routes = {
   '/': {
     view: 'home/index'
   },
+  
+  //Tracts Controller
   '/tracts/state/:stateFIPS':{
     controller : 'TractsController',
     action : 'stateTracts',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
+    cors: accessible
   },
   '/tracts/acs':{
     controller : 'TractsController',
     action : 'acs',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
-  },
-  '/gtfs/routes':{
-    controller : 'GtfsController',
-    action : 'routes',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
-  },
-   '/gtfs/stops':{
-    controller : 'GtfsController',
-    action : 'stops',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
+    cors: accessible
   },
   '/tracts/lehdTrips':{
     controller : 'TractsController',
     action : 'lehdTrips',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
+    cors: accessible
   },
   '/tracts/surveyTrips':{
     controller : 'TractsController',
     action : 'surveyTrips',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
+    cors: accessible
   },
+  '/tracts/ctppTrips':{
+    controller : 'TractsController',
+    action : 'ctppTrips',
+    cors: accessible
+  },
+
+  //GTFS Controller
+  '/gtfs/routes':{
+    controller : 'GtfsController',
+    action : 'routes',
+    cors: accessible
+  },
+   '/gtfs/stops':{
+    controller : 'GtfsController',
+    action : 'stops',
+    cors: accessible
+  },
+  
+  //Trip Table Controller
   '/triptable/:id/run':{
     controller : 'TriptableController',
     action : 'runModel',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
+    cors: accessible
   },
   '/triptable/:id/status':{
     controller : 'TriptableController',
     action : 'runStatus',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
+    cors: accessible
   },
   '/triptable/:id/modeldata':{
     controller : 'TriptableController',
     action : 'modelData',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
+    cors: accessible
   },
   '/triptable/finished':{
     controller : 'TriptableController',
     action : 'models',
-    cors: {
-      origin: '*',
-      methods: 'GET, POST, HEAD',
-      headers: 'content-type,X-Requested-With'
-    }
+    cors: accessible
   }
+
   /*
   // But what if you want your home page to display
   // a signup form located at `views/user/signup.ejs`?

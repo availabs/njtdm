@@ -24,7 +24,7 @@
 
             <table class="table table-hover">
               <tr ng-repeat="var in vars">
-                <td> {{  var }}</td>
+                <td> {{  census_vars[var].name }}</td>
                 <td ng-click="choropleth(var)" >  {{ census_vars[var].value | number }} <i class="fa fa-bar-chart-o"></i> </td>
               </tr>
             </table>
@@ -34,13 +34,8 @@
     </tab>
     <tab heading="GTFS">
         <div class="info_container">
+           GTFS Interface
         </div>
     </tab>
-     <tab heading="Landmarks">
-        <div class="info_container">
-        Landmarks Interface
-        </div>
-    </tab>
-    
   </tabset>
 </div>
