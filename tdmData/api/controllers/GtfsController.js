@@ -104,13 +104,21 @@ module.exports = {
 	},
 	stops: function(req,res){
 		console.log("GET STOPS");
+		if (!req.param('routes') instanceof Array) {
+			res.send('Must post Array of route short names');
+		}
+		var routes_in = "(";
+		req.param('routes').forEach(function(tract){
+			routes_in += "'"+tract+"',";
+		});
+		routes_in = routes_in.slice(0, -1)+")";
 		var stopsCollection = {};
 		stopsCollection.type = "FeatureCollection";
 		stopsCollection.features = [];
 		var sql =   "SELECT ST_AsGeoJSON(geom) as stop_shape,stop_name,stop_id,stop_code FROM \"njtransit_bus_07-12-2013\".stops WHERE stop_id IN ( "+
 		 " SELECT DISTINCT stop_id FROM \"njtransit_bus_07-12-2013\".stop_times WHERE trip_id IN ("+
 		 "  SELECT trip_id FROM \"njtransit_bus_07-12-2013\".trips WHERE route_id IN("+
-		 " SELECT route_id from \"njtransit_bus_07-12-2013\".routes where route_short_name in ('319','501','502','504','505','507','508','509','551','552','553','554','559') )));";
+		 " SELECT route_id from \"njtransit_bus_07-12-2013\".routes where route_short_name in "+routes_in+" )));";
 		
 		Gtfs.query(sql,{},function(err,data){
 			if (err) {

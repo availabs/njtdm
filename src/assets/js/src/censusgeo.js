@@ -142,7 +142,11 @@ censusGeo = {
       var domain = censusGeo.color.domain(),
           range = censusGeo.color.range();
       // create legend label
-      var legendText = '<h3>'+censusGeo.current_map+'</h3>';
+      var name = censusGeo.current_map.split(' ');
+      //console.log(name, name[name.length-1])
+      name[name.length-1] = esc.capitalizeAll(name[name.length-1], '_');
+      name = name.join(' ');
+      var legendText = '<h3>'+name+'</h3>';
       // start unordered list
       legendText += '<ul id="censusGeo_legend">';
       // add first list element

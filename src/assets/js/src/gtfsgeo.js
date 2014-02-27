@@ -13,7 +13,8 @@ gtfsGeo = {
   drawRoutes : function(){
     var geo = topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
     var path = d3.geo.path().projection(gtfsGeo.project);
-    
+    console.log(geo);
+
     var routes = gtfsGeo.g.selectAll("path.route")
                   .data(geo.features);
 
@@ -30,6 +31,11 @@ gtfsGeo = {
       gtfsGeo.reset(feature, path);
     });
   },
+  vizRoutes: function(inputData){
+    var routes = gtfsGeo.g.selectAll("path.route");
+    var routeWidth = d3.scale.
+    console.log(routes, inputData);
+  },
   drawStops: function(){
     // convert the topoJSON to geoJSON
     var geoJSON = topojson.feature(gtfsGeo.stopData, gtfsGeo.stopData.objects.stops);
@@ -40,17 +46,7 @@ gtfsGeo = {
     stops.enter().append("circle")
             .attr("class", "stop")
             .attr("r", "5px")
-            .attr("fill", "red");/*
-            .on("mouseover", function(d){
-                var textTitle = "<p>";
-                textTitle += "<strong>Stop ID:</strong>" + d.properties.stop_id + "<br>";
-                textTitle += "<strong>Stop ID:</strong>" + d.geometry.coordinates.toString() + "<br>";
-                textTitle += "</p>";
-                 $("#info").show().html(textTitle);
-            })
-            .on("mouseout", function(self) {
-              $("#info").hide().html("");
-            });*/
+            .attr("fill", "red");
 
     stops.exit().remove();
 
@@ -68,7 +64,6 @@ gtfsGeo = {
   reset:function (feature, path) {
     feature
       .attr("d", path);
-      
   },
   stops_reset: function(stops){
     stops

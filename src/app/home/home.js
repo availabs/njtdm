@@ -158,6 +158,11 @@ angular.module( 'njTDM.home', [
     censusGeo.choropleth_trip_table(var_name);
   };
 
+  $scope.vizRoutes = function(){
+    console.log($scope.model_data.routes.all());
+    gtfsGeo.vizRoutes($scope.model_data.routes.all());
+  };
+
   $scope.mapTripTable =function(){
     if(!$scope.trips_loaded){
       tripTable.draw_trips();
