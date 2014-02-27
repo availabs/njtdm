@@ -76,7 +76,7 @@ angular.module( 'njTDM.home', [
   $scope.model_message = '';
   $scope.active_run = false;
   $scope.run_progress = 0;
-  $scope.run_max = 100;
+  $scope.run_max = 0;
   $scope.finished_models = [];
   $scope.model_od = 'stops';
 
