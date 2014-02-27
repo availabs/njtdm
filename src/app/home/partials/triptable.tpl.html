@@ -39,10 +39,13 @@
        <option value="pm">PM Peak</option>
       </select>
       <br><br>
+      <a class="btn btn-info" ng-click="saveScenario">Save Current Scenario</a>
+
       <a class="btn btn-info" ng-click="newTripTable(model_type)">Update Trip Table</a>
       <a class="btn btn-info" ng-click="newModel()" ng-disabled="active_run">Run Model</a>
       <br><br>
       
+
       <div ng-show="active_run">
        {{run_progress}} / {{run_max}}
        <progressbar value="run_progress" max="run_max"><span style="color:black; white-space:nowrap;"></span></progressbar>
