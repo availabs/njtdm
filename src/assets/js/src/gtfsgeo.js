@@ -42,7 +42,7 @@ gtfsGeo = {
     var routeWidth = {};
 
     inputData.forEach(function(d, i) {
-      routeWidth[d.key] = width(d.value);
+      routeWidth[d.key] = Math.round(width(d.value));
     })
     //console.log(routeWidth);
     routes
