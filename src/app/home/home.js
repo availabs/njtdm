@@ -66,8 +66,8 @@ angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario,TripTable,$modal) {
-  //$scope.api = 'http://lor.availabs.org:1338/';
-  $scope.api = 'http://localhost:1337/';
+  $scope.api = 'http://lor.availabs.org:1338/';
+  //$scope.api = 'http://localhost:1337/';
   $scope.current_template_index = 0;
   $scope.model_time = 'am';
   $scope.census_vars = censusData.variables;
@@ -80,6 +80,7 @@ angular.module( 'njTDM.home', [
   $scope.finished_models = [];
   $scope.model_od = 'stops';
 
+
   /**********************************************
   *
   * Trip Table setup
@@ -91,6 +92,7 @@ angular.module( 'njTDM.home', [
   $scope.tt_total = 0;
   $scope.trips_loaded = false;
   $scope.show_trips = false;
+  $scope.tt_search = {};
   
   $scope.$watch('tt_search', function() {
       $scope.tt_total = $filter('filter')($scope.trip_table,$scope.tt_search).length;
@@ -190,6 +192,7 @@ angular.module( 'njTDM.home', [
         tripTable.update_trips();
       }
       censusGeo.choropleth_trip_table('outbound_trips');
+      $scope.tt_total = trip_table.data.length;
     });
   };
 
