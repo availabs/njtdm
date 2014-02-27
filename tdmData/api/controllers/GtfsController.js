@@ -130,7 +130,7 @@ module.exports = {
 				stopsCollection.features.push(stopFeature);
 			});
 			
-			var topology = topojson.topology({stops: stopsCollection},{"property-transform":preserveProperties,"quantization":2});
+			var topology = topojson.topology({stops: stopsCollection},{"property-transform":preserveProperties});
 			res.json(topology);
 		});
 
