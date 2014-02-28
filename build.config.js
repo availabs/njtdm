@@ -63,7 +63,7 @@ module.exports = {
   vendor_files: {
     js: [
       'vendor/jquery/jquery.min.js',
-      'vendor/select2/select2.min.js',
+      //'vendor/select2/select2.min.js',
       'vendor/angular/angular.js',
       'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
       'vendor/angular-ui-router/release/angular-ui-router.js',

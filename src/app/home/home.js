@@ -351,12 +351,12 @@ angular.module( 'njTDM.home', [
   //***************************************************************************************************
   //***************************************************************************************************
   //***************************************************************************************************
-});
+})
 
 
 //--------------------------------------------------------------
-var ModalInstanceCtrl = function ($scope, $modalInstance) {
-
+.controller( 'ModalInstanceCtrl', function ($scope, $modalInstance) {
+  
   $scope.ok = function (info) {
     $modalInstance.close(info);
   };
@@ -364,11 +364,4 @@ var ModalInstanceCtrl = function ($scope, $modalInstance) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
-};
-
-/**********************
-** Utils
-***********************/
-function number_format(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+});

@@ -33,8 +33,8 @@ gtfsGeo = {
   },
   vizRoutes: function(inputData){
     var routes = gtfsGeo.g.selectAll("path.route"),
-        min = d3.min(inputData, function(d) {return d.value}),
-        max = d3.max(inputData, function(d) {return d.value}),
+        min = d3.min(inputData, function(d) {return d.value;}),
+        max = d3.max(inputData, function(d) {return d.value;}),
         width = d3.scale.linear()
                         .domain([min, max])
                         .range([3, 20]);
