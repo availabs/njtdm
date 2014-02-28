@@ -80,6 +80,8 @@ angular.module( 'njTDM.home', [
   $scope.run_max = 0;
   $scope.finished_models = [];
   $scope.model_od = 'stops';
+  $scope.show_routes = true;
+  $scope.show_stops = true;
 
 
   /**********************************************
@@ -183,6 +185,29 @@ angular.module( 'njTDM.home', [
         $scope.show_trips = true;
       }
     }
+  };
+  $scope.routes_visible = function(){
+ 
+    if($scope.show_routes){
+      $('.route').hide();
+      $scope.show_routes = false;
+    }else{
+      $('.route').show();
+      $scope.show_routes = true;
+    }
+
+  };
+
+  $scope.stops_visible = function(){
+ 
+    if($scope.show_stops){
+      $('.stop').hide();
+      $scope.show_stops = false;
+    }else{
+      $('.stop').show();
+      $scope.show_stops = true;
+    }
+
   };
 
   $scope.newTripTable =function(type){

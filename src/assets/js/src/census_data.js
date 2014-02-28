@@ -42,7 +42,7 @@ censusData = {
   "200000+":{"value":0,"vars":['b19001_017e'], "name":"$200,000 or more"},
   "poverty_status":{"value":0,"vars":['b17001_002e'], "name":"Income in the past 12 months below poverty level:"},
   "public_school":{"value":0,"vars":['b14003_003e','b14003_031e'], "name":"Public School Enrollment"},
-  "private_School":{"value":0,"vars":['b14003_012e','b14003_040e'], "name":"Private School Enrollment"},
+  "private_school":{"value":0,"vars":['b14003_012e','b14003_040e'], "name":"Private School Enrollment"},
   "no_high_school":{"value":0,"vars":['b23006_002e'], "name":"Less than high school graduate:"},
   "high_school":{"value":0,"vars":['b23006_009e'], "name":"High school graduate:"},
   "some_college":{"value":0,"vars":['b23006_016e'], "name":"Some college or associate's degree:"},
@@ -109,7 +109,7 @@ censusData = {
 categories : {
   "Population":["total_population"],
   "Employment":["employment","unemployment"],
-  "Journey To Work":["travel_to_work_total","bus_to_work","public_transportation_to_work","bus_to_work"],
+  "Journey To Work":["travel_to_work_total","bus_to_work","public_transportation_to_work","b08301_002e"],
   "Industry":["total","agriculture","construction","manufacturing","wholesale","retail","transportation","information","finance","professional","educational","arts","other","public_administration","armed_forces"],
   "Income Categories":["poverty_status","10000_14999","15000_19999","20000_24999","25000_29999","30000_34999","35000_39999","40000_44999","45000_45999","50000_59999","60000_74999","75000_99999","100000_124999","125000_149999","150000_199999","200000+"],
   "School Enrollment":["public_school","private_school"],

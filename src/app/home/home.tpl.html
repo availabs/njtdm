@@ -45,9 +45,19 @@
       </div>
     </tab>
     <tab heading="GTFS">
-        <div class="info_container">
-           GTFS Interface
-        </div>
+      <tabset>
+        <tab heading="Routes">
+           <div class="info_container">
+            <button class="btn btn-info" ng-click="routes_visible()">Show/Hide Routes</button>
+          </div>
+        </tab>
+        <tab heading="Routes">
+           <div class="info_container">
+            <button class="btn btn-info" ng-click="stops_visible()">Show/Hide Stops</button>
+          </div>
+        </tab>
+      </tabset>
+       
     </tab>
   </tabset>
 </div>
