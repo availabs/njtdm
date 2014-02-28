@@ -4,7 +4,7 @@
 .tract:hover							{stroke-width:3px;fill:#f00}
 .selected_tract							{fill:#00f;stroke:#000;opacity:0.6;stroke-width:2px;}
 .selected_tract:hover					{stroke-width:3px;fill:#0f0}
-.route									{display:block;stroke:#ED3A2D;opacity:.6; stroke-width:3px;fill:none;}
+.route									{display:block;stroke:#2C7BC9;opacity:.6; stroke-width:3px;fill:none;}
 .trip  									{opacity: 0.6}
 
 /*-------------Layout ----------------------------------*/
