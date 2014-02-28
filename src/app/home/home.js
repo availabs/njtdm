@@ -208,7 +208,6 @@ angular.module( 'njTDM.home', [
     * 1 - CTPP Bus Trips
     * 1 - AC Survey
     */
-    console.log(model_type,$scope.model_od);
     var promise = [];
     if(model_type == 'lehd'){
       promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,od:$scope.model_od}).then(function(data){
@@ -264,7 +263,7 @@ angular.module( 'njTDM.home', [
       //Save Scenario And Make it currently selected
       
     }, function () {
-      console.log('Modal dismissed at: ' + new Date());
+      //console.log('Modal dismissed at: ' + new Date());
     });
 
   };
@@ -324,6 +323,7 @@ angular.module( 'njTDM.home', [
   leafletData.getMap().then(function(map) {
     
     //Grab the Map & Draw all Tracts
+    L.control.scale({position:"bottomleft"}).addTo(map);
     censusGeo.map = map;
     $scope.map = map;
     censusGeo.geodata= njTracts; //loaded in index as seperate file

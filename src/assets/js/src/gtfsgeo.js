@@ -43,7 +43,7 @@ gtfsGeo = {
 
     inputData.forEach(function(d, i) {
       routeWidth[d.key] = Math.round(width(d.value));
-    })
+    });
     //console.log(routeWidth);
     routes
       .transition()
@@ -58,11 +58,11 @@ gtfsGeo = {
     var geoJSON = topojson.feature(gtfsGeo.stopData, gtfsGeo.stopData.objects.stops);
 
     var stops = gtfsGeo.g.selectAll("circle.stop")
-                    .data(geoJSON.features)
+                    .data(geoJSON.features);
 
     stops.enter().append("circle")
             .attr("class", "stop")
-            .attr("r", "5px")
+            .attr("r", "4px")
             .attr("fill", "red");
 
     stops.exit().remove();
