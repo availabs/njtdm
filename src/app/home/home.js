@@ -96,6 +96,16 @@ angular.module( 'njTDM.home', [
   $scope.trips_loaded = false;
   $scope.show_trips = false;
   $scope.tt_search = {};
+
+  /***************************
+  Model Tabs variables
+
+  *****************************/
+  $scope.modelTabs = {};
+  // to select active model tab
+  $scope.modelTabs.active = 'true';
+
+
   
   $scope.$watch('tt_search', function() {
       $scope.tt_total = $filter('filter')($scope.trip_table,$scope.tt_search).length;
@@ -332,6 +342,15 @@ angular.module( 'njTDM.home', [
           $scope.route_total += d.value;
         });
 
+        // get all on_stop objects
+        $scope.model_data.on_stops = $scope.model_data.on_stops.all();
+        // sum number of boardings at each stop
+        $scope.model_data.on_stops_total = d3.sum($scope.model_data.on_stops, function(d) {return d.value;});
+
+        // get all off_stop objects
+        $scope.model_data.off_stops = $scope.model_data.off_stops.all();
+        // sum number of alightings at each stop
+        $scope.model_data.off_stops_total = d3.sum($scope.model_data.off_stops, function(d) {return d.value;});
     });
 
   };

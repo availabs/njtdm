@@ -23,7 +23,7 @@ gtfsGeo = {
 
     routes.exit().remove();
 
-    //var feature = routes.attr("d", path);
+    routes.attr("d", path);
 
     gtfsGeo.reset(routes, path);
      
@@ -49,9 +49,10 @@ gtfsGeo = {
       .transition()
       .duration(1000)
       .style("stroke-width", function(d){
-        //console.log(d,d.route_short_name);
-        return routeWidth[d.properties.route_short_name];//routeWidth(d.key);
-      });
+        console.log(d);
+        return routeWidth[d.properties.route_short_name];
+      })
+      .style("stroke", "green");
   },
   drawStops: function(){
     // convert the topoJSON to geoJSON

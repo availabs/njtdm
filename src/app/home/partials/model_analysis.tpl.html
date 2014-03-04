@@ -9,10 +9,9 @@
   <tabset>
     <tab heading="info">
     </tab>
-    <tab heading="Routes" active="tab.active">
+    <tab heading="Routes" active="modelTabs.active">
       <br><br>
       <a class="btn btn-info" ng-click="vizRoutes()" >Show Routes by Riders</a>
-
       <table class="table table-hover">
         <thead>
           <tr>
@@ -32,9 +31,52 @@
           </tr></tfoot>
       </table>
     </tab>
+
     <tab heading="Tracts">
     </tab>
     <tab heading="Stops">
+      <tabset>
+        <tab heading="Boardings">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+              <td>Stop</td>
+              <td># Passengers</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="stop in model_data.on_stops">
+              <td>{{ stop.key }}</td><td>{{  stop.value }}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Total:</td>
+                <td>{{ model_data.on_stops_total }}</td>
+              </tr></tfoot>
+          </table>
+        </tab>
+        <tab heading="Alightings">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+              <td>Stop</td>
+              <td># Passengers</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="stop in model_data.off_stops">
+              <td>{{ stop.key }}</td><td>{{  stop.value }}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Total:</td>
+                <td>{{ model_data.of_stops_total }}</td>
+              </tr></tfoot>
+          </table>
+        </tab>
+      </tabset>
     </tab>
   </tabset>
 </div>
