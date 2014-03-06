@@ -360,9 +360,11 @@ angular.module( 'njTDM.home', [
         // sum number of alightings at each stop
         $scope.off_stops_total = d3.sum($scope.off_stops, function(d) {return d.value;});
 
-        $scope.transfer_counts = $scope.model_data.transfer_counts;
+        $scope.transfer_counts = $scope.model_data.transfer_counts.all();
 
+        $scope.start_time_group = $scope.model_data.start_time_group.all();
 
+        gtfsGeo.drawModelGraph($scope.start_time_group); 
     });
 
   };
