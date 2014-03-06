@@ -44,15 +44,14 @@ gtfsGeo = {
     inputData.forEach(function(d, i) {
       routeWidth[d.key] = Math.round(width(d.value));
     });
-    //console.log(routeWidth);
+
     routes
       .transition()
       .duration(1000)
       .style("stroke-width", function(d){
-        console.log(d);
+        //console.log(d);
         return routeWidth[d.properties.route_short_name];
-      })
-      .style("stroke", "green");
+      });
   },
   drawStops: function(){
     // convert the topoJSON to geoJSON
@@ -64,7 +63,8 @@ gtfsGeo = {
     stops.enter().append("circle")
             .attr("class", "stop")
             .attr("r", "4px")
-            .attr("fill", "red");
+            .style("fill", '#f00')
+            .style("opacity", '0.75');
 
     stops.exit().remove();
 
@@ -73,6 +73,57 @@ gtfsGeo = {
     censusGeo.map.on("viewreset", function(){
       gtfsGeo.stops_reset(stops);
     });
+  },
+  vizBoardings: function(inputData) {
+    var stops = gtfsGeo.g.selectAll("circle.stop"),
+        min = d3.min(inputData, function(d) {return d.value;}),
+        max = d3.max(inputData, function(d) {return d.value;}),
+        radius = d3.scale.linear()
+                        .domain([min, max])
+                        .range([5, 40]);
+
+    var stopsRadius = {};
+
+    inputData.forEach(function(d, i) {
+      stopsRadius[d.key] = Math.round(radius(d.value));
+    });
+
+    /*stops.filter(function(d){
+      return stopsRadius[d.properties.stop_code];
+    });*/
+
+    stops
+      .transition()
+      .duration(1000)
+      .attr("r", function(d){return stopsRadius[d.properties.stop_code] || 0;})
+      .style("fill", '#0f0');
+  },
+  vizAlightings: function(inputData) {
+    var stops = gtfsGeo.g.selectAll("circle.stop"),
+        min = d3.min(inputData, function(d) {return d.value;}),
+        max = d3.max(inputData, function(d) {return d.value;}),
+        radius = d3.scale.linear()
+                        .domain([min, max])
+                        .range([5, 40]);
+
+    var stopsRadius = {};
+
+    inputData.forEach(function(d, i) {
+      stopsRadius[d.key] = Math.round(radius(d.value));
+    });
+
+    stops.filter(function(d){
+      return stopsRadius[d.properties.stop_code];
+    });
+
+    stops
+      .transition()
+      .duration(1000)
+      .attr("r", function(d){return stopsRadius[d.properties.stop_code] || 0;})
+      .style("fill", '#f00');
+  },
+  drawTransfersGraph: function() {
+    return;
   },
   project:function(x) {
       if(x.length != 2){ return [];}

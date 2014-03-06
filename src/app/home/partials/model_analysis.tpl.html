@@ -8,10 +8,28 @@
   <br><br>
   <tabset>
     <tab heading="info">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+          <td># Transfers</td>
+          <td># Passengers</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="transfer in transfer_counts">
+          <td>{{ transfer.key }}</td><td>{{  transfer.value }}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+          </tr>
+        </tfoot>
+      </table>
     </tab>
     <tab heading="Routes" active="modelTabs.active">
-      <br><br>
+      <br>
       <a class="btn btn-info" ng-click="vizRoutes()" >Show Routes by Riders</a>
+      <br>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -37,6 +55,9 @@
     <tab heading="Stops">
       <tabset>
         <tab heading="Boardings">
+          <br>
+          <a class="btn btn-info" ng-click="vizBoardings()">Show Boardings</a>
+          <br>
           <table class="table table-hover">
             <thead>
               <tr>
@@ -45,19 +66,22 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="stop in model_data.on_stops">
+            <tr ng-repeat="stop in on_stops">
               <td>{{ stop.key }}</td><td>{{  stop.value }}</td>
             </tr>
             </tbody>
             <tfoot>
               <tr>
                 <td>Total:</td>
-                <td>{{ model_data.on_stops_total }}</td>
+                <td>{{ on_stops_total }}</td>
               </tr></tfoot>
           </table>
         </tab>
         <tab heading="Alightings">
           <table class="table table-hover">
+            <br>
+            <a class="btn btn-info" ng-click="vizAlightings()" >Show Alightings</a>
+            <br>
             <thead>
               <tr>
               <td>Stop</td>
@@ -65,14 +89,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="stop in model_data.off_stops">
+            <tr ng-repeat="stop in off_stops">
               <td>{{ stop.key }}</td><td>{{  stop.value }}</td>
             </tr>
             </tbody>
             <tfoot>
               <tr>
                 <td>Total:</td>
-                <td>{{ model_data.of_stops_total }}</td>
+                <td>{{ off_stops_total }}</td>
               </tr></tfoot>
           </table>
         </tab>
