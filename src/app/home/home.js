@@ -364,7 +364,11 @@ angular.module( 'njTDM.home', [
 
         $scope.start_time_group = $scope.model_data.start_time_group.all();
 
-        gtfsGeo.drawModelGraph($scope.start_time_group); 
+        $scope.wait_time_group = $scope.model_data.wait_time_group.all();
+
+        gtfsGeo.clearGraphs();
+        gtfsGeo.drawStartTimeGraph($scope.start_time_group);
+        gtfsGeo.drawWaitTimeGraph($scope.wait_time_group);
     });
 
   };

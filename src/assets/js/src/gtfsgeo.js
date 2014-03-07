@@ -13,7 +13,7 @@ gtfsGeo = {
   drawRoutes : function(){
     var geo = topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
     var path = d3.geo.path().projection(gtfsGeo.project);
-    //console.log(geo);
+    console.log(geo);
 
     var routes = gtfsGeo.g.selectAll("path.route")
                   .data(geo.features);
@@ -122,7 +122,10 @@ gtfsGeo = {
       .attr("r", function(d){return stopsRadius[d.properties.stop_code] || 0;})
       .style("fill", '#f00');
   },
-  drawModelGraph: function(data) {
+  clearGraphs: function() {
+    d3.select('#graphDiv').selectAll('svg').remove();
+  },
+  drawStartTimeGraph: function(data) {
     //console.log('drawModelGraph', data);
     var margin = {top: 10, right: 0, bottom: 20, left: 25},
         width = 330 - margin.left - margin.right,
@@ -134,14 +137,12 @@ gtfsGeo = {
                   .range([height, 0]);
 
     var barWidth = Math.round(width / data.length);
-
+    /*************/
     var timeScale = d3.time.scale()
                       .domain([data[0].key, data[data.length-1].key])
                       .range([0, width]);
-
-    d3.select('#infoTabSVG').select('g').remove();
-
-    var svg = d3.select('#infoTabSVG')
+    /*************/
+    var svg = d3.select('#graphDiv').append('svg')
                   .attr('width', width + margin.left + margin.right)
                   .attr('height', height + margin.top + margin.bottom)
                   .append("g")
@@ -175,7 +176,62 @@ gtfsGeo = {
         .attr('x', function(d, i) { return i*barWidth; })
         .attr('y', function(d) { return heightScale(d.value); })
         .attr('stroke-width', 0)
-        .attr('fill', '#44bb44')
+        .attr('fill', '#44bb44');
+  },
+  drawWaitTimeGraph: function(data) {
+    //console.log(data);
+    var margin = {top: 10, right: 0, bottom: 20, left: 25},
+        width = 330 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom,
+        max = d3.max(data, function(d) { return d.value; });
+
+    var heightScale = d3.scale.linear()
+                  .domain([0, max])
+                  .range([height, 0]);
+
+    var barWidth = Math.round(width / data.length);
+    /*************/
+    var Xmin = d3.min(data, function(d) { return d.key });
+        Xmax = d3.max(data, function(d) { return d.key });
+    var Xscale = d3.scale.linear()
+                    .domain([Xmin, Xmax])
+                    .range([0, width]);
+    /*************/
+    var svg = d3.select('#graphDiv').append('svg')
+                  .attr('width', width + margin.left + margin.right)
+                  .attr('height', height + margin.top + margin.bottom)
+                  .append("g")
+                  .attr("transform", "translate("+margin.left+", "+margin.top+")");
+
+    var xAxis = d3.svg.axis()
+                  .scale(Xscale)
+                  .orient('bottom')
+                  .ticks(4);
+
+    svg.append('g')
+        .attr('transform', 'translate(0, '+height+')')
+        .call(xAxis);
+
+    var yAxis = d3.svg.axis()
+                  .scale(heightScale)
+                  .orient('left')
+                  .ticks(10);
+
+    svg.append('g')
+        .call(yAxis);
+
+    var bars = svg.selectAll('rect')
+                  .data(data);
+
+    bars.exit().remove();
+    bars.enter().append('rect');
+
+    bars.attr('height', function(d) { return height - heightScale(d.value); })
+        .attr('width', barWidth)
+        .attr('x', function(d, i) { return i*barWidth; })
+        .attr('y', function(d) { return heightScale(d.value); })
+        .attr('stroke-width', 0)
+        .attr('fill', '#44bb44');
   },
   drawTransfersGraph: function() {
     return;

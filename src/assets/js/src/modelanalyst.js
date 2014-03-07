@@ -15,7 +15,7 @@ modelAnalyst = {
 			d.minute = d3.time.minute(d.start_time_d);
 			//console.log('d.minutes=',d.minute);
 			d.minute.setHours(d.minute.getHours()-4);
-		})
+		});
 		//console.log('model analyst data', data);
 		modelAnalyst.modelTrips = crossfilter(data);
 
@@ -37,6 +37,11 @@ modelAnalyst = {
 		var startMinuteDimension = modelAnalyst.modelTrips.dimension(function(d){return d.minute;}),
 			startTimeGroup = startMinuteDimension.group();
 
-		return {"routes":modelRoutesGroup,"on_stops":modelOnStopGroup,"off_stops":modelOffStopGroup, "transfer_counts":transfer_counts, "start_time_group":startTimeGroup};
+		var waitTimeDimension = modelAnalyst.modelTrips.dimension(function(d){return +d.waiting_time/60.0;}),
+			waitTimeGroup = waitTimeDimension.group();
+
+		return {"routes": modelRoutesGroup, "on_stops": modelOnStopGroup,
+				"off_stops": modelOffStopGroup, "transfer_counts": transfer_counts,
+				"start_time_group": startTimeGroup, "wait_time_group": waitTimeGroup};
 	}
 };
