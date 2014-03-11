@@ -79,7 +79,7 @@ module.exports.routes = {
     action : 'stops',
     cors: accessible
   },
-  '/gtfs/routetrips/:route':{
+  '/gtfs/routetrips':{
     controller: 'GtfsController',
     action: 'route_trips',
     cors: accessible
