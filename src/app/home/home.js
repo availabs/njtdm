@@ -229,14 +229,13 @@ angular.module( 'njTDM.home', [
   $scope.saveScenario = function(){
     Scenario.update({id:$scope.scenario.id },$scope.scenario);
   };
-/*
+
   $scope.route_trips = function(route) {
-    console.log(route);
     $http.post($scope.api+'gtfs/routetrips', {route: route})
           .success(function(data){
             console.log(data);
           });
-  };*/
+  };
 
   $scope.loadTripTable = function(model_type){
     /*******
