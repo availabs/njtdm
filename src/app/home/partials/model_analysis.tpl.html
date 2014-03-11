@@ -26,6 +26,33 @@
         </tfoot>
       </table>
       <div id="graphDiv"></div>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <td>Wait Type</td>
+            <td>Number</td>
+            <td>Percent</td>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>No Waits:</td><td>{{  wait_time_data.no_waits }}</td><td>{{  wait_time_data.percent_no_waits  }}%</td>
+        </tr>
+        <tr>
+          <td>Norm Waits:</td><td>{{  wait_time_data.normal_waits }}</td><td>{{  wait_time_data.percent_norm_waits  }}%</td>
+        </tr>
+        <tr>
+          <td>Bad Waits:</td><td>{{  wait_time_data.bad_waits }}</td><td>{{  wait_time_data.percent_bad_waits  }}%</td>
+        </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total:</td><td>{{  wait_time_data.total_waits  }}</td>
+          </tr>
+        </tfoot>
+      </table>
+
     </tab>
     <tab heading="Routes" active="modelTabs.active">
       <br>

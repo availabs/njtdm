@@ -79,6 +79,11 @@ module.exports.routes = {
     action : 'stops',
     cors: accessible
   },
+  '/gtfs/routetrips/:route':{
+    controller: 'GtfsController',
+    action: 'route_trips',
+    cors: accessible
+  },
   
   //Trip Table Controller
   '/triptable/:id/run':{

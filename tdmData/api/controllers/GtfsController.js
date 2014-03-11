@@ -104,13 +104,15 @@ module.exports = {
 		}
 	},
 	route_trips: function(req,res){
+		console.log('ok');
+		res.send('sweet');
 // 		var sql = "SELECT route_id, service_id, a.trip_id, trip_headsign, trip_short_name, b.departure_time
 //   FROM "njtransit_bus_07-12-2013".trips as a
 //   join "njtransit_bus_07-12-2013".stop_times as b on a.trip_id = b.trip_id and b.stop_sequence = 1
 //   where route_id in (SELECT route_id from "njtransit_bus_07-12-2013".routes where route_short_name = '505' )
 //   and (b.departure_time like '06%' or b.departure_time like '07%' or b.departure_time like '08%' or b.departure_time like '09%')
 // "
-	}
+	},
 	stops: function(req,res){
 		console.log("GET STOPS");
 		if (!req.param('routes') instanceof Array) {

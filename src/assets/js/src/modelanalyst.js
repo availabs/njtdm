@@ -1,5 +1,6 @@
 modelAnalyst = {
 	modelTrips : [],
+	modelBadTrips : [],
 	modelRoute : {},
 	modelRoutesGroup : {},
 	modelOnStop : {},
@@ -8,15 +9,24 @@ modelAnalyst = {
 	modelOffStopGroup : {},
 	modelTripCount : {},
 	modelTripCountGroup : {},
-	update_data:function(data){
+	update_data:function(data,i){
 		var timeFormat = d3.time.format("%Y-%m-%dT%H:%M:%S.000Z");
 		data.forEach(function(d){
 			d.start_time_d = timeFormat.parse(d.start_time);
 			d.minute = d3.time.minute(d.start_time_d);
-			//console.log('d.minutes=',d.minute);
 			d.minute.setHours(d.minute.getHours()-4);
 		});
-		console.log('model analyst data', data);
+		modelAnalyst.modelBadTrips = [];
+		for (var i = data.length-1; i >= 0; i--) {
+			if (data[i].waiting_time <= 3)
+				data[i].waiting_time = 0;
+
+			if (data[i].waiting_time > 1200) {
+				modelAnalyst.modelBadTrips.push(data[i]);
+				data = data.slice(0, i).concat(data.slice(i+1));
+			}
+		}
+		//console.log('model analyst data', data);
 		modelAnalyst.modelTrips = crossfilter(data);
 
 		modelRoutes = modelAnalyst.modelTrips.dimension(function(d){return d.route;});
@@ -37,15 +47,12 @@ modelAnalyst = {
 		var startMinuteDimension = modelAnalyst.modelTrips.dimension(function(d){return d.minute;}),
 			startTimeGroup = startMinuteDimension.group();
 
-		var max = d3.max(data, function(d) {return d.waiting_time*1});
-		console.log('data length', data.length, 'max time', max);
-
-		var waitTimeDimension = modelAnalyst.modelTrips.dimension(function(d){return d.waiting_time/60.0;}),
+		var waitTimeDimension = modelAnalyst.modelTrips.dimension(function(d){return Math.round(d.waiting_time/60);}),
 			waitTimeGroup = waitTimeDimension.group();
-		console.log('group',waitTimeGroup.all())
 
 		return {"routes": modelRoutesGroup, "on_stops": modelOnStopGroup,
 				"off_stops": modelOffStopGroup, "transfer_counts": transfer_counts,
-				"start_time_group": startTimeGroup, "wait_time_group": waitTimeGroup};
+				"start_time_group": startTimeGroup, "wait_time_group": waitTimeGroup,
+				"model_bad_trips" : modelAnalyst.modelBadTrips};
 	}
 };

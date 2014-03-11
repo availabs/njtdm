@@ -45,18 +45,7 @@
       </div>
     </tab>
     <tab heading="GTFS">
-      <tabset>
-        <tab heading="Routes">
-           <div class="info_container">
-            <button class="btn btn-info" ng-click="routes_visible()">Show/Hide Routes</button>
-          </div>
-        </tab>
-        <tab heading="Routes">
-           <div class="info_container">
-            <button class="btn btn-info" ng-click="stops_visible()">Show/Hide Stops</button>
-          </div>
-        </tab>
-      </tabset>
+       <div ng-include="'home/partials/gtfs_tab.tpl.html'"></div>
        
     </tab>
   </tabset>
