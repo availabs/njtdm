@@ -153,6 +153,7 @@ gtfsGeo = {
     var Xscale = d3.scale.linear()
                     .domain([Xmin, Xmax])
                     .range([0, width]);
+    //console.log('data', data, 'domain',Xscale.domain())
     gtfsGeo.drawGraph(data, Xscale);
   },
   drawGraph: function(data, xScale) {
@@ -161,7 +162,7 @@ gtfsGeo = {
         margin = dims.margin,
         width = dims.width,
         height = dims.height;
-        
+
     var max = d3.max(data, function(d) { return d.value; });
 
     var heightScale = d3.scale.linear()
