@@ -11,9 +11,9 @@ gtfsGeo = {
      gtfsGeo.g = censusGeo.g;
   },
   drawRoutes : function(){
+    console.log(geo);
     var geo = topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
     var path = d3.geo.path().projection(gtfsGeo.project);
-    console.log(geo);
 
     var routes = gtfsGeo.g.selectAll("path.route")
                   .data(geo.features);
