@@ -125,78 +125,50 @@ gtfsGeo = {
   clearGraphs: function() {
     d3.select('#graphDiv').selectAll('svg').remove();
   },
-  drawStartTimeGraph: function(data) {
-    //console.log('drawModelGraph', data);
+  getDimensions: function() {
     var margin = {top: 10, right: 0, bottom: 20, left: 25},
         width = 330 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom,
-        max = d3.max(data, function(d) { return d.value; });
+        height = 300 - margin.top - margin.bottom;
+    return {margin: margin, width: width, height: height};
+  },
+  drawStartTimeGraph: function(data) {
+    var dims = gtfsGeo.getDimensions(),
+        margin = dims.margin,
+        width = dims.width,
+        height = dims.height;
 
-    var heightScale = d3.scale.linear()
-                  .domain([0, max])
-                  .range([height, 0]);
-
-    var barWidth = Math.round(width / data.length);
-    /*************/
     var timeScale = d3.time.scale()
                       .domain([data[0].key, data[data.length-1].key])
                       .range([0, width]);
-    /*************/
-    var svg = d3.select('#graphDiv').append('svg')
-                  .attr('width', width + margin.left + margin.right)
-                  .attr('height', height + margin.top + margin.bottom)
-                  .append("g")
-                  .attr("transform", "translate("+margin.left+", "+margin.top+")");
-
-    var xAxis = d3.svg.axis()
-                  .scale(timeScale)
-                  .orient('bottom')
-                  .ticks(4);
-
-    svg.append('g')
-        .attr('transform', 'translate(0, '+height+')')
-        .call(xAxis);
-
-    var yAxis = d3.svg.axis()
-                  .scale(heightScale)
-                  .orient('left')
-                  .ticks(10);
-
-    svg.append('g')
-        .call(yAxis);
-
-    var bars = svg.selectAll('rect')
-                  .data(data);
-
-    bars.exit().remove();
-    bars.enter().append('rect');
-
-    bars.attr('height', function(d) { return height - heightScale(d.value); })
-        .attr('width', barWidth)
-        .attr('x', function(d, i) { return i*barWidth; })
-        .attr('y', function(d) { return heightScale(d.value); })
-        .attr('stroke-width', 0)
-        .attr('fill', '#44bb44');
+    gtfsGeo.drawGraph(data, timeScale);
   },
   drawWaitTimeGraph: function(data) {
-    //console.log(data);
-    var margin = {top: 10, right: 0, bottom: 20, left: 25},
-        width = 330 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom,
-        max = d3.max(data, function(d) { return d.value; });
+    var dims = gtfsGeo.getDimensions(),
+        margin = dims.margin,
+        width = dims.width,
+        height = dims.height;
 
-    var heightScale = d3.scale.linear()
-                  .domain([0, max])
-                  .range([height, 0]);
-
-    var barWidth = Math.round(width / data.length);
-    /*************/
     var Xmin = d3.min(data, function(d) { return d.key });
         Xmax = d3.max(data, function(d) { return d.key });
     var Xscale = d3.scale.linear()
                     .domain([Xmin, Xmax])
                     .range([0, width]);
-    /*************/
+    gtfsGeo.drawGraph(data, Xscale);
+  },
+  drawGraph: function(data, xScale) {
+    //console.log('drawModelGraph', data);
+    var dims = gtfsGeo.getDimensions(),
+        margin = dims.margin,
+        width = dims.width,
+        height = dims.height;
+        
+    var max = d3.max(data, function(d) { return d.value; });
+
+    var heightScale = d3.scale.linear()
+                  .domain([0, max])
+                  .range([height, 0]);
+
+    var barWidth = Math.round(width / data.length);
     var svg = d3.select('#graphDiv').append('svg')
                   .attr('width', width + margin.left + margin.right)
                   .attr('height', height + margin.top + margin.bottom)
@@ -204,7 +176,7 @@ gtfsGeo = {
                   .attr("transform", "translate("+margin.left+", "+margin.top+")");
 
     var xAxis = d3.svg.axis()
-                  .scale(Xscale)
+                  .scale(xScale)
                   .orient('bottom')
                   .ticks(4);
 
