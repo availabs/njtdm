@@ -13,7 +13,7 @@ gtfsGeo = {
   drawRoutes : function(){
     var geo = topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
     var path = d3.geo.path().projection(gtfsGeo.project);
-    //console.log(geo);
+    console.log(geo);
 
     var routes = gtfsGeo.g.selectAll("path.route")
                   .data(geo.features);
@@ -44,15 +44,14 @@ gtfsGeo = {
     inputData.forEach(function(d, i) {
       routeWidth[d.key] = Math.round(width(d.value));
     });
-    //console.log(routeWidth);
+
     routes
       .transition()
       .duration(1000)
       .style("stroke-width", function(d){
-        console.log(d);
+        //console.log(d);
         return routeWidth[d.properties.route_short_name];
-      })
-      .style("stroke", "green");
+      });
   },
   drawStops: function(){
     // convert the topoJSON to geoJSON
@@ -64,7 +63,8 @@ gtfsGeo = {
     stops.enter().append("circle")
             .attr("class", "stop")
             .attr("r", "4px")
-            .attr("fill", "red");
+            .style("fill", '#f00')
+            .style("opacity", '0.75');
 
     stops.exit().remove();
 
@@ -73,6 +73,168 @@ gtfsGeo = {
     censusGeo.map.on("viewreset", function(){
       gtfsGeo.stops_reset(stops);
     });
+  },
+  vizBoardings: function(inputData) {
+    var stops = gtfsGeo.g.selectAll("circle.stop"),
+        min = d3.min(inputData, function(d) {return d.value;}),
+        max = d3.max(inputData, function(d) {return d.value;}),
+        radius = d3.scale.linear()
+                        .domain([min, max])
+                        .range([5, 40]);
+
+    var stopsRadius = {};
+
+    inputData.forEach(function(d, i) {
+      stopsRadius[d.key] = Math.round(radius(d.value));
+    });
+
+    /*stops.filter(function(d){
+      return stopsRadius[d.properties.stop_code];
+    });*/
+
+    stops
+      .transition()
+      .duration(1000)
+      .attr("r", function(d){return stopsRadius[d.properties.stop_code] || 0;})
+      .style("fill", '#0f0');
+  },
+  vizAlightings: function(inputData) {
+    var stops = gtfsGeo.g.selectAll("circle.stop"),
+        min = d3.min(inputData, function(d) {return d.value;}),
+        max = d3.max(inputData, function(d) {return d.value;}),
+        radius = d3.scale.linear()
+                        .domain([min, max])
+                        .range([5, 40]);
+
+    var stopsRadius = {};
+
+    inputData.forEach(function(d, i) {
+      stopsRadius[d.key] = Math.round(radius(d.value));
+    });
+
+    stops.filter(function(d){
+      return stopsRadius[d.properties.stop_code];
+    });
+
+    stops
+      .transition()
+      .duration(1000)
+      .attr("r", function(d){return stopsRadius[d.properties.stop_code] || 0;})
+      .style("fill", '#f00');
+  },
+  clearGraphs: function() {
+    d3.select('#graphDiv').selectAll('svg').remove();
+  },
+  drawStartTimeGraph: function(data) {
+    //console.log('drawModelGraph', data);
+    var margin = {top: 10, right: 0, bottom: 20, left: 25},
+        width = 330 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom,
+        max = d3.max(data, function(d) { return d.value; });
+
+    var heightScale = d3.scale.linear()
+                  .domain([0, max])
+                  .range([height, 0]);
+
+    var barWidth = Math.round(width / data.length);
+    /*************/
+    var timeScale = d3.time.scale()
+                      .domain([data[0].key, data[data.length-1].key])
+                      .range([0, width]);
+    /*************/
+    var svg = d3.select('#graphDiv').append('svg')
+                  .attr('width', width + margin.left + margin.right)
+                  .attr('height', height + margin.top + margin.bottom)
+                  .append("g")
+                  .attr("transform", "translate("+margin.left+", "+margin.top+")");
+
+    var xAxis = d3.svg.axis()
+                  .scale(timeScale)
+                  .orient('bottom')
+                  .ticks(4);
+
+    svg.append('g')
+        .attr('transform', 'translate(0, '+height+')')
+        .call(xAxis);
+
+    var yAxis = d3.svg.axis()
+                  .scale(heightScale)
+                  .orient('left')
+                  .ticks(10);
+
+    svg.append('g')
+        .call(yAxis);
+
+    var bars = svg.selectAll('rect')
+                  .data(data);
+
+    bars.exit().remove();
+    bars.enter().append('rect');
+
+    bars.attr('height', function(d) { return height - heightScale(d.value); })
+        .attr('width', barWidth)
+        .attr('x', function(d, i) { return i*barWidth; })
+        .attr('y', function(d) { return heightScale(d.value); })
+        .attr('stroke-width', 0)
+        .attr('fill', '#44bb44');
+  },
+  drawWaitTimeGraph: function(data) {
+    //console.log(data);
+    var margin = {top: 10, right: 0, bottom: 20, left: 25},
+        width = 330 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom,
+        max = d3.max(data, function(d) { return d.value; });
+
+    var heightScale = d3.scale.linear()
+                  .domain([0, max])
+                  .range([height, 0]);
+
+    var barWidth = Math.round(width / data.length);
+    /*************/
+    var Xmin = d3.min(data, function(d) { return d.key });
+        Xmax = d3.max(data, function(d) { return d.key });
+    var Xscale = d3.scale.linear()
+                    .domain([Xmin, Xmax])
+                    .range([0, width]);
+    /*************/
+    var svg = d3.select('#graphDiv').append('svg')
+                  .attr('width', width + margin.left + margin.right)
+                  .attr('height', height + margin.top + margin.bottom)
+                  .append("g")
+                  .attr("transform", "translate("+margin.left+", "+margin.top+")");
+
+    var xAxis = d3.svg.axis()
+                  .scale(Xscale)
+                  .orient('bottom')
+                  .ticks(4);
+
+    svg.append('g')
+        .attr('transform', 'translate(0, '+height+')')
+        .call(xAxis);
+
+    var yAxis = d3.svg.axis()
+                  .scale(heightScale)
+                  .orient('left')
+                  .ticks(10);
+
+    svg.append('g')
+        .call(yAxis);
+
+    var bars = svg.selectAll('rect')
+                  .data(data);
+
+    bars.exit().remove();
+    bars.enter().append('rect');
+
+    bars.attr('height', function(d) { return height - heightScale(d.value); })
+        .attr('width', barWidth)
+        .attr('x', function(d, i) { return i*barWidth; })
+        .attr('y', function(d) { return heightScale(d.value); })
+        .attr('stroke-width', 0)
+        .attr('fill', '#44bb44');
+  },
+  drawTransfersGraph: function() {
+    return;
   },
   project:function(x) {
       if(x.length != 2){ return [];}

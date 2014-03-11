@@ -173,11 +173,6 @@ angular.module( 'njTDM.home', [
     censusGeo.choropleth_trip_table(var_name);
   };
 
-  $scope.vizRoutes = function(){
-    //console.log($scope.model_data.routes.all());
-    gtfsGeo.vizRoutes($scope.model_data.routes.all());
-  };
-
   $scope.mapTripTable =function(){
     if(!$scope.trips_loaded){
       tripTable.draw_trips();
@@ -303,6 +298,19 @@ angular.module( 'njTDM.home', [
 
   };
 
+  $scope.vizRoutes = function(){
+    gtfsGeo.vizRoutes($scope.model_data.routes.all());
+  };
+
+  $scope.vizBoardings = function(name) {
+    //var button =
+    gtfsGeo.vizBoardings($scope.on_stops);
+  };
+
+  $scope.vizAlightings = function(name) {
+    gtfsGeo.vizAlightings($scope.off_stops);
+  };
+
   $scope.getRunStatus = function(id){
     $http.post($scope.api+'triptable/'+id+'/status').success(function(data){
       if(data.status == "finished"){
@@ -343,14 +351,24 @@ angular.module( 'njTDM.home', [
         });
 
         // get all on_stop objects
-        $scope.model_data.on_stops = $scope.model_data.on_stops.all();
+        $scope.on_stops = $scope.model_data.on_stops.all();
         // sum number of boardings at each stop
-        $scope.model_data.on_stops_total = d3.sum($scope.model_data.on_stops, function(d) {return d.value;});
+        $scope.on_stops_total = d3.sum($scope.on_stops, function(d) {return d.value;});
 
         // get all off_stop objects
-        $scope.model_data.off_stops = $scope.model_data.off_stops.all();
+        $scope.off_stops = $scope.model_data.off_stops.all();
         // sum number of alightings at each stop
-        $scope.model_data.off_stops_total = d3.sum($scope.model_data.off_stops, function(d) {return d.value;});
+        $scope.off_stops_total = d3.sum($scope.off_stops, function(d) {return d.value;});
+
+        $scope.transfer_counts = $scope.model_data.transfer_counts.all();
+
+        $scope.start_time_group = $scope.model_data.start_time_group.all();
+
+        $scope.wait_time_group = $scope.model_data.wait_time_group.all();
+
+        gtfsGeo.clearGraphs();
+        gtfsGeo.drawStartTimeGraph($scope.start_time_group);
+        gtfsGeo.drawWaitTimeGraph($scope.wait_time_group);
     });
 
   };

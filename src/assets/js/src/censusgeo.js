@@ -99,6 +99,8 @@ censusGeo = {
         // if the input value is greater than the last quantile then the last color
         // range is selected.
         censusGeo.color = function(val) {
+          // range and domain functions were added in order to maintain compatibility
+          // with other project functions that use d3.scale functions as color scales
           censusGeo.color.range = function() {
             return colorbrewer[censusGeo.brewer[censusGeo.brewer_index]][censusGeo.ll];
           };
