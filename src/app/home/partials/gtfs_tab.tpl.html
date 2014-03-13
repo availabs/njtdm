@@ -1,0 +1,31 @@
+<tabset>
+  <tab heading="Routes">
+     <div class="info_container">
+      <button class="btn btn-info" ng-click="routes_visible()">Show/Hide Routes</button>
+      <br />
+
+      <table class="table table-hover" style="float:left">
+        <thead>
+          <tr>
+            <th class="col-sm-3">Route</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="route in route_count">
+          <td ng-click="route_trips(route.key)">{{ route.key }}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+          </tr>
+        </tfoot>
+      </table>
+      <div width="500px" style="float:right;background:red;"><br /><br />???<br /><br /></div>
+    </div>
+  </tab>
+  <tab heading="Stops">
+     <div class="info_container">
+      <button class="btn btn-info" ng-click="stops_visible()">Show/Hide Stops</button>
+    </div>
+  </tab>
+</tabset>
