@@ -11,7 +11,6 @@ gtfsGeo = {
      gtfsGeo.g = censusGeo.g;
   },
   drawRoutes : function(){
-    //console.log(gtfsGeo.routeData);
     var geo = gtfsGeo.routeData;//topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
     //console.log('drawRoutes, geo=',geo);
     var path = d3.geo.path().projection(gtfsGeo.project);
@@ -24,7 +23,16 @@ gtfsGeo = {
 
     routes.exit().remove();
 
-    routes.attr("d", path);
+    routes.attr("d", path)
+      .on("mouseover", function(d){
+          var textTitle = "<p>";
+          textTitle += "<strong>Route ID:</strong> " + d.properties.route_id + "<br>";
+          textTitle += "<strong>Short Name:</strong> "+ d.properties.route_short_name + "<br>";
+          $("#info").show().html(textTitle);
+        })
+        .on("mouseout", function() {
+          $("#info").hide().html("");
+        });
 
     gtfsGeo.reset(routes, path);
      
@@ -57,6 +65,7 @@ gtfsGeo = {
   drawStops: function(){
     // convert the topoJSON to geoJSON
     var geoJSON = gtfsGeo.stopData;//topojson.feature(gtfsGeo.stopData, gtfsGeo.stopData.objects.stops);
+    console.log('drawStops, stops=', geoJSON);
 
     var stops = gtfsGeo.g.selectAll("circle.stop")
                     .data(geoJSON.features);
@@ -68,6 +77,17 @@ gtfsGeo = {
             .style("opacity", '0.75');
 
     stops.exit().remove();
+
+    stops.on("mouseover", function(d){
+          var textTitle = "<p>";
+          textTitle += "<strong>" + d.properties.stop_name + "</strong><br>";
+          textTitle += "<strong>Stop ID:</strong> " + d.properties.stop_id + "<br>";
+          textTitle += "<strong>Stop Code:</strong> "+ d.properties.stop_code + "<br>";
+          $("#info").show().html(textTitle);
+        })
+        .on("mouseout", function() {
+          $("#info").hide().html("");
+        });
 
     gtfsGeo.stops_reset(stops);
      

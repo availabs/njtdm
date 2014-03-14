@@ -49,7 +49,7 @@ module.exports = {
 		});
 
 		var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
-																	 "quantization": 1e5});
+																	 "quantization": 1e6});
 		topology = topojson.simplify(topology, {"minimum-area":7e-6,
 												"coordinate-system":"cartesian"});
 		//var output = {};
