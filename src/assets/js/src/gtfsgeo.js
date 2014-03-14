@@ -12,9 +12,14 @@ gtfsGeo = {
   },
   drawRoutes : function(){
     var geo = gtfsGeo.routeData;//topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
-    //console.log('drawRoutes, geo=',geo);
+    console.log('drawRoutes, geo=',geo);
     var path = d3.geo.path().projection(gtfsGeo.project);
 
+    if(typeof geo.features == 'undefined'){
+      var features = geo;
+      geo = {};
+      geo.features = features;
+    }
     var routes = gtfsGeo.g.selectAll("path.route")
                   .data(geo.features);
 
@@ -28,10 +33,13 @@ gtfsGeo = {
           var textTitle = "<p>";
           textTitle += "<strong>Route ID:</strong> " + d.properties.route_id + "<br>";
           textTitle += "<strong>Short Name:</strong> "+ d.properties.route_short_name + "<br>";
-          $("#info").show().html(textTitle);
+          $("#info").show()
+                .css('border-top', '5px solid #2C7BC9')
+                .html(textTitle);
         })
         .on("mouseout", function() {
-          $("#info").hide().html("");
+          $("#info").hide()
+                .css('border-top', '');
         });
 
     gtfsGeo.reset(routes, path);
@@ -65,7 +73,7 @@ gtfsGeo = {
   drawStops: function(){
     // convert the topoJSON to geoJSON
     var geoJSON = gtfsGeo.stopData;//topojson.feature(gtfsGeo.stopData, gtfsGeo.stopData.objects.stops);
-    console.log('drawStops, stops=', geoJSON);
+    //console.log('drawStops, stops=', geoJSON);
 
     var stops = gtfsGeo.g.selectAll("circle.stop")
                     .data(geoJSON.features);
@@ -83,10 +91,13 @@ gtfsGeo = {
           textTitle += "<strong>" + d.properties.stop_name + "</strong><br>";
           textTitle += "<strong>Stop ID:</strong> " + d.properties.stop_id + "<br>";
           textTitle += "<strong>Stop Code:</strong> "+ d.properties.stop_code + "<br>";
-          $("#info").show().html(textTitle);
+          $("#info").show()
+                .css('border-top', '5px solid #f00')
+                .html(textTitle);
         })
         .on("mouseout", function() {
-          $("#info").hide().html("");
+          $("#info").hide()
+                .css('border-top', '');
         });
 
     gtfsGeo.stops_reset(stops);

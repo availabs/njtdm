@@ -62,7 +62,22 @@ angular.module( 'njTDM.home', [
         }
     );
 })
+.filter('geoJsonProperties', function(){
 
+  return function(items, input){
+    if (!items) {
+      return [];
+    }
+    var arrayToReturn = [];        
+    for (var i=0; i<items.length; i++){
+        if (items[i].properties.route_short_name.indexOf(input) != -1) {
+            arrayToReturn.push(items[i]);
+        }
+    }
+
+    return arrayToReturn;
+  };
+})
 /**
  * CONTROLLER
  */
@@ -96,7 +111,8 @@ angular.module( 'njTDM.home', [
   $scope.trips_loaded = false;
   $scope.show_trips = false;
   $scope.tt_search = {};
-
+  $scope.routeFilter = '';
+  
   /***************************
   Model Tabs variables
 
@@ -105,7 +121,19 @@ angular.module( 'njTDM.home', [
   // to select active model tab
   $scope.modelTabs.active = 'true';
 
-
+  $scope.updateRoutes = function(value){
+    console.log('routefilter changed',value);
+    gtfsGeo.routeData = $filter('geoJsonProperties')($scope.route_properties.features,value);
+    gtfsGeo.drawRoutes();
+  };
+/*
+  $scope.$watch('routeFilter',
+        function(newVal, oldVal) {
+          console.log('routefilter changed');
+          if (newVal !== oldVal) {
+            gtfsGeo.drawRoutes();
+          }
+        }, true);*/
   
   $scope.$watch('tt_search', function() {
       $scope.tt_total = $filter('filter')($scope.trip_table,$scope.tt_search).length;
@@ -146,14 +174,17 @@ angular.module( 'njTDM.home', [
             censusGeo.update_scenario();
 
             gtfsGeo.routeData = topojson.feature(route_data, route_data.objects.routes);
-            //console.log(gtfsGeo.routeData);
-            gtfsGeo.stopData = topojson.feature(stop_data, stop_data.objects.stops);//;
-            //console.log(gtfsGeo.routeData.features);
-            $scope.route_properties = [];
-            gtfsGeo.routeData.features.forEach(function(d) {
-              $scope.route_properties.push(d.properties);
+            $scope.route_properties = gtfsGeo.routeData;
+            // gtfsGeo.routeData.features.forEach(function(d) {
+            //   $scope.route_properties.push(d.properties);
+            // });
+
+            gtfsGeo.stopData = topojson.feature(stop_data, stop_data.objects.stops);
+            $scope.stop_properties = [];
+            gtfsGeo.stopData.features.forEach(function(d) {
+              $scope.stop_properties.push(d.properties);
             });
-            //console.log($scope.route_properties);
+
             gtfsGeo.drawRoutes();
             gtfsGeo.drawStops();
             
