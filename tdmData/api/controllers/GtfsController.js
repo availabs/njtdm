@@ -15,6 +15,7 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 var topojson = require("topojson");
+var shaper = require("mapshaper");
 //var queue = require("queue-async");
 module.exports = {
     
@@ -47,10 +48,13 @@ module.exports = {
 			routesCollection.features.push(routeFeature);
 		});
 
-		var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties});
+		var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
+																	 "quantization": 1e5});
+		topology = topojson.simplify(topology, {"minimum-area":7e-6,
+												"coordinate-system":"cartesian"});
 		//var output = {};
 		//output.routes = topology;//topojson.simplify(topology,{"minimum-area": 2,"coordinate-system": "spherical"});
-		console.log('old routes', topology);
+		//console.log('old routes', topology);
 		res.send(topology);
 	});
 

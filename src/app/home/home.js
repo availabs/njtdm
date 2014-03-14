@@ -145,7 +145,8 @@ angular.module( 'njTDM.home', [
             censusData.update_data(tract_data);
             censusGeo.update_scenario();
 
-            gtfsGeo.routeData = topojson.feature(route_data, route_data.objects.routes);//;
+            gtfsGeo.routeData = topojson.feature(route_data, route_data.objects.routes);
+            console.log(gtfsGeo.routeData);
             gtfsGeo.stopData = topojson.feature(stop_data, stop_data.objects.stops);//;
             //console.log(gtfsGeo.routeData.features);
             $scope.route_properties = [];
