@@ -11,7 +11,8 @@ gtfsGeo = {
      gtfsGeo.g = censusGeo.g;
   },
   drawRoutes : function(){
-    var geo = topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
+    //console.log(gtfsGeo.routeData);
+    var geo = gtfsGeo.routeData;//topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
     //console.log('drawRoutes, geo=',geo);
     var path = d3.geo.path().projection(gtfsGeo.project);
 
@@ -55,7 +56,7 @@ gtfsGeo = {
   },
   drawStops: function(){
     // convert the topoJSON to geoJSON
-    var geoJSON = topojson.feature(gtfsGeo.stopData, gtfsGeo.stopData.objects.stops);
+    var geoJSON = gtfsGeo.stopData;//topojson.feature(gtfsGeo.stopData, gtfsGeo.stopData.objects.stops);
 
     var stops = gtfsGeo.g.selectAll("circle.stop")
                     .data(geoJSON.features);

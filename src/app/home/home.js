@@ -144,8 +144,15 @@ angular.module( 'njTDM.home', [
             //tripTable.draw_trips();
             censusData.update_data(tract_data);
             censusGeo.update_scenario();
-            gtfsGeo.routeData = route_data;
-            gtfsGeo.stopData = stop_data;
+
+            gtfsGeo.routeData = topojson.feature(route_data, route_data.objects.routes);//;
+            gtfsGeo.stopData = topojson.feature(stop_data, stop_data.objects.stops);//;
+            //console.log(gtfsGeo.routeData.features);
+            $scope.route_properties = [];
+            gtfsGeo.routeData.features.forEach(function(d) {
+              $scope.route_properties.push(d.properties);
+            });
+            //console.log($scope.route_properties);
             gtfsGeo.drawRoutes();
             gtfsGeo.drawStops();
             
@@ -233,7 +240,8 @@ angular.module( 'njTDM.home', [
   $scope.route_trips = function(route) {
     $http.post($scope.api+'gtfs/routetrips', {route: route})
           .success(function(data){
-            console.log(data);
+            //console.log(data);
+            $scope.route_trip_data = data;
           });
   };
 
