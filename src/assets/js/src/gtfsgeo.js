@@ -11,17 +11,12 @@ gtfsGeo = {
      gtfsGeo.g = censusGeo.g;
   },
   drawRoutes : function(){
-    var geo = gtfsGeo.routeData;//topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
-    console.log('drawRoutes, geo=',geo);
+    var geo = gtfsGeo.routeData;
+    //console.log('drawRoutes, geo=',geo);
     var path = d3.geo.path().projection(gtfsGeo.project);
 
-    if(typeof geo.features == 'undefined'){
-      var features = geo;
-      geo = {};
-      geo.features = features;
-    }
     var routes = gtfsGeo.g.selectAll("path.route")
-                  .data(geo.features);
+                  .data(geo);
 
     routes.enter().append("path")
           .attr("class", "route");
@@ -71,12 +66,12 @@ gtfsGeo = {
       });
   },
   drawStops: function(){
-    // convert the topoJSON to geoJSON
-    var geoJSON = gtfsGeo.stopData;//topojson.feature(gtfsGeo.stopData, gtfsGeo.stopData.objects.stops);
-    //console.log('drawStops, stops=', geoJSON);
+    // convert the topoJSON to geo
+    var geo = gtfsGeo.stopData;
+    //console.log('drawStops, stops=', geo);
 
     var stops = gtfsGeo.g.selectAll("circle.stop")
-                    .data(geoJSON.features);
+                    .data(geo);
 
     stops.enter().append("circle")
             .attr("class", "stop")

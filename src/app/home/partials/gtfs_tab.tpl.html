@@ -9,15 +9,14 @@
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th>Route</th>
+                  <th><input type="text" ng-model='routeFilter' ng-change='updateRoutes(routeFilter)' placeholder='filter'></th>
                 </tr>
                 <tr>
-                  <th><input type="text" ng-model='routeFilter' ng-change='updateRoutes(routeFilter)' placeholder='filter'>
-                </th>
+                  <th>Route</th>
                 </tr>
               </thead>
               <tbody>
-              <tr ng-repeat="route in route_properties.features">
+              <tr ng-repeat="route in route_properties | filterRoutes: routeFilter">
                 <td ng-click="route_trips(route.properties.route_short_name)">{{ route.properties.route_short_name }}</td>
               </tr>
               </tbody>
@@ -55,12 +54,15 @@
         <table class="table table-hover">
           <thead>
             <tr>
+              <th><input type="text" ng-model='stopFilter' ng-change='updateStops(stopFilter)' placeholder='filter'></th>
+            </tr>
+            <tr>
               <th>Stop Name</th><th>Stop Code</th>
             </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="stop in stop_properties">
-            <td>{{ stop.stop_name }}</td><td>{{ stop.stop_code }}</td>
+          <tr ng-repeat="stop in stop_properties | filterStops: stopFilter">
+            <td>{{ stop.properties.stop_name }}</td><td>{{ stop.properties.stop_code }}</td>
           </tr>
           </tbody>
           <tfoot>
