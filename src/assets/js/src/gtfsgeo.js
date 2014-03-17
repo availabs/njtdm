@@ -29,7 +29,9 @@ gtfsGeo = {
           textTitle += "<strong>Route ID:</strong> " + d.properties.route_id + "<br>";
           textTitle += "<strong>Short Name:</strong> "+ d.properties.route_short_name + "<br>";
           $("#info").show()
-                .css('border-top', '5px solid #2C7BC9')
+                .css('border-top', function() {
+                  return '5px solid ' + d3.select('.route').style('stroke');
+                })
                 .html(textTitle);
         })
         .on("mouseout", function() {
@@ -75,9 +77,7 @@ gtfsGeo = {
 
     stops.enter().append("circle")
             .attr("class", "stop")
-            .attr("r", "4px")
-            .style("fill", '#f00')
-            .style("opacity", '0.75');
+            .attr("r", "4px");
 
     stops.exit().remove();
 
@@ -87,7 +87,9 @@ gtfsGeo = {
           textTitle += "<strong>Stop ID:</strong> " + d.properties.stop_id + "<br>";
           textTitle += "<strong>Stop Code:</strong> "+ d.properties.stop_code + "<br>";
           $("#info").show()
-                .css('border-top', '5px solid #f00')
+                .css('border-top', function() {
+                  return '5px solid ' + d3.select('.stop').style('stroke');
+                })
                 .html(textTitle);
         })
         .on("mouseout", function() {

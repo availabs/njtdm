@@ -112,7 +112,7 @@ angular.module( 'njTDM.home', [
   $scope.finished_models = [];
   $scope.model_od = 'stops';
   $scope.show_routes = true;
-  $scope.show_stops = true;
+  $scope.show_stops = false;
 
 
   /**********************************************
@@ -134,9 +134,8 @@ angular.module( 'njTDM.home', [
   Model Tabs variables
 
   *****************************/
-  $scope.modelTabs = {};
   // to select active model tab
-  $scope.modelTabs.active = 'true';
+  $scope.modelTabs = {active: 'true'};
 
   // functions to filter drawn routes and stops
   $scope.updateRoutes = function(value){
@@ -148,14 +147,6 @@ angular.module( 'njTDM.home', [
     gtfsGeo.stopData = $filter('filterStops')($scope.stop_properties, value);
     gtfsGeo.drawStops();
   };
-/*
-  $scope.$watch('routeFilter',
-        function(newVal, oldVal) {
-          console.log('routefilter changed');
-          if (newVal !== oldVal) {
-            gtfsGeo.drawRoutes();
-          }
-        }, true);*/
   
   $scope.$watch('tt_search', function() {
       $scope.tt_total = $filter('filter')($scope.trip_table,$scope.tt_search).length;
@@ -239,10 +230,12 @@ angular.module( 'njTDM.home', [
         $('circle.dest').css('display','none');
         $('circle.origin').css('display','none');
         $scope.show_trips = false;
+        $('#origin-dest-div').hide();
       }else{
          $('circle.dest').css('display','block');
         $('circle.origin').css('display','block');
         $scope.show_trips = true;
+        $('#origin-dest-div').show();
       }
     }
   };
@@ -250,9 +243,11 @@ angular.module( 'njTDM.home', [
  
     if($scope.show_routes){
       $('.route').hide();
+      $('#route-legend-div').hide();
       $scope.show_routes = false;
     }else{
       $('.route').show();
+      $('#route-legend-div').show();
       $scope.show_routes = true;
     }
 
@@ -262,9 +257,11 @@ angular.module( 'njTDM.home', [
  
     if($scope.show_stops){
       $('.stop').hide();
+      $('#stop-legend-div').hide();
       $scope.show_stops = false;
     }else{
       $('.stop').show();
+      $('#stop-legend-div').show();
       $scope.show_stops = true;
     }
 
