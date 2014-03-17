@@ -17,7 +17,7 @@
                 </tr>
               </thead>
               <tbody>
-              <tr ng-repeat="route in route_properties.features | geoJsonProperties : routeFilter">
+              <tr ng-repeat="route in route_properties.features">
                 <td ng-click="route_trips(route.properties.route_short_name)">{{ route.properties.route_short_name }}</td>
               </tr>
               </tbody>

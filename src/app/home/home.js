@@ -122,7 +122,7 @@ angular.module( 'njTDM.home', [
   $scope.modelTabs.active = 'true';
 
   $scope.updateRoutes = function(value){
-    console.log('routefilter changed',value);
+    //console.log('routefilter changed',value);
     gtfsGeo.routeData = $filter('geoJsonProperties')($scope.route_properties.features,value);
     gtfsGeo.drawRoutes();
   };
