@@ -153,8 +153,8 @@ censusGeo = {
       legendText += '<ul id="censusGeo_legend">';
       // add first list element
       color = range[0];
-      label = domain[0];
-      legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>&lt;= '+label.toFixed(0)+'</span></li>';
+      label = domain[0]+1;
+      legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+color+'"></rect></svg><span>&lt; '+label.toFixed(0)+'</span></li>';
       // iterate through color domain, appending list elements
       for (i = 1; i < domain.length; i++) {
         color = range[i];

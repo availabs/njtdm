@@ -4,8 +4,11 @@
 .tract:hover							{stroke-width:3px;fill:#f00}
 .selected_tract							{fill:#00f;stroke:#000;opacity:0.6;stroke-width:2px;}
 .selected_tract:hover					{stroke-width:3px;fill:#0f0}
-.route									{display:block;stroke:#2C7BC9;opacity:.6; stroke-width:3px;fill:none;}
+.route									{display:block;stroke:#f60;opacity:.75; stroke-width:3px;fill:none;}
+.stop									{display:none;opacity:.75;fill:#c00;}
 .trip  									{opacity: 0.6}
+.origin                                 {display:block;opacity:.75;fill:#0c0;stroke:#000;stroke-width:2px;}
+.dest									{display:block;opacity:.75;fill:#c00;stroke:#000;stroke-width:2px;}
 
 /*-------------Layout ----------------------------------*/
 .angular-leaflet-map					{left:0; height:100%; position:fixed; top:0; width:100%;z-index:-1;}
@@ -35,9 +38,16 @@
 #legend h3 											{font-size:.75em; font-weight:700; margin:0 0 5px 0; text-transform:uppercase;}
 #legend hr 											{border-top:1px dotted #ccc; margin:15px 0;}
 #legend-detail										{border-bottom:1px solid #999; display:none; line-height:1.25; padding:10px 15px; width:170px;}
-#legend-detail li									{font-size:.75em; margin:0 0 5px 0; overflow:hidden;}
+#legend-detail li									{font-size:.75em; margin:0 0 5px 0; overflow:hidden;list-style: none;}
 #legend-detail li svg			    				{display:block; float:left; margin:0 5px 0 0;}
 #legend-detail li span			    				{display:block; float:left; padding:2px 0 0 0;}
 #legend-detail li span.c-01			    			{width:85px;}
 #legend-detail li span.c-02			    			{text-align:right; width:85px;}
 #censusGeo_legend									{list-style: none;}
+#route-legend-div									{display:block;}
+.route-legend										{stroke:#f60;opacity:.75; stroke-width:3px;fill:none;}
+#stop-legend-div									{display:none;}
+.stop-legend										{stroke:#c00;opacity:.75; stroke-width:3px;fill:#c00;}
+.origin-legend                                 		{opacity:.75;fill:#0c0;stroke:#000;stroke-width:2px;}
+.dest-legend										{opacity:.75;fill:#c00;stroke:#000;stroke-width:2px;}
+#origin-dest-div									{display:none;}

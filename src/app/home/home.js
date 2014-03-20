@@ -62,7 +62,38 @@ angular.module( 'njTDM.home', [
         }
     );
 })
+.filter('filterRoutes', function(){
 
+  return function(items, input){
+    if (!items) {
+      return [];
+    }
+    var arrayToReturn = [];        
+    for (var i=0; i<items.length; i++){
+        if (items[i].properties.route_short_name.indexOf(input) != -1) {
+            arrayToReturn.push(items[i]);
+        }
+    }
+
+    return arrayToReturn;
+  };
+})
+.filter('filterStops', function(){
+
+  return function(items, input){
+    if (!items) {
+      return [];
+    }
+    var arrayToReturn = [];        
+    for (var i=0; i<items.length; i++){
+        if (items[i].properties.stop_code.indexOf(input) != -1) {
+            arrayToReturn.push(items[i]);
+        }
+    }
+
+    return arrayToReturn;
+  };
+})
 /**
  * CONTROLLER
  */
@@ -81,7 +112,7 @@ angular.module( 'njTDM.home', [
   $scope.finished_models = [];
   $scope.model_od = 'stops';
   $scope.show_routes = true;
-  $scope.show_stops = true;
+  $scope.show_stops = false;
 
 
   /**********************************************
@@ -96,16 +127,26 @@ angular.module( 'njTDM.home', [
   $scope.trips_loaded = false;
   $scope.show_trips = false;
   $scope.tt_search = {};
-
+  $scope.routeFilter = '';
+  $scope.stopFilter = '';
+  
   /***************************
   Model Tabs variables
 
   *****************************/
-  $scope.modelTabs = {};
   // to select active model tab
-  $scope.modelTabs.active = 'true';
+  $scope.modelTabs = {active: 'true'};
 
+  // functions to filter drawn routes and stops
+  $scope.updateRoutes = function(value){
+    gtfsGeo.routeData = $filter('filterRoutes')($scope.route_properties, value);
+    gtfsGeo.drawRoutes();
+  };
 
+  $scope.updateStops = function(value){
+    gtfsGeo.stopData = $filter('filterStops')($scope.stop_properties, value);
+    gtfsGeo.drawStops();
+  };
   
   $scope.$watch('tt_search', function() {
       $scope.tt_total = $filter('filter')($scope.trip_table,$scope.tt_search).length;
@@ -145,15 +186,12 @@ angular.module( 'njTDM.home', [
             censusData.update_data(tract_data);
             censusGeo.update_scenario();
 
-            gtfsGeo.routeData = topojson.feature(route_data, route_data.objects.routes);
-            console.log(gtfsGeo.routeData);
-            gtfsGeo.stopData = topojson.feature(stop_data, stop_data.objects.stops);//;
-            //console.log(gtfsGeo.routeData.features);
-            $scope.route_properties = [];
-            gtfsGeo.routeData.features.forEach(function(d) {
-              $scope.route_properties.push(d.properties);
-            });
-            //console.log($scope.route_properties);
+            gtfsGeo.routeData = topojson.feature(route_data, route_data.objects.routes).features;
+            $scope.route_properties = gtfsGeo.routeData;
+
+            gtfsGeo.stopData = topojson.feature(stop_data, stop_data.objects.stops).features;
+            $scope.stop_properties = gtfsGeo.stopData;
+
             gtfsGeo.drawRoutes();
             gtfsGeo.drawStops();
             
@@ -192,10 +230,12 @@ angular.module( 'njTDM.home', [
         $('circle.dest').css('display','none');
         $('circle.origin').css('display','none');
         $scope.show_trips = false;
+        $('#origin-dest-div').hide();
       }else{
          $('circle.dest').css('display','block');
         $('circle.origin').css('display','block');
         $scope.show_trips = true;
+        $('#origin-dest-div').show();
       }
     }
   };
@@ -203,9 +243,11 @@ angular.module( 'njTDM.home', [
  
     if($scope.show_routes){
       $('.route').hide();
+      $('#route-legend-div').hide();
       $scope.show_routes = false;
     }else{
       $('.route').show();
+      $('#route-legend-div').show();
       $scope.show_routes = true;
     }
 
@@ -215,9 +257,11 @@ angular.module( 'njTDM.home', [
  
     if($scope.show_stops){
       $('.stop').hide();
+      $('#stop-legend-div').hide();
       $scope.show_stops = false;
     }else{
       $('.stop').show();
+      $('#stop-legend-div').show();
       $scope.show_stops = true;
     }
 

@@ -49,7 +49,7 @@ tripTable = {
         cy: function(d,i) {
           return tripTable.project(d.from_coords)[1];
         },
-        fill:"#000",
+        //fill:"#000",
         class : function(d,i){
           return 'origin';
         }
@@ -67,7 +67,7 @@ tripTable = {
         cy: function(d,i) {
           return tripTable.project(d.to_coords)[1];
         },
-        fill:"#fff",
+        //fill:"#fff",
         class : function(d,i){
           return 'dest';
         }
@@ -78,6 +78,11 @@ tripTable = {
       });
       tripTable.reset_orig(tripTable.origins);
       tripTable.reset_dest(tripTable.dests);
+
+      tripTable.tripsLegend();
+  },
+  tripsLegend: function() {
+    $('#origin-dest-div').show();
   },
   project :function(x) {
       if(x.length != 2){ return [];}
@@ -101,7 +106,7 @@ tripTable = {
             cy: function(d,i) {
               return tripTable.project(d.from_coords)[1];
             },
-            fill:"#000",
+            //fill:"#000",
             class : function(d,i){
               return 'origin';
             }
@@ -125,7 +130,7 @@ tripTable = {
               cy: function(d,i) {
                 return tripTable.project(d.to_coords)[1];
               },
-              fill:"#fff",
+              //fill:"#fff",
               class : function(d,i){
                 return 'dest';
               }
@@ -137,6 +142,8 @@ tripTable = {
 
         tripTable.reset_orig(tripTable.origins);
         tripTable.reset_dest(tripTable.dests);
+
+        tripTable.tripsLegend();
       }
   },
   reset_orig:function (feature) {
