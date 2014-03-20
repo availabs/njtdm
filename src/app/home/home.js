@@ -492,11 +492,11 @@ angular.module( 'njTDM.home', [
   //***************************************************************************************************
   //***************************************************************************************************
   //***************************************************************************************************
-})
+});
 
 
 //--------------------------------------------------------------
-.controller( 'ModalInstanceCtrl', function ($scope, $modalInstance) {
+var ModalInstanceCtrl = function ($scope, $modalInstance) {
   
   $scope.ok = function (info) {
     $modalInstance.close(info);
@@ -505,4 +505,4 @@ angular.module( 'njTDM.home', [
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
-});
+};

@@ -19,7 +19,7 @@ var shaper = require("mapshaper");
 //var queue = require("queue-async");
 module.exports = {
     
-  routes: function(req,res){
+  computed_routes: function(req,res){
 
 	if (!req.param('routes') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to tracts');
@@ -59,7 +59,7 @@ module.exports = {
 	});
 
 	},
-	old_routes: function(req,res){
+	routes: function(req,res){
 		console.log('ROUTES INIT');
 		if (!req.param('routes') instanceof Array) {
 			res.send('Must post Array of 11 digit fips codes to tracts');
