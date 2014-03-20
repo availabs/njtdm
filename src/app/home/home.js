@@ -67,8 +67,8 @@ angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario,TripTable,$modal) {
-  $scope.api = 'http://lor.availabs.org:1338/';
-  //$scope.api = 'http://localhost:1337/';
+  //$scope.api = 'http://lor.availabs.org:1338/';
+  $scope.api = 'http://localhost:1337/';
   $scope.current_template_index = 0;
   $scope.model_time = 'am';
   $scope.census_vars = censusData.variables;
@@ -144,8 +144,16 @@ angular.module( 'njTDM.home', [
             //tripTable.draw_trips();
             censusData.update_data(tract_data);
             censusGeo.update_scenario();
-            gtfsGeo.routeData = route_data;
-            gtfsGeo.stopData = stop_data;
+
+            gtfsGeo.routeData = topojson.feature(route_data, route_data.objects.routes);
+            console.log(gtfsGeo.routeData);
+            gtfsGeo.stopData = topojson.feature(stop_data, stop_data.objects.stops);//;
+            //console.log(gtfsGeo.routeData.features);
+            $scope.route_properties = [];
+            gtfsGeo.routeData.features.forEach(function(d) {
+              $scope.route_properties.push(d.properties);
+            });
+            //console.log($scope.route_properties);
             gtfsGeo.drawRoutes();
             gtfsGeo.drawStops();
             
@@ -228,6 +236,14 @@ angular.module( 'njTDM.home', [
   };
   $scope.saveScenario = function(){
     Scenario.update({id:$scope.scenario.id },$scope.scenario);
+  };
+
+  $scope.route_trips = function(route) {
+    $http.post($scope.api+'gtfs/routetrips', {route: route})
+          .success(function(data){
+            //console.log(data);
+            $scope.route_trip_data = data;
+          });
   };
 
   $scope.loadTripTable = function(model_type){
@@ -364,11 +380,30 @@ angular.module( 'njTDM.home', [
 
         $scope.start_time_group = $scope.model_data.start_time_group.all();
 
+        $scope.model_bad_trips = $scope.model_data.model_bad_trips;
+
         $scope.wait_time_group = $scope.model_data.wait_time_group.all();
+
+        var noWaits = $scope.wait_time_group[0].value,
+            normWaits = 0,
+            badWaits = $scope.model_data.model_bad_trips.length,
+            totalWaits = 0;
+        for (var i = 1; i < $scope.wait_time_group.length; i++) {
+          normWaits += $scope.wait_time_group[i].value;
+        }
+        totalWaits = noWaits + normWaits + badWaits;
+        //console.log(noWaits, normWaits, badWaits, totalWaits);
+        $scope.wait_time_data = {no_waits: noWaits,
+                                  normal_waits: normWaits,
+                                  bad_waits: badWaits,
+                                  total_waits: totalWaits,
+                                  percent_no_waits: (100*noWaits/totalWaits).toFixed(2),
+                                  percent_norm_waits: (100*normWaits/totalWaits).toFixed(2),
+                                  percent_bad_waits: (100*badWaits/totalWaits).toFixed(2)};
 
         gtfsGeo.clearGraphs();
         gtfsGeo.drawStartTimeGraph($scope.start_time_group);
-        gtfsGeo.drawWaitTimeGraph($scope.wait_time_group);
+        gtfsGeo.drawWaitTimeGraph($scope.wait_time_group.splice(1));
     });
 
   };

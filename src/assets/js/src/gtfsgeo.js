@@ -11,9 +11,10 @@ gtfsGeo = {
      gtfsGeo.g = censusGeo.g;
   },
   drawRoutes : function(){
-    var geo = topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
+    //console.log(gtfsGeo.routeData);
+    var geo = gtfsGeo.routeData;//topojson.feature(gtfsGeo.routeData, gtfsGeo.routeData.objects.routes);
+    //console.log('drawRoutes, geo=',geo);
     var path = d3.geo.path().projection(gtfsGeo.project);
-    console.log(geo);
 
     var routes = gtfsGeo.g.selectAll("path.route")
                   .data(geo.features);
@@ -55,7 +56,7 @@ gtfsGeo = {
   },
   drawStops: function(){
     // convert the topoJSON to geoJSON
-    var geoJSON = topojson.feature(gtfsGeo.stopData, gtfsGeo.stopData.objects.stops);
+    var geoJSON = gtfsGeo.stopData;//topojson.feature(gtfsGeo.stopData, gtfsGeo.stopData.objects.stops);
 
     var stops = gtfsGeo.g.selectAll("circle.stop")
                     .data(geoJSON.features);
@@ -125,50 +126,45 @@ gtfsGeo = {
   clearGraphs: function() {
     d3.select('#graphDiv').selectAll('svg').remove();
   },
-  getDimensions: function() {
-    var margin = {top: 10, right: 0, bottom: 20, left: 25},
-        width = 330 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom;
-    return {margin: margin, width: width, height: height};
-  },
   drawStartTimeGraph: function(data) {
-    var dims = gtfsGeo.getDimensions(),
-        margin = dims.margin,
-        width = dims.width,
-        height = dims.height;
+    var margin = {top: 10, right: 5, bottom: 20, left: 25},
+        width = 330 - margin.left - margin.right,
+        height = 280 - margin.top - margin.bottom,
+        dims = {margin: margin, width: width, height: height};
 
     var timeScale = d3.time.scale()
                       .domain([data[0].key, data[data.length-1].key])
                       .range([0, width]);
-    gtfsGeo.drawGraph(data, timeScale);
+    gtfsGeo.drawGraph(data, timeScale, dims);
   },
   drawWaitTimeGraph: function(data) {
-    var dims = gtfsGeo.getDimensions(),
-        margin = dims.margin,
-        width = dims.width,
-        height = dims.height;
+    var margin = {top: 10, right: 10, bottom: 20, left: 35},
+        width = 330 - margin.left - margin.right,
+        height = 250 - margin.top - margin.bottom,
+        dims = {margin: margin, width: width, height: height};
 
     var Xmin = d3.min(data, function(d) { return d.key });
         Xmax = d3.max(data, function(d) { return d.key });
     var Xscale = d3.scale.linear()
                     .domain([Xmin, Xmax])
                     .range([0, width]);
-    gtfsGeo.drawGraph(data, Xscale);
+
+    gtfsGeo.drawGraph(data, Xscale, dims);
   },
-  drawGraph: function(data, xScale) {
+  drawGraph: function(data, xScale, dims) {
     //console.log('drawModelGraph', data);
-    var dims = gtfsGeo.getDimensions(),
-        margin = dims.margin,
+    var margin = dims.margin,
         width = dims.width,
         height = dims.height;
-        
-    var max = d3.max(data, function(d) { return d.value; });
+
+    var maxCount = d3.max(data, function(d) { return d.value; });
 
     var heightScale = d3.scale.linear()
-                  .domain([0, max])
+                  .domain([0, maxCount])
                   .range([height, 0]);
 
-    var barWidth = Math.round(width / data.length);
+    var barWidth = Math.max(Math.round(width/data.length), 1);
+
     var svg = d3.select('#graphDiv').append('svg')
                   .attr('width', width + margin.left + margin.right)
                   .attr('height', height + margin.top + margin.bottom)

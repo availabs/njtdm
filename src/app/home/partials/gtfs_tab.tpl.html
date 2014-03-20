@@ -1,0 +1,53 @@
+<tabset>
+  <tab heading="Routes">
+     <div class="info_container">
+      <button class="btn btn-info" ng-click="routes_visible()">Show/Hide Routes</button>
+      <br />
+      <div class="container" width="350px">
+        <div class="row">
+          <div class="col-xs-1">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Route</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="route in route_properties">
+                <td ng-click="route_trips(route.route_short_name)">{{ route.route_short_name }}</td>
+              </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="col-xs-4">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th class="col-xs-3">Headsign</th><th class="col-xs-1">Departure Time</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="trip_datum in route_trip_data">
+                <td>{{ trip_datum.trip_headsign }}</td><td>{{ trip_datum.departure_time }}</td>
+              </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </tab>
+  <tab heading="Stops">
+     <div class="info_container">
+      <button class="btn btn-info" ng-click="stops_visible()">Show/Hide Stops</button>
+    </div>
+  </tab>
+</tabset>
