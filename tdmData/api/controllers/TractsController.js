@@ -55,7 +55,7 @@ acs : function(req,res){
 	fips_in = fips_in.slice(0, -1)+")";
 	var sql = 'select * from tl_2011_34_tract_acs where geoid in '+fips_in;
 
-	Tracts.query(sql,{},function(err,data){
+	Gtfs.query(sql,{},function(err,data){
 		if (err) {
 			res.send('{status:"error",message:"'+err+'"}',500);
 			return console.log(err);
