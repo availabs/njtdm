@@ -102,9 +102,35 @@ censusData = {
   "car_2":{"value":0,"vars":['b08014_004e'], "name":"2 vehicles available"},
   "car_3":{"value":0,"vars":['b08014_005e'], "name":"3 vehicles available"},
   "car_4":{"value":0,"vars":['b08014_006e'], "name":"4 vehicles available"},
-  "car_5+":{"value":0,"vars":['b08014_007e'], "name":"5 or more vehicles available"}
-
-
+  "car_5+":{"value":0,"vars":['b08014_007e'], "name":"5 or more vehicles available"},
+  '12:00am': {"value":0,"vars":['b08132_002E'],"name":'12:00 a.m. to 4:59 a.m.'},
+  '5:00am': {"value":0,"vars":['b08132_003E'],"name":'5:00 a.m. to 5:29 a.m.'},
+  '5:30am': {"value":0,"vars":['b08132_004E'],"name":'5:30 a.m. to 5:59 a.m.'},
+  '6:00am': {"value":0,"vars":['b08132_005E'],"name":'6:00 a.m. to 6:29 a.m.'},
+  '6:30am': {"value":0,"vars":['b08132_006E'],"name":'6:30 a.m. to 6:59 a.m.'},
+  '7:00am': {"value":0,"vars":['b08132_007E'],"name":'7:00 a.m. to 7:29 a.m.'},
+  '7:30am': {"value":0,"vars":['b08132_008E'],"name":'7:30 a.m. to 7:59 a.m.'},
+  '8:00am': {"value":0,"vars":['b08132_009E'],"name":'8:00 a.m. to 8:29 a.m.'},
+  '8:30am': {"value":0,"vars":['b08132_010E'],"name":'8:30 a.m. to 8:59 a.m.'},
+  '9:00am': {"value":0,"vars":['b08132_011E'],"name":'9:00 a.m. to 9:59 a.m.'},
+  '10:00am': {"value":0,"vars":['b08132_012E'],"name":'10:00 a.m. to 10:59 a.m.'},
+  '11:00am': {"value":0,"vars":['b08132_013E'],"name":'11:00 a.m. to 11:59 a.m.'},
+  '12:00pm': {"value":0,"vars":['b08132_014E'],"name":'12:00 p.m. to 3:59 p.m.'},
+  '4:00pm': {"value":0,"vars":['b08132_015E'],"name":'4:00 p.m. to 11:59 p.m.'},
+  '12:00ampt': {"value":0,"vars":['b08132_047E'],"name":'Public Transportation - 12:00 a.m. to 4:59 a.m.'},
+  '5:00ampt': {"value":0,"vars":['b08132_048E'],"name":'Public Transportation - 5:00 a.m. to 5:29 a.m.'},
+  '5:30ampt': {"value":0,"vars":['b08132_049E'],"name":'Public Transportation - 5:30 a.m. to 5:59 a.m.'},
+  '6:00ampt': {"value":0,"vars":['b08132_050E'],"name":'Public Transportation - 6:00 a.m. to 6:29 a.m.'},
+  '6:30ampt': {"value":0,"vars":['b08132_051E'],"name":'Public Transportation - 6:30 a.m. to 6:59 a.m.'},
+  '7:00ampt': {"value":0,"vars":['b08132_052E'],"name":'Public Transportation - 7:00 a.m. to 7:29 a.m.'},
+  '7:30ampt': {"value":0,"vars":['b08132_053E'],"name":'Public Transportation - 7:30 a.m. to 7:59 a.m.'},
+  '8:00ampt': {"value":0,"vars":['b08132_054E'],"name":'Public Transportation - 8:00 a.m. to 8:29 a.m.'},
+  '8:30ampt': {"value":0,"vars":['b08132_055E'],"name":'Public Transportation - 8:30 a.m. to 8:59 a.m.'},
+  '9:00ampt': {"value":0,"vars":['b08132_056E'],"name":'Public Transportation - 9:00 a.m. to 9:59 a.m.'},
+  '10:00ampt': {"value":0,"vars":['b08132_057E'],"name":'Public Transportation - 10:00 a.m. to 10:59 a.m.'},
+  '11:00ampt': {"value":0,"vars":['b08132_058E'],"name":'Public Transportation - 11:00 a.m. to 11:59 a.m.'},
+  '12:00pmpt': {"value":0,"vars":['b08132_059E'],"name":'Public Transportation - 12:00 p.m. to 3:59 p.m.'},
+  '4:00pmpt': {"value":0,"vars":['b08132_060E'],"name":'Public Transportation - 4:00 p.m. to 11:59 p.m.'}
 },
 categories : {
   "Population":["total_population"],
@@ -120,10 +146,12 @@ categories : {
   "Age Categories":["age5_9","age10_14","age15_17","age18_19","age20","age21","age22_24","age25_29","age30_34","age35_39","age40_44","age45_49","age50_54","age55_59","age60_62","age62_64","age65_66","age67_69","age70_74","age75_79","age80_84","age85+"],
   "Race":["race_white","race_black","race_amerindian","race_asian","race_hawaii","race_other", "race_two"],
   "Housing Units":["total_housing","occupied_housing","vacant_housing","1_unit_det","1_unit_att","2_units","3_4units","5_9units","10_19units","20_49units","50+_units","mobile_home","other_home","occupancy_renter","occupancy_owner"],
-  "Vehicles Available" :["car_0","car_1","car_2","car_3", "car_4", "car_5+"]
+  "Vehicles Available" :["car_0","car_1","car_2","car_3", "car_4", "car_5+"],
+  "Journey To Work by Time":['12:00am','5:00am','5:30am','6:00am','6:30am','7:00am','7:30am','8:00am','8:30am','9:00am','10:00am','11:00am','12:00pm','4:00pm','12:00ampt','5:00ampt','5:30ampt','6:00ampt','6:30ampt','7:00ampt','7:30ampt','8:00ampt','8:30ampt','9:00ampt','10:00ampt','11:00ampt','12:00pmpt','4:00pmpt'],
 },
+
   update_data:function(tracts){
-     
+    console.log(tracts);
     for (var census_var in censusData.census_vars){
       censusData.census_vars[census_var].value = 0;
     }

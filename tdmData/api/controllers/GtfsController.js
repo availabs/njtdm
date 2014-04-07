@@ -18,8 +18,27 @@ var topojson = require("topojson");
 var shaper = require("mapshaper");
 //var queue = require("queue-async");
 module.exports = {
-    
-  computed_routes: function(req,res){
+	acs : function(req,res){
+		if (!req.param('tracts') instanceof Array) {
+			res.send('Must post Array of 11 digit fips codes to tracts');
+		}
+		var fips_in = "(";
+		req.param('tracts').forEach(function(tract){
+			
+			fips_in += "'"+tract+"',";
+		});
+		fips_in = fips_in.slice(0, -1)+")";
+		var sql = 'select * from tl_2011_34_tract_acs where geoid in '+fips_in;
+
+		Gtfs.query(sql,{},function(err,data){
+			if (err) {
+				res.send('{status:"error",message:"'+err+'"}',500);
+				return console.log(err);
+			}
+			res.send(data.rows);
+		});
+	},
+  	computed_routes: function(req,res){
 
 	if (!req.param('routes') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to tracts');
