@@ -48,7 +48,7 @@ module.exports.routes = {
     cors: accessible
   },
   '/tracts/acs':{
-    controller : 'GtfsController',
+    controller : 'TractsController',
     action : 'acs',
     cors: accessible
   },
