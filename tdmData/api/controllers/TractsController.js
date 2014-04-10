@@ -80,8 +80,6 @@ surveyTrips : function(req,res){
 	});
 	fips_in = fips_in.slice(0, -1)+")";
 	var trip_table = [];
-	
-
 	var sql = "select accessmode as access,O_MAT_LAT as o_lat,O_MAT_LONG as o_lng,ON_MAT_LAT as on_lat,ON_MAT_LONG as on_lng,OFF_MAT_LAT as off_lat,OFF_MAT_LONG as off_lng, b.militarystarttime, b.weight, D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo as a join survey_attributes as b on a.id = b.id where MILITARYSTARTTIME BETWEEN '1970-01-01 05:30:00'::timestamp AND '1970-01-01 10:00:00'::timestamp AND o_geoid10 in "+fips_in+" and d_geoid10 in "+fips_in;
 	console.log(sql);
 	Gtfs.query(sql,{},function(err,trips_data){
@@ -153,14 +151,17 @@ ctppTrips : function(req,res){
 					}
 					if(typeof req.param('cenData')!= 'undefined'){
 						if(typeof req.param('cenData')[tract.home_tract] != 'undefined'){
-							var regessionRiders = Math.round(38.794+(req.param('cenData')[tract.home_tract].car_0*0.544)+(req.param('cenData')[tract.home_tract].arts*0.158)+(req.param('cenData')[tract.home_tract].race_white*-0.027));
+							//var regessionRiders = Math.round(38.794+(req.param('cenData')[tract.home_tract].car_0*0.544)+(req.param('cenData')[tract.home_tract].arts*0.158)+(req.param('cenData')[tract.home_tract].race_white*-0.027));
+							var regessionRiders = Math.round((req.param('cenData')[tract.home_tract].car_0*0.743)+(req.param('cenData')[tract.home_tract].car_1*0.141)+(req.param('cenData')[tract.home_tract].information*-0.813))
 							if(req.param('buspercent')[tract.home_tract].bus_to_work > 0){
 								regPercent= regessionRiders / req.param('buspercent')[tract.home_tract].bus_to_work;
 							}else{
-								regPercent= regessionRiders / 1;
+								regPercent= 1;
 							}	
 						}
-						console.log(regessionRiders,regPercent);
+						// if(tract.home_tract == '34009021400'){
+						// console.log('what is happeniing?',regessionRiders,regPercent,req.param('cenData')[tract.home_tract].car_0,req.param('cenData')[tract.home_tract].car_1);
+						// }
 						num_trips =  tract.bus_total*percent_intime*Math.abs(regPercent);
 					}else{
 						num_trips = tract.bus_total*percent_intime;
