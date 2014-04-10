@@ -122,6 +122,10 @@ ctppTrips : function(req,res){
 	if(typeof req.param('od') != 'undefined'){
 		odtype =req.param('od');
 	}
+	var timeOfDay = "am";
+	if(typeof req.param('timeofday') != 'undefined'){
+		timeOfDay = req.param('timeofday');
+	}
 	console.log(odtype);
 	output = [];
 	var fips_in = "(";
@@ -139,8 +143,28 @@ ctppTrips : function(req,res){
 			getSurveyOD(fips_in,function(origin_points,destination_points){
 				var id = 0;
 				tracts_data.rows.forEach(function(tract){
-					
-					num_trips = tract.bus_total;
+					var percent_intime = 1;
+					var timeMatrix = {};
+					if(typeof req.param('buspercent') != 'undefined'){
+						var vars = calculateCensus(req.param('buspercent'),tract,timeOfDay);
+						percent_trips =  vars.percent_trips;
+						percent_intime = vars.percent_intime;
+						timeMatrix = vars.timeMatrix;
+					}
+					if(typeof req.param('cenData')!= 'undefined'){
+						if(typeof req.param('cenData')[tract.home_tract] != 'undefined'){
+							var regessionRiders = Math.round(38.794+(req.param('cenData')[tract.home_tract].car_0*0.544)+(req.param('cenData')[tract.home_tract].arts*0.158)+(req.param('cenData')[tract.home_tract].race_white*-0.027));
+							if(req.param('buspercent')[tract.home_tract].bus_to_work > 0){
+								regPercent= regessionRiders / req.param('buspercent')[tract.home_tract].bus_to_work;
+							}else{
+								regPercent= regessionRiders / 1;
+							}	
+						}
+						console.log(regessionRiders,regPercent);
+						num_trips =  tract.bus_total*percent_intime*Math.abs(regPercent);
+					}else{
+						num_trips = tract.bus_total*percent_intime;
+					}
 					for(var i = 0; i < num_trips;i++){
 						var trip = {};
 						trip.id = id;
@@ -152,8 +176,8 @@ ctppTrips : function(req,res){
 						if(tract.home_tract in origin_points && tract.work_tract in destination_points){
 							trip.from_coords = origin_points[tract.home_tract][random(0,origin_points[tract.home_tract].length-1)];
 							trip.to_coords = destination_points[tract.work_tract][random(0,destination_points[tract.work_tract].length-1)];
-							trip.time = random(6,9)+":"+random(0,59)+'am';
-							trip.source ="LEHD"+version;
+							trip.time =getTime(timeMatrix);
+							trip.source ="CTPP"+version;
 							trip_table.push(trip);
 						}
 					}
@@ -164,8 +188,30 @@ ctppTrips : function(req,res){
 			getStopsOD(fips_in,function(stop_points){
 				var id = 0;
 				tracts_data.rows.forEach(function(tract){
-					
-					num_trips = tract.bus_total;
+					var percent_trips = 0.05;
+					var percent_intime = 1;
+					var timeMatrix = {};
+					if(typeof req.param('buspercent') != 'undefined'){
+						var vars = calculateCensus(req.param('buspercent'),tract,timeOfDay);
+						percent_trips =  vars.percent_trips;
+						percent_intime = vars.percent_intime;
+						timeMatrix = vars.timeMatrix;
+					}
+					var regPercent = 1;
+					if(typeof req.param('cenData')!= 'undefined'){
+						if(typeof req.param('cenData')[tract.home_tract] != 'undefined'){
+							var regessionRiders = Math.round(38.794+(req.param('cenData')[tract.home_tract].car_0*0.544)+(req.param('cenData')[tract.home_tract].arts*0.158)+(req.param('cenData')[tract.home_tract].race_white*-0.027));
+							if(req.param('buspercent')[tract.home_tract].bus_to_work > 0){
+								regPercent= regessionRiders / req.param('buspercent')[tract.home_tract].bus_to_work;
+							}else{
+								regPercent= regessionRiders / 1;
+							}	
+						}
+						console.log(regessionRiders,regPercent);
+						num_trips =  tract.bus_total*percent_intime*Math.abs(regPercent);
+					}else{
+						num_trips = tract.bus_total*percent_intime;
+					}
 					for(var i = 0; i < num_trips;i++){
 						var trip = {};
 						trip.id = id;
@@ -183,8 +229,8 @@ ctppTrips : function(req,res){
 							trip.to_coords[0] += pointVariation();
 							trip.to_coords[1] += pointVariation();
 							
-							trip.time = random(6,9)+":"+random(0,59)+'am';
-							trip.source ="LEHD"+version;
+							trip.time = getTime(timeMatrix);
+							trip.source ="CTPP"+version;
 							trip_table.push(trip);
 						}
 					}

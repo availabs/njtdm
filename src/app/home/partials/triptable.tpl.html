@@ -18,11 +18,12 @@
         <button class="btn btn-info" ng-click="tt_choropleth('outbound_trips')">Map Outbound Trips</button>
         <button class="btn btn-info" ng-click="tt_choropleth('inbound_trips')">Map Inbound Trips</button>
       </div>
-      <label>Model Type</label>
+      <label>Trip Table Generator</label>
       <select ui-select2   ng-model="model_type" class='template_select'>
-       <option value="lehd" selected>LEHD 5%</option>
-       <option value="lehdbus" selected>LEHD + ACS % Bus Trips</option>
-       <option value="ctpp" selected>CTPP 2010 Bus Trips</option>
+       <option value="lehd" >LEHD 5%</option>
+       <option value="lehdbus" >LEHD + ACS % Bus Trips</option>
+       <option value="ctpp" >CTPP 2010 Bus Trips</option>
+       <option value="censusregression" >Atlantic City Census Regression</option>
        <option value="survey">Atlantic City Survey</option>
       </select>
       <div ng-show="showOD(model_type)">
