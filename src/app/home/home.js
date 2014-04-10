@@ -98,8 +98,8 @@ angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario,TripTable,$modal) {
-  $scope.api = 'http://lor.availabs.org:1338/';
-  //$scope.api = 'http://localhost:1337/';
+  //$scope.api = 'http://lor.availabs.org:1338/';
+  $scope.api = 'http://localhost:1337/';
   $scope.current_template_index = 0;
   $scope.model_time = 'am';
   $scope.census_vars = censusData.variables;
@@ -289,7 +289,12 @@ angular.module( 'njTDM.home', [
             $scope.route_trip_data = data;
           });
   };
-
+  $scope.switchView = function(to){
+    if(to =='model'){
+      $('#map').hide();
+      $('#model').show();
+    }
+  };
   $scope.loadTripTable = function(model_type){
     /*******
     * Model Types
@@ -307,8 +312,25 @@ angular.module( 'njTDM.home', [
     else if(model_type == 'lehdbus'){
       var busdata = {};
       for(var tract in censusData.acs){
-        busdata[tract] = censusData.acs[tract].bus_to_work/censusData.acs[tract].travel_to_work_total;
+        busdata[tract] = {};
+        busdata[tract].buspercent = censusData.acs[tract].bus_to_work/censusData.acs[tract].travel_to_work_total;
+        busdata[tract]['pttotal'] = censusData.acs[tract]['pttotal'];
+        busdata[tract]['12_00ampt'] = censusData.acs[tract]['12_00ampt'];
+        busdata[tract]['5_00ampt'] = censusData.acs[tract]['5_00ampt'];
+        busdata[tract]['5_30ampt'] = censusData.acs[tract]['5_30ampt'];
+        busdata[tract]['6_00ampt'] = censusData.acs[tract]['6_00ampt'];
+        busdata[tract]['6_30ampt'] = censusData.acs[tract]['6_30ampt'];
+        busdata[tract]['7_00ampt'] = censusData.acs[tract]['7_00ampt'];
+        busdata[tract]['7_30ampt'] = censusData.acs[tract]['7_30ampt'];
+        busdata[tract]['8_00ampt'] = censusData.acs[tract]['8_00ampt'];
+        busdata[tract]['8_30ampt'] = censusData.acs[tract]['8_30ampt'];
+        busdata[tract]['9_00ampt'] = censusData.acs[tract]['9_00ampt'];
+        busdata[tract]['10_00ampt']= censusData.acs[tract]['10_00ampt'];
+        busdata[tract]['11_00ampt']= censusData.acs[tract]['11_00ampt'];
+        busdata[tract]['12_00pmpt']= censusData.acs[tract]['12_00pmpt'];
+        busdata[tract]['4_00pmpt'] = censusData.acs[tract]['4_00pmpt'];
       }
+      console.log('busdata',busdata);
       promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
         return data;
       });
@@ -492,6 +514,9 @@ angular.module( 'njTDM.home', [
   //***************************************************************************************************
   //***************************************************************************************************
   //***************************************************************************************************
+})
+.controller( 'DataCtrl', function DataController( $scope,$http,$filter,Scenario,TripTable,$modal) {
+  $scope.working = 'hello';
 });
 
 
@@ -506,3 +531,6 @@ var ModalInstanceCtrl = function ($scope, $modalInstance) {
     $modalInstance.dismiss('cancel');
   };
 };
+
+
+
