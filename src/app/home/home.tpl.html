@@ -45,7 +45,7 @@
             <table class="table table-hover">
               <tr ng-repeat="var in vars">
                 <td> {{  census_vars[var].name }}</td>
-                <td ng-click="choropleth(var)" >  {{ census_vars[var].value | number }} <i class="fa fa-bar-chart-o"></i> </td>
+                <td ng-click="choropleth(var)" > {{ census_vars[var].value | number }} <i class="fa fa-bar-chart-o"></i> </td>
               </tr>
             </table>
           </accordion-group>
