@@ -189,7 +189,7 @@ ctppTrips : function(req,res){
 	});
 },
 lehdTrips : function(req,res){
-	var version = "0.0.2";
+	var version = "0.0.3";
 	console.log("LEHD");
 	if (!req.param('tracts') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to LEHD Trip Table');
@@ -198,7 +198,11 @@ lehdTrips : function(req,res){
 	if(typeof req.param('od') != 'undefined'){
 		odtype =req.param('od');
 	}
-	console.log(odtype);
+	var timeOfDay = "am";
+	if(typeof req.param('timeofday') != 'undefined'){
+		timeOfDay = req.param('timeofday');
+	}
+	
 	output = [];
 	var fips_in = "(";
 	req.param('tracts').forEach(function(tract){
@@ -216,8 +220,13 @@ lehdTrips : function(req,res){
 				var id = 0;
 				tracts_data.rows.forEach(function(tract){
 					var percent_trips = 0.05;
+					var percent_intime = 1;
+					var timeMatrix = {};
 					if(typeof req.param('buspercent') != 'undefined'){
-						percent_trips = req.param('buspercent')[tract.home_tract];
+						var vars = calculateCensus(req.param('buspercent'),tract,timeOfDay);
+						percent_trips =  vars.percent_trips;
+						percent_intime = vars.percent_intime;
+						timeMatrix = vars.timeMatrix;
 					}
 					num_trips = Math.round(tract.bus_total*percent_trips);
 					for(var i = 0; i < num_trips;i++){
@@ -231,7 +240,7 @@ lehdTrips : function(req,res){
 						if(tract.home_tract in origin_points && tract.work_tract in destination_points){
 							trip.from_coords = origin_points[tract.home_tract][random(0,origin_points[tract.home_tract].length-1)];
 							trip.to_coords = destination_points[tract.work_tract][random(0,destination_points[tract.work_tract].length-1)];
-							trip.time = random(6,9)+":"+random(0,59)+'am';
+							trip.time = getTime(timeMatrix);
 							trip.source ="LEHD"+version;
 							trip_table.push(trip);
 						}
@@ -244,10 +253,15 @@ lehdTrips : function(req,res){
 				var id = 0;
 				tracts_data.rows.forEach(function(tract){
 					var percent_trips = 0.05;
+					var percent_intime = 1;
+					var timeMatrix = {};
 					if(typeof req.param('buspercent') != 'undefined'){
-						percent_trips = req.param('buspercent')[tract.home_tract];
+						var vars = calculateCensus(req.param('buspercent'),tract,timeOfDay);
+						percent_trips =  vars.percent_trips;
+						percent_intime = vars.percent_intime;
+						timeMatrix = vars.timeMatrix;
 					}
-					num_trips = Math.round(tract.bus_total*percent_trips);
+					num_trips = Math.round(tract.bus_total*percent_trips*percent_intime);
 					for(var i = 0; i < num_trips;i++){
 						var trip = {};
 						trip.id = id;
@@ -266,7 +280,7 @@ lehdTrips : function(req,res){
 							trip.to_coords[0] += pointVariation();
 							trip.to_coords[1] += pointVariation();
 							
-							trip.time = random(6,9)+":"+random(0,59)+'am';
+							trip.time = getTime(timeMatrix);
 							trip.source ="LEHD"+version;
 							trip_table.push(trip);
 						}
@@ -286,6 +300,67 @@ lehdTrips : function(req,res){
 
   
 };
+
+var getTime = function(timeMatrix){
+	var hour = random(6,9);
+	var minutes = random(0,59);
+	for(key in timeMatrix){
+		if(timeMatrix[key].count > 0){
+			hour = timeMatrix[key].hour;
+			minutes = random(timeMatrix[key].lowMin,timeMatrix[key].highMin);
+			timeMatrix[key].count--;
+		}
+	}
+	return  hour+":"+minutes+'am';
+}
+
+var calculateCensus = function(censusData,tract,timeOfDay){
+	var output = {percent_trips:0.05,percent_intime:0,timeMatrix:{}};
+	if(typeof censusData != 'undefined'){
+		if(typeof censusData[tract.home_tract] != 'undefined'){
+			output.percent_trips = censusData[tract.home_tract].buspercent;
+			var timeSum= 0;
+			for(key in censusData[tract.home_tract]){
+				if(timeOfDay == 'am'){
+					if(['6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt'].indexOf(key) !== -1){
+						timeSum+=censusData[tract.home_tract][key];
+					}
+				}
+			}
+			output.percent_intime = timeSum/censusData[tract.home_tract].pttotal;
+			if(isNaN(output.percent_intime)){
+				output.percent_intime = 1;
+			}
+		}else{
+			output.percent_trips = 0;
+		}
+	}
+	var num_trips = Math.round(tract.bus_total*output.percent_trips*output.percent_intime);
+	
+	for(key in censusData[tract.home_tract]){
+		if(timeOfDay == 'am'){
+			if(['6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt'].indexOf(key) !== -1){
+				var hour = 6;
+				var lowMin = 0;
+				var highMin = 29;
+				if(key.length == 8){
+					hour = key[0];
+					if(key[2] == '3'){
+						lowMin = 30;
+						highMin = 59;
+					}
+				}
+				if(key.length == 9){
+					hour = key.substring(0,2);
+					lowMin = 0;
+					highMin = 59;
+				}
+				output.timeMatrix[key] = {'count':Math.round((censusData[tract.home_tract][key]/timeSum)*num_trips*1),'hour':hour,'lowMin':lowMin,'highMin':highMin};
+			}
+		}
+	}
+	return output;
+}
 
 var getSurveyOD = function(fips_in,callback){
 	var sql = "select O_MAT_LAT as o_lat, O_MAT_LONG as o_lng,D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo where o_geoid10 in "+fips_in+" and d_geoid10 in "+fips_in+" and not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT= 0 and not D_MAT_LONG = 0";
