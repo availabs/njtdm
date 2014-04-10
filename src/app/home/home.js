@@ -98,8 +98,8 @@ angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario,TripTable,$modal) {
-  //$scope.api = 'http://lor.availabs.org:1338/';
-  $scope.api = 'http://localhost:1337/';
+  $scope.api = 'http://lor.availabs.org:1338/';
+  ///$scope.api = 'http://localhost:1337/';
   $scope.current_template_index = 0;
   $scope.model_time = 'am';
   $scope.census_vars = censusData.variables;
@@ -296,24 +296,12 @@ angular.module( 'njTDM.home', [
     }
   };
   $scope.loadTripTable = function(model_type){
-    /*******
-    * Model Types
-    * 0 - LEHD
-    * 1 - LEHD + % Bus
-    * 1 - CTPP Bus Trips
-    * 1 - AC Survey
-    */
-    var promise = [];
-    if(model_type == 'lehd'){
-      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,od:$scope.model_od}).then(function(data){
-        return data;
-      });
-    }
-    else if(model_type == 'lehdbus'){
-      var busdata = {};
+    var busdata = {};
       for(var tract in censusData.acs){
         busdata[tract] = {};
         busdata[tract].buspercent = censusData.acs[tract].bus_to_work/censusData.acs[tract].travel_to_work_total;
+        busdata[tract].bus_to_work = censusData.acs[tract].bus_to_work;
+        busdata[tract].travel_to_work_total = censusData.acs[tract].travel_to_work_total;
         busdata[tract]['pttotal'] = censusData.acs[tract]['pttotal'];
         busdata[tract]['12_00ampt'] = censusData.acs[tract]['12_00ampt'];
         busdata[tract]['5_00ampt'] = censusData.acs[tract]['5_00ampt'];
@@ -330,13 +318,40 @@ angular.module( 'njTDM.home', [
         busdata[tract]['12_00pmpt']= censusData.acs[tract]['12_00pmpt'];
         busdata[tract]['4_00pmpt'] = censusData.acs[tract]['4_00pmpt'];
       }
-      console.log('busdata',busdata);
+    /*******
+    * Model Types
+    * 0 - LEHD
+    * 1 - LEHD + % Bus
+    * 1 - CTPP Bus Trips
+    * 1 - AC Survey
+    */
+    var promise = [];
+    if(model_type == 'lehd'){
+      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata}).then(function(data){
+        return data;
+      });
+    }
+    else if(model_type == 'lehdbus'){
+      
       promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
         return data;
       });
     }
     else if(model_type == 'ctpp'){
-      promise = $http.post($scope.api+'tracts/ctppTrips', {tracts:$scope.tracts,od:$scope.model_od}).then(function(data){
+      promise = $http.post($scope.api+'tracts/ctppTrips', {tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata}).then(function(data){
+        return data;
+      });
+    }
+    else if(model_type == 'censusregression'){
+      var regData = {};
+      for(tract in censusData.acs){
+        regData[tract] = {};
+        regData[tract].arts = censusData.acs[tract].arts;
+        regData[tract].car_0 = censusData.acs[tract].car_0;
+        regData[tract].race_white = censusData.acs[tract].race_white;
+      }
+      console.log(regData);
+      promise = $http.post($scope.api+'tracts/ctppTrips', {tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata,cenData:regData}).then(function(data){
         return data;
       });
     }
@@ -415,7 +430,7 @@ angular.module( 'njTDM.home', [
   
   $scope.showOD = function(type){
     //console.log($scope.model_type);
-    if(type == 'lehd' || type == 'lehdbus' || type == 'ctpp'){
+    if(type == 'lehd' || type == 'lehdbus' || type == 'ctpp' || type == 'censusregression'){
       return true;
     }
     return false;
