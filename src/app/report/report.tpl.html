@@ -1,0 +1,131 @@
+<!-- <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#home">Start Bootstrap</a>
+        </div>
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#about">About</a>
+                </li>
+                <li><a href="#services">Services</a>
+                </li>
+                <li><a href="#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+        
+    </div>
+</nav> -->
+<div class="container" style="margin-top:60px">
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <p class="lead">Market Areas</p>
+            <div class="list-group">
+                <a ng-repeat="market in marketAreas" class="list-group-item" ng-class="isActiveMarket(market.id)" ng-click="setActiveMarket(market.id)">{{market.name}}</a>
+            </div>
+            <select ui-select2   ng-model="current_model_index" class='template_select'>
+              <option  ng-repeat="model in finished_models | filter:{marketArea:activeMarket}" value="{{model.id}}">{{ model.name }}</option>
+            </select>
+            <br><br>
+            <p class='btn-grp'>
+                <a class='btn btn-info' ng-click="loadModelData(current_model_index)" ng-disabled='loading'> Load Model </a>
+            </p>
+            <div class="progress progress-striped active" ng-show='loading'>
+              <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                <span class="sr-only">Loading Data</span>
+              </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <ol class="breadcrumb">
+              <li><a href="#">{{marketAreas[activeMarket].name}}</a></li>
+            </ol>
+            <div class="well" ng-show='loadedModels.length > 0'>
+                <span class="label label-primary" ng-repeat="model in loadedModels">{{model.name}}</span>
+            </div>
+
+            <div class="thumbnail">
+                <div id=""
+
+            </div>
+
+            <div class="well">
+<!-- 
+                <div class="text-right">
+                    <a class="btn btn-success">Leave a Review</a>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        Anonymous
+                        <span class="pull-right">10 days ago</span>
+                        <p>This product was great in terms of quality. I would definitely buy another!</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        Anonymous
+                        <span class="pull-right">12 days ago</span>
+                        <p>I've alredy ordered another one!</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        Anonymous
+                        <span class="pull-right">15 days ago</span>
+                        <p>I've seen some better than this, but not at this price. I definitely recommend this item.</p>
+                    </div>
+                </div>
+
+            </div> -->
+
+        </div>
+
+    </div>
+
+</div>
+<!-- /.container -->
+
+<!-- <div class="container">
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p><a href="#">NJTransit</a> Demand Forcasting NJTransit
+                </p>
+            </div>
+        </div>
+    </footer>
+</div> -->

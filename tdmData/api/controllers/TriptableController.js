@@ -39,7 +39,11 @@ module.exports = {
 		});
 	},
 	models: function(req,res){
-		var sql = 'SELECT scenario.name,triptable.id FROM scenario join triptable on scenario.trip_table_id = triptable.id where triptable.model_finished = 1';
+		var where = '';
+		if(typeof req.param('marketarea') != 'undefined'){
+			where = ' and scenario."marketArea" = '+req.param('marketarea');
+		}
+		var sql = 'SELECT scenario.name,triptable.id,scenario."marketArea" FROM scenario join triptable on scenario.trip_table_id = triptable.id where triptable.model_finished = 1' +where;
 		Gtfs.query(sql,{},function(err,data){
 			res.send(data.rows);
 		});
