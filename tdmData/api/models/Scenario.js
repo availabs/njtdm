@@ -16,7 +16,8 @@ module.exports = {
 	center : 'ARRAY',
 	model_type : 'INTEGER',
 	trip_table_id : 'INTEGER',
-	ampm : 'INTEGER'
+	ampm : 'INTEGER',
+	marketArea : 'INTEGER'
   }
 
 };

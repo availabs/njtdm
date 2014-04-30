@@ -1,7 +1,7 @@
 /**
 * HOME Module
 **/
-angular.module( 'njTDM.home', [
+var homeMod = angular.module( 'njTDM.home', [
   'ui.state',
   'leaflet-directive',
   'ui.bootstrap',
@@ -98,8 +98,8 @@ angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario,TripTable,$modal) {
-  $scope.api = 'http://lor.availabs.org:1338/';
-  ///$scope.api = 'http://localhost:1337/';
+  //$scope.api = 'http://lor.availabs.org:1338/';
+  $scope.api = 'http://localhost:1337/';
   $scope.current_template_index = 0;
   $scope.model_time = 'am';
   $scope.census_vars = censusData.variables;
@@ -348,6 +348,8 @@ angular.module( 'njTDM.home', [
         regData[tract] = {};
         regData[tract].arts = censusData.acs[tract].arts;
         regData[tract].car_0 = censusData.acs[tract].car_0;
+        regData[tract].car_1 = censusData.acs[tract].car_1;
+        regData[tract].information = censusData.acs[tract].information;
         regData[tract].race_white = censusData.acs[tract].race_white;
       }
       console.log(regData);
@@ -530,13 +532,11 @@ angular.module( 'njTDM.home', [
   //***************************************************************************************************
   //***************************************************************************************************
 })
-.controller( 'DataCtrl', function DataController( $scope,$http,$filter,Scenario,TripTable,$modal) {
-  $scope.working = 'hello';
-});
+
 
 
 //--------------------------------------------------------------
-var ModalInstanceCtrl = function ($scope, $modalInstance) {
+.controller( 'ModalInstanceCtrl', function ModalInstanceCtrl($scope, $modalInstance) {
   
   $scope.ok = function (info) {
     $modalInstance.close(info);
@@ -545,7 +545,9 @@ var ModalInstanceCtrl = function ($scope, $modalInstance) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
-};
+});
+
+
 
 
 

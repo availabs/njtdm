@@ -2,6 +2,7 @@ angular.module( 'njTDM', [
   'templates-app',
   'templates-common',
   'njTDM.home',
+  'njTDM.report',
   'ui.state',
   'ui.route'
 ])
