@@ -59,64 +59,22 @@ var reportMod = angular.module( 'njTDM.report', [
         $scope.finished_models.splice(v,1);
       }
       $scope.loading=false;
-      console.log(data);
-      $scope.newData(data);
+      
+      console.log($scope.loadedModels[$scope.loadedModels.length-1].name);
+      $scope.newData(data,$scope.loadedModels[$scope.loadedModels.length-1].name);
     });
   };
 
-  $scope.newData = function(data){
-    $scope.model_data = modelAnalyst.update_data(data);
-        // console.log($scope.model_data);
-        // $scope.route_count = $scope.model_data.routes.all();
-        // $scope.route_total = 0;
-        // $scope.model_data.routes.all().forEach(function(d){
-        //   $scope.route_total += d.value;
-        // });
-
-        // // get all on_stop objects
-        // $scope.on_stops = $scope.model_data.on_stops.all();
-        // // sum number of boardings at each stop
-        // $scope.on_stops_total = d3.sum($scope.on_stops, function(d) {return d.value;});
-
-        // // get all off_stop objects
-        // $scope.off_stops = $scope.model_data.off_stops.all();
-        // // sum number of alightings at each stop
-        // $scope.off_stops_total = d3.sum($scope.off_stops, function(d) {return d.value;});
-
-        // $scope.transfer_counts = $scope.model_data.transfer_counts.all();
-
-        // $scope.start_time_group = $scope.model_data.start_time_group.all();
-
-        // $scope.model_bad_trips = $scope.model_data.model_bad_trips;
-
-        // $scope.wait_time_group = $scope.model_data.wait_time_group.all();
-
-        // var noWaits = $scope.wait_time_group[0].value,
-        //     normWaits = 0,
-        //     badWaits = $scope.model_data.model_bad_trips.length,
-        //     totalWaits = 0;
-        // for (var i = 1; i < $scope.wait_time_group.length; i++) {
-        //   normWaits += $scope.wait_time_group[i].value;
-        // }
-        // totalWaits = noWaits + normWaits + badWaits;
-        // //console.log(noWaits, normWaits, badWaits, totalWaits);
-        // $scope.wait_time_data = {no_waits: noWaits,
-        //                           normal_waits: normWaits,
-        //                           bad_waits: badWaits,
-        //                           total_waits: totalWaits,
-        //                           percent_no_waits: (100*noWaits/totalWaits).toFixed(2),
-        //                           percent_norm_waits: (100*normWaits/totalWaits).toFixed(2),
-        //                           percent_bad_waits: (100*badWaits/totalWaits).toFixed(2)};
-
-        // gtfsGeo.clearGraphs();
-        // gtfsGeo.drawStartTimeGraph($scope.start_time_group);
-        // gtfsGeo.drawWaitTimeGraph($scope.wait_time_group.splice(1));
+  $scope.newData = function(data,name){
+    
+    reportAnalyst.update_data(data,name);
+    reportAnalyst.clearGraphs();
+    reportAnalyst.renderGraphs();
+       
   };
 
   //$scope.isActiveZone = funtion()  
   $http.get($scope.api+'triptable/finished',{}).success(function(data){
-        $scope.finished_models = data;
-        console.log(data);
-        
+    $scope.finished_models = data;        
   });
 });

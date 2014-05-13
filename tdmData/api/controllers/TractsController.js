@@ -66,6 +66,8 @@ acs : function(req,res){
 },
 surveyTrips : function(req,res){
 	console.log("Survey");
+	var randomness = (random(0,20)/10000);
+	randomness = 0;
 	if (!req.param('tracts') instanceof Array) {
 		res.send('Must post Array of 11 digit fips codes to tracts');
 	}
@@ -94,11 +96,11 @@ surveyTrips : function(req,res){
 					trip.from_geoid = tract.o_geoid10;
 					trip.to_geoid = tract.d_geoid10;
 					if(tract.access != 1){
-						trip.from_coords = [tract.on_lat*1+(random(0,20)/10000),tract.on_lng*1+(random(0,20)/10000)];
+						trip.from_coords = [tract.on_lat*1+randomness,tract.on_lng*1+randomness];
 					}else{
-						trip.from_coords = [tract.o_lat*1+(random(0,20)/10000),tract.o_lng*1+(random(0,20)/10000)];
+						trip.from_coords = [tract.o_lat*1+randomness,tract.o_lng*1+randomness];
 					}
-					trip.to_coords = [tract.d_lat*1+(random(0,20)/10000),tract.d_lng*1+(random(0,20)/10000)];
+					trip.to_coords = [tract.d_lat*1+randomness,tract.d_lng*1+randomness];
 					
 					d = new Date(tract.militarystarttime);
 					trip.time = d.getHours()+":"+d.getMinutes()+"am";
@@ -135,6 +137,7 @@ ctppTrips : function(req,res){
 	var trip_table = [];
 	fips_in = fips_in.slice(0, -1)+")";
 	var sql="SELECT from_tract as home_tract, to_tract as work_tract, est as bus_total from ctpp_a302103_tracts where (from_tract in "+fips_in+" or to_tract in "+fips_in+")";
+	console.log('ctpp sql',sql);
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
 		if(odtype == "survey"){
@@ -186,7 +189,7 @@ ctppTrips : function(req,res){
 				res.send(trip_table);
 			});
 		}else if(odtype == "stops"){
-			getStopsOD(fips_in,function(stop_points){
+			getStopsOD(tracts_data,function(stop_points){
 				var id = 0;
 				tracts_data.rows.forEach(function(tract){
 					var percent_trips = 0.05;
@@ -262,11 +265,12 @@ lehdTrips : function(req,res){
 	req.param('tracts').forEach(function(tract){
 		fips_in += "'"+tract+"',";
 	});
+	fips_in = fips_in.slice(0, -1)+")";
 	
 	
 	var trip_table = [];
-	fips_in = fips_in.slice(0, -1)+")";
 	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where CAST(s000/5 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
+	console.log('lehd sql',sql);
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
 		if(odtype == "survey"){
@@ -303,7 +307,7 @@ lehdTrips : function(req,res){
 				res.send(trip_table);
 			});
 		}else if(odtype == "stops"){
-			getStopsOD(fips_in,function(stop_points){
+			getStopsOD(tracts_data,function(stop_points){
 				var id = 0;
 				tracts_data.rows.forEach(function(tract){
 					var percent_trips = 0.05;
@@ -417,7 +421,7 @@ var calculateCensus = function(censusData,tract,timeOfDay){
 }
 
 var getSurveyOD = function(fips_in,callback){
-	var sql = "select O_MAT_LAT as o_lat, O_MAT_LONG as o_lng,D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo where o_geoid10 in "+fips_in+" and d_geoid10 in "+fips_in+" and not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT= 0 and not D_MAT_LONG = 0";
+	var sql = "select O_MAT_LAT as o_lat, O_MAT_LONG as o_lng,D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo where o_geoid10 in "+fips_in+" or d_geoid10 in "+fips_in+" and not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT= 0 and not D_MAT_LONG = 0";
 	Gtfs.query(sql,{},function(err,points_data){
 
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
@@ -446,9 +450,25 @@ var getSurveyOD = function(fips_in,callback){
 	});
 };
 
-var getStopsOD = function(fips_in,callback){
+
+var getStopsOD = function(input,callback){
+	tract_list = [];
+	input.rows.forEach(function(d){
+		if(tract_list.indexOf(d.home_tract) == -1){
+			tract_list.push(d.home_tract);
+		}
+		if(tract_list.indexOf(d.work_tract) == -1){
+			tract_list.push(d.work_tract);
+		}
+	});
+	var fips_in = "(";
+	tract_list.forEach(function(tract){
+		fips_in += "'"+tract+"',";
+	});
+	fips_in = fips_in.slice(0, -1)+")";
+
 	var sql = "SELECT a.geoid11,b.stop_lat,b.stop_lon FROM stop_fips as a join \"njtransit_bus_07-12-2013\".stops as b on a.stop_id  = cast(b.stop_id as integer) where a.geoid11 in "+fips_in;
-	
+	console.log('stop OD Sql',sql);
 	Gtfs.query(sql,{},function(err,points_data){
 
 		if (err) {  return console.log(err);}
@@ -478,7 +498,8 @@ var preserveProperties = function(properties, key, value) {
 
 var  pointVariation = function(){
 	var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-	return random(0,20)/10000*plusOrMinus;
+	//return random(0,20)/10000*plusOrMinus;
+	return 0
 };
 
 function random(min,max)
