@@ -4,8 +4,8 @@
     <option  ng-repeat="model in finished_models" value="{{ model.id}}">{{ model.name }}</option>
   </select>
     <br><br>
-    <a class="btn btn-info" ng-click="loadModelData(current_model_index)" ng-disabled="active_run">View Model Data</a>
-    <a class="btn btn-info" ng-click="switchView('model')">Model Data Viewer</a>
+    <a class="btn btn-info" ng-click="loadModelData(current_model_index)" ng-disabled="active_run">Load Model Data</a>
+    <a class="btn btn-info" href="#/report">Model Data Viewer</a>
   <br><br>
   <tabset>
     <tab heading="info">

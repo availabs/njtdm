@@ -190,6 +190,8 @@ reportAnalyst = {
         .ordinalColors(colorbrewer.Set1[5])
         .round(d3.time.minute.round)
         .xUnits(d3.time.minutes)
+        .xAxisLabel("Trip Departure Time")
+        .yAxisLabel("# of Riders")
         .group(reportAnalyst.modelStartTimeRunGroup,reportAnalyst.modelRuns[0])
         .valueAccessor(function (d) {
             return d.value[reportAnalyst.modelRuns[0]];
@@ -213,6 +215,8 @@ reportAnalyst = {
         .gap(1)
         .elasticY(true)
         .ordinalColors(colorbrewer.Set1[5])
+        .xAxisLabel("Trip Duration (minutes)")
+        .yAxisLabel("# of Riders")
         .group(reportAnalyst.modelDurationRunGroup,reportAnalyst.modelRuns[0])
         .valueAccessor(function (d) {
             return d.value[reportAnalyst.modelRuns[0]];
@@ -237,6 +241,8 @@ reportAnalyst = {
         .elasticY(true)
         .ordinalColors(colorbrewer.Set1[5])
         .group(reportAnalyst.waitTimeGroup,reportAnalyst.modelRuns[0])
+        .xAxisLabel("Trip Wait Time")
+        .yAxisLabel("# of Riders")
         .valueAccessor(function (d) {
             return d.value[reportAnalyst.modelRuns[0]];
         })
@@ -260,6 +266,8 @@ reportAnalyst = {
       .elasticY(true)
       .elasticX(true)
       .ordinalColors(colorbrewer.Set1[5])
+      .xAxisLabel("Distance Travelled (mi)")
+      .yAxisLabel("# of Riders")
       .group(reportAnalyst.distanceGroup,reportAnalyst.modelRuns[0])
       .valueAccessor(function (d) {
             return d.value[reportAnalyst.modelRuns[0]];
