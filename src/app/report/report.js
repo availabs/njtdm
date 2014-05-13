@@ -22,7 +22,8 @@ var reportMod = angular.module( 'njTDM.report', [
   //-------------------------------------------------------
   // Scope Setup
   ///------------------------------------------------------
-  $scope.api = 'http://localhost:1337/';
+  $scope.api = 'http://lor.availabs.org:1338/';
+  $scope.colors = colorbrewer.Set1[5];
   $scope.marketAreas = [
     {name:'Atlantic City', id:0},
     {name:'Princeton / Trenton', id:1},
