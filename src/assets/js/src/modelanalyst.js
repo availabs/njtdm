@@ -55,10 +55,13 @@ modelAnalyst = {
 				"start_time_group": startTimeGroup, "wait_time_group": waitTimeGroup,
 				"model_bad_trips" : modelAnalyst.modelBadTrips};
 	},
+  clearGraphs: function() {
+    d3.select('#graphDiv').selectAll('svg').remove();
+  },
 	drawStartTimeGraph: function(data) {
     var margin = {top: 10, right: 5, bottom: 20, left: 25},
-        width = 330 - margin.left - margin.right,
-        height = 280 - margin.top - margin.bottom,
+        width = 800 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom,
         dims = {margin: margin, width: width, height: height};
 
     var timeScale = d3.time.scale()
@@ -68,8 +71,8 @@ modelAnalyst = {
   },
   drawWaitTimeGraph: function(data) {
     var margin = {top: 10, right: 10, bottom: 20, left: 35},
-        width = 330 - margin.left - margin.right,
-        height = 250 - margin.top - margin.bottom,
+        width = 800 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom,
         dims = {margin: margin, width: width, height: height};
 
     var Xmin = d3.min(data, function(d) { return d.key });
