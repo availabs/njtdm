@@ -1,0 +1,1 @@
+/opentripplanner-api-webapp/ws/tile/{z}/{x}/{y}.png?layers=traveltime&styles=color30&batch=true&mode=TRANSIT%2CWALK&maxWalkDistance=2000&time=2013-07-23T08%3A00%3A00&fromPlace=39.352816861148575%2C-74.45005416870117&toPlace=-18.792719100000003%2C-90.27034235 

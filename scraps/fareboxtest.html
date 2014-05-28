@@ -1,0 +1,55 @@
+<script src="../build/assets/js/jquery.min.js"></script>
+<script src="../build/assets/js/crossfilter.min.js"></script>
+<script src="../build/assets/js/d3.js"></script>
+<script>
+	var fareTrips = {};
+	$.ajax('http://localhost:1337/triptable/farebox',{data:{marketarea:1}})
+	.done(function(data){
+		console.log('hello farebox',data.length, data);
+		fareTrips = crossfilter(data);
+		fareRoutes = fareTrips.dimension(function(d){return d.RUN_DATE;});
+		fairDayRoute = fareRoutes.group().reduce(
+	      function (p, v) {p[v.LINE] = (p[v.LINE] || 0) + v.TOTAL_TRANSACTIONS*1; return p;},
+	      function (p, v) {p[v.LINE] = (p[v.LINE] || 0) - v.TOTAL_TRANSACTIONS*1; return p;},
+	      function () { return {}; }
+	    );
+		console.log('routes',fairDayRoute.all());
+		var output = []
+		for(var key in fairDayRoute.all()[0].value){
+
+		    var min = d3.min(fairDayRoute.all(),function(d){ return d.value[key]; });
+		    var max = d3.max(fairDayRoute.all(),function(d){ return d.value[key]; });
+		    var mean = d3.mean(fairDayRoute.all(),function(d){ return d.value[key]; });
+		    var median = d3.median(fairDayRoute.all(),function(d){ return d.value[key]; });
+		    for(var i = 0;i<max;i++){
+		    	var ride = {
+		    		modelRun: "Princeton AM median",
+					route: key
+		    	};
+		    	output.push(ride);
+		    }
+
+			console.log(key,min,max,mean,median);
+		}
+		console.log(output);
+
+		$('body').append(JSON.stringify(output));
+		
+		// fareRoutes = fareTrips.dimension(function(d){return d.LINE;});
+		// fareRoutesGroup = fareRoutes.group().reduceSum(function(d) { return d.TOTAL_TRANSACTIONS*1; });
+		// console.log('routes',fareRoutesGroup.all());
+
+		// fareFareZones = fareTrips.dimension(function(d){return d.BOARDING_ZONE;});
+		// fareFareZonesGroup = fareFareZones.group().reduceSum(function(d){ return d.TOTAL_TRANSACTIONS*1; });
+		// console.log('zones boarding',fareFareZonesGroup.all());
+
+		// fareFareZonesAlighting = fareTrips.dimension(function(d){return d.ALIGHTING_ZONE;});
+		// fareFareZonesAlightingGroup = fareFareZonesAlighting.group().reduceSum(function(d){ return d.TOTAL_TRANSACTIONS*1; });
+		// console.log('zones Alighting',fareFareZonesGroup.all());
+
+		// fareRouteStart = fareTrips.dimension(function(d){return d.LINE+" "+d.START_TIME;});
+		// fareRouteStartGroup = fareRouteStart.group().reduceSum(function(d){ return d.TOTAL_TRANSACTIONS*1; });
+		// console.log('start time',fareRouteStartGroup.all());
+	})
+
+</script>

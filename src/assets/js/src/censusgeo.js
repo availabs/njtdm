@@ -58,8 +58,14 @@ censusGeo = {
             // textTitle += "<strong>Employment:</strong> "+ number_format(censusData.acs[d.properties.geoid].employed) +" <br>";
             // textTitle += "<strong>Unemployment:</strong> "+ number_format(censusData.acs[d.properties.geoid].unemployed) +" <br>";
             textTitle += "<strong>Bus to Work:</strong> "+ number_format(censusData.acs[d.properties.geoid].bus_to_work) +" ("+ number_format((censusData.acs[d.properties.geoid].bus_to_work/censusData.acs[d.properties.geoid].travel_to_work_total*100).toFixed(2)) +"%) <br>";
-            textTitle += "<strong>Trip Table inbound:</strong> "+ number_format(tripTable.tt[d.properties.geoid].inbound_trips) +" <br>";
-            textTitle += "<strong>Trip Table outbound:</strong> "+ number_format(tripTable.tt[d.properties.geoid].outbound_trips) +" <br>";
+            var inbound_trips = 0,outbound_trips = 0;
+
+            if(typeof tripTable.tt[d.properties.geoid] != 'undefined'){
+              inbound_trips = tripTable.tt[d.properties.geoid].inbound_trips;
+              outbound_trips = tripTable.tt[d.properties.geoid].outbound_trips;
+            }
+            textTitle += "<strong>Trip Table inbound:</strong> "+ number_format(inbound_trips) +" <br>";
+            textTitle += "<strong>Trip Table outbound:</strong> "+ number_format(outbound_trips) +" <br>";
             $("#info").show().html(textTitle);
           }
         })

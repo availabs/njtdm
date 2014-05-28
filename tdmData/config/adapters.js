@@ -26,14 +26,14 @@ module.exports.adapters = {
 
   // MySQL is the world's most popular relational database.
   // Learn more: http://en.wikipedia.org/wiki/MySQL
-  myLocalMySQLDatabase: {
+  farebox: {
     module: 'sails-mysql',
-    host: 'YOUR_MYSQL_SERVER_HOSTNAME_OR_IP_ADDRESS',
-    user: 'YOUR_MYSQL_USER',
+    host: 'lor.availabs.org',
+    user: 'passenger',
     // Psst.. You can put your password in config/local.js instead
     // so you don't inadvertently push it up if you're using version control
-    password: 'YOUR_MYSQL_PASSWORD',
-    database: 'YOUR_MYSQL_DB'
+    password: 'am1238wk',
+    database: 'njtransit'
   },
   postgres:{
     module: 'sails-postgresql',
