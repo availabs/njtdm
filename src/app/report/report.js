@@ -22,14 +22,20 @@ var reportMod = angular.module( 'njTDM.report', [
   //-------------------------------------------------------
   // Scope Setup
   ///------------------------------------------------------
-  $scope.api = 'http://lor.availabs.org:1338/';
+  //$scope.api = 'http://lor.availabs.org:1338/';
+  $scope.api = 'http://localhost:1337/';
   $scope.colors = colorbrewer.Set1[5];
+
   $scope.marketAreas = [
     {name:'Atlantic City', id:0},
     {name:'Princeton / Trenton', id:1},
-    {name:'Patterson', id:2}
+    {name:'Paterson', id:2}
   ];
+
+  $scope.loadedData = {0:[],1:[],2:[]};
+
   $scope.activeMarket = 0;
+  
   $scope.loadedModels = [];
   $scope.loading = false;
   
@@ -76,6 +82,13 @@ var reportMod = angular.module( 'njTDM.report', [
 
   //$scope.isActiveZone = funtion()  
   $http.get($scope.api+'triptable/finished',{}).success(function(data){
-    $scope.finished_models = data;        
+    $scope.finished_models = data;
+    console.log(data); 
+    $scope.finished_models.push({id: 'acam', marketArea: 0,name:"AC AM Farebox"});
+    $scope.finished_models.push({id: 'acammin', marketArea: 0,name:"AC AM Farebox Min"});
+    $scope.finished_models.push({id: 'acammax', marketArea: 0,name:"AC AM Farebox Max"});
+    $scope.finished_models.push({id: 'princeam', marketArea: 1,name:"Princeton/Trenton AM Farebox"});
+    $scope.finished_models.push({id: 'princeammin', marketArea: 1,name:"Princeton/Trenton AM Farebox Min"});
+    $scope.finished_models.push({id: 'princeammax', marketArea: 1,name:"Princeton/Trenton AM Farebox Max"});
   });
 });

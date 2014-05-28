@@ -44,16 +44,18 @@ stateTracts: function(req,res,$http){
 	});
 },
 acs : function(req,res){
+	var where = '';
 	if (!req.param('tracts') instanceof Array) {
-		res.send('Must post Array of 11 digit fips codes to tracts');
+		var fips_in = "(";
+		req.param('tracts').forEach(function(tract){
+			
+			fips_in += "'"+tract+"',";
+		});
+		fips_in = fips_in.slice(0, -1)+")";
+		where = 'where geoid in '+fips_in;
 	}
-	var fips_in = "(";
-	req.param('tracts').forEach(function(tract){
-		
-		fips_in += "'"+tract+"',";
-	});
-	fips_in = fips_in.slice(0, -1)+")";
-	var sql = 'select * from tl_2011_34_tract_acs where geoid in '+fips_in;
+	
+	var sql = 'select * from tl_2011_34_tract_acs '+ where;
 
 	Triptable.query(sql,{},function(err,data){
 		if (err) {
