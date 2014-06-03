@@ -73,17 +73,21 @@ var reportMod = angular.module( 'njTDM.report', [
   };
 
   $scope.newData = function(data,name){
-    
-    reportAnalyst.update_data(data,name);
-    reportAnalyst.clearGraphs();
-    reportAnalyst.renderGraphs();
-       
+    var marketAreas = [7,11,9]; //Market Area template ids in tdmData.scenario
+ 
+    var api = 'http://localhost:1337';
+    d3.json(api+'/tracts/scenario/'+marketAreas[$scope.activeMarket],function(err,geoData){
+     
+      reportAnalyst.geoData = geoData;
+      reportAnalyst.update_data(data,name);
+      reportAnalyst.clearGraphs();
+      reportAnalyst.renderGraphs();
+    });
   };
 
   //$scope.isActiveZone = funtion()  
   $http.get($scope.api+'triptable/finished',{}).success(function(data){
     $scope.finished_models = data;
-    console.log(data); 
     $scope.finished_models.push({id: 'acam', marketArea: 0,name:"AC AM Farebox"});
     $scope.finished_models.push({id: 'acammin', marketArea: 0,name:"AC AM Farebox Min"});
     $scope.finished_models.push({id: 'acammax', marketArea: 0,name:"AC AM Farebox Max"});

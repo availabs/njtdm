@@ -47,6 +47,11 @@ module.exports.routes = {
     action : 'stateTracts',
     cors: accessible
   },
+  '/tracts/scenario/:scenarioid':{
+    controller : 'TractsController',
+    action : 'scenarioTracts',
+    cors: accessible
+  },
   '/tracts/acs':{
     controller : 'TractsController',
     action : 'acs',

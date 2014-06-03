@@ -11,6 +11,9 @@
           <td>Trips Planned</td><td>{{ trip_table.length | number }}</td>
         </tr>
         <tr>
+          <td>Trips Unroutable</td><td>{{ tt_failed}}</td>
+        </tr>
+        <tr>
           <td>Number of Tracts </td><td>{{ tracts.length | number }}</td>
         </tr>
       </table>
@@ -20,7 +23,6 @@
       </div>
       <label>Trip Table Generator</label>
       <select ui-select2   ng-model="model_type" class='template_select'>
-       <option value="lehd" >LEHD 5%</option>
        <option value="lehdbus" >LEHD + ACS % Bus Trips</option>
        <option value="ctpp" >CTPP 2010 Bus Trips</option>
        <option value="censusregression" >Atlantic City Census Regression</option>
@@ -39,6 +41,7 @@
       <select ui-select2   ng-model="model_time" class='template_select'>
        <option value="am" selected>AM Peak</option>
        <option value="pm">PM Peak</option>
+       <option value="fullday">Full Day</option>
       </select>
       <br><br>
       <a class="btn btn-info" ng-click="saveScenario()">Save Current Scenario</a>

@@ -43,6 +43,34 @@ stateTracts: function(req,res,$http){
 		//res.send(JSON.stringify(routesCollection));
 	});
 },
+scenarioTracts: function(req,res,$http){
+	var scenarioSQL = 'select tracts from scenario where id = '+req.param('scenarioid');
+	Gtfs.query(scenarioSQL,{},function(err,scenario_tracts){
+		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+		var sql = 'select ST_AsGeoJSON(the_geom) as geo,geoid from tl_2013_34_tract where geoid in '+scenario_tracts.rows[0].tracts.replace('[','(').replace(']',')').replace(/"/g, '\'');
+		var routesCollection = {};
+		routesCollection.type = "FeatureCollection";
+		routesCollection.features = [];
+		
+		Tracts.query(sql,{},function(err,data){
+			if (err) {
+				res.send('{status:"error",message:"'+err+'"}',500);
+				return console.log(err);
+			}
+			data.rows.forEach(function(route){
+				var routeFeature = {};
+				routeFeature.type="Feature";
+				routeFeature.geometry = JSON.parse(route.geo);
+				routeFeature.properties = {};
+				routeFeature.properties.geoid = route.geoid;
+				routesCollection.features.push(routeFeature);
+			});
+			//var topology = topojson.topology({tracts: routesCollection},{"property-transform":preserveProperties});
+			res.send(JSON.stringify(routesCollection));
+			//res.send(JSON.stringify(routesCollection));
+		});
+	});
+},
 acs : function(req,res){
 	var where = '';
 	if (!req.param('tracts') instanceof Array) {
@@ -85,7 +113,6 @@ surveyTrips : function(req,res){
 	fips_in = fips_in.slice(0, -1)+")";
 	var trip_table = [];
 	var sql = "select accessmode as access,O_MAT_LAT as o_lat,O_MAT_LONG as o_lng,ON_MAT_LAT as on_lat,ON_MAT_LONG as on_lng,OFF_MAT_LAT as off_lat,OFF_MAT_LONG as off_lng, b.militarystarttime, b.weight, D_MAT_LAT as d_lat, D_MAT_LONG as d_lng,o_geoid10,d_geoid10 from survey_geo as a join survey_attributes as b on a.id = b.id where MILITARYSTARTTIME BETWEEN '1970-01-01 05:30:00'::timestamp AND '1970-01-01 10:00:00'::timestamp AND o_geoid10 in "+fips_in+" and d_geoid10 in "+fips_in;
-	console.log(sql);
 	Gtfs.query(sql,{},function(err,trips_data){
 	if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
 		getSurveyOD(fips_in,function(origin_points,destination_points){
@@ -110,7 +137,7 @@ surveyTrips : function(req,res){
 					trip_table.push(trip);
 				}
 			});
-			res.send(trip_table);
+			res.send({'tt':trip_table});
 		});
 	});
 },
@@ -137,9 +164,11 @@ ctppTrips : function(req,res){
 	
 	
 	var trip_table = [];
+	var cantRoute = [];
+					
 	fips_in = fips_in.slice(0, -1)+")";
 	var sql="SELECT from_tract as home_tract, to_tract as work_tract, est as bus_total from ctpp_a302103_tracts where (from_tract in "+fips_in+" or to_tract in "+fips_in+")";
-	console.log('ctpp sql',sql);
+	//console.log('ctpp sql',sql);
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
 		if(odtype == "survey"){
@@ -185,10 +214,12 @@ ctppTrips : function(req,res){
 							trip.time =getTime(timeMatrix);
 							trip.source ="CTPP"+version;
 							trip_table.push(trip);
+						}else{
+							cantRoute.push(trip);
 						}
 					}
 				});
-				res.send(trip_table);
+				res.send({'tt':trip_table,'failed':cantRoute});
 			});
 		}else if(odtype == "stops"){
 			getStopsOD(tracts_data,function(stop_points){
@@ -238,41 +269,34 @@ ctppTrips : function(req,res){
 							trip.time = getTime(timeMatrix);
 							trip.source ="CTPP"+version;
 							trip_table.push(trip);
+						}else{
+							cantRoute.push(trip);
 						}
 					}
 				});
-				res.send(trip_table);
+				res.send({'tt':trip_table,'failed':cantRoute});
 			});
 
 		}
 	});
 },
 lehdTrips : function(req,res){
-	var version = "0.0.3";
-	console.log("LEHD");
-	if (!req.param('tracts') instanceof Array) {
-		res.send('Must post Array of 11 digit fips codes to LEHD Trip Table');
-	}
+	var version = "0.0.4";
+	console.log("LEHD "+version);
+	if (!req.param('tracts') instanceof Array) { res.send('Must post Array of 11 digit fips codes to LEHD Trip Table');}
 	var odtype = "stops";
-	if(typeof req.param('od') != 'undefined'){
-		odtype =req.param('od');
-	}
+	if(typeof req.param('od') != 'undefined'){ odtype =req.param('od');}
 	var timeOfDay = "am";
-	if(typeof req.param('timeofday') != 'undefined'){
-		timeOfDay = req.param('timeofday');
-	}
-	
-	output = [];
-	var fips_in = "(";
-	req.param('tracts').forEach(function(tract){
-		fips_in += "'"+tract+"',";
-	});
-	fips_in = fips_in.slice(0, -1)+")";
+	if(typeof req.param('timeofday') != 'undefined'){ timeOfDay = req.param('timeofday');}
+
+	var output = [],
+		trip_table = [], 
+		cantRoute = [];
+	var fips_in = toPostgresArray(req.param('tracts'));
 	
 	
-	var trip_table = [];
 	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where CAST(s000/5 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
-	console.log('lehd sql',sql);
+	//console.log('lehd sql',sql);
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
 		if(odtype == "survey"){
@@ -303,10 +327,12 @@ lehdTrips : function(req,res){
 							trip.time = getTime(timeMatrix);
 							trip.source ="LEHD"+version;
 							trip_table.push(trip);
+						}else{
+							cantRoute.push(trip);
 						}
 					}
 				});
-				res.send(trip_table);
+				res.send({'tt':trip_table,'failed':cantRoute});
 			});
 		}else if(odtype == "stops"){
 			getStopsOD(tracts_data,function(stop_points){
@@ -343,10 +369,12 @@ lehdTrips : function(req,res){
 							trip.time = getTime(timeMatrix);
 							trip.source ="LEHD"+version;
 							trip_table.push(trip);
+						}else{
+							cantRoute.push(trip);
 						}
 					}
 				});
-				res.send(trip_table);
+				res.send({'tt':trip_table,'failed':cantRoute});
 			});
 
 		}
@@ -470,7 +498,7 @@ var getStopsOD = function(input,callback){
 	fips_in = fips_in.slice(0, -1)+")";
 
 	var sql = "SELECT a.geoid11,b.stop_lat,b.stop_lon FROM stop_fips as a join \"njtransit_bus_07-12-2013\".stops as b on a.stop_id  = cast(b.stop_id as integer) where a.geoid11 in "+fips_in;
-	console.log('stop OD Sql',sql);
+	//console.log('stop OD Sql',sql);
 	Gtfs.query(sql,{},function(err,points_data){
 
 		if (err) {  return console.log(err);}
@@ -507,4 +535,11 @@ var  pointVariation = function(){
 function random(min,max)
 {
     return Math.floor(Math.random()*(max-min+1)+min);
+}
+function toPostgresArray(input){
+	var output ="(";
+	input.forEach(function(tract){
+		output += "'"+tract+"',";
+	});
+	return output.slice(0, -1)+")";
 }
