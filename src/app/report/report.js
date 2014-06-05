@@ -23,7 +23,7 @@ var reportMod = angular.module( 'njTDM.report', [
   // Scope Setup
   ///------------------------------------------------------
   //$scope.api = 'http://lor.availabs.org:1338/';
-  $scope.api = 'http://localhost:1337/';
+  //$scope.api = 'http://localhost:1337/';
   $scope.colors = colorbrewer.Set1[5];
 
   $scope.marketAreas = [

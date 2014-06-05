@@ -273,10 +273,13 @@ generateTrips : function(req,res){
 								regressionRiders += req.param('cenData')[tract.home_tract].occupied_housing*-0.09579623;
 								///console.log('rr',regressionRiders);
 							}else if(marketArea == 1){
-								regressionRiders = 38.794+req.param('cenData')[tract.home_tract].car_0*0.743
-								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.141
-								regressionRiders += req.param('cenData')[tract.home_tract].race_white*-0.027
-
+								regressionRiders = -0.04630396+req.param('cenData')[tract.home_tract].car_0* 0.2751065;
+								regressionRiders += req.param('cenData')[tract.home_tract].race_black* 0.01149703;
+								regressionRiders += req.param('cenData')[tract.home_tract].age18_19*-0.08908261;
+								regressionRiders += req.param('cenData')[tract.home_tract].age25_29*  0.1412946;
+								regressionRiders += req.param('cenData')[tract.home_tract]['20_49units']*  0.1392643;
+								regressionRiders += req.param('cenData')[tract.home_tract]['10_19units']*-0.07791869;
+								
 							}
 
 							if(req.param('buspercent')[tract.home_tract].bus_to_work > 0){
