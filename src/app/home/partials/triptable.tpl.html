@@ -38,10 +38,11 @@
         {{model_od}}
       </div>
        <label>Model Time</label>
-      <select ui-select2   ng-model="model_time" class='template_select'>
+      <select ui-select2   ng-model="model_time" class='template_select' ng-change="update_time(model_time)">
        <option value="am" selected>AM Peak</option>
        <option value="pm">PM Peak</option>
        <option value="fullday">Full Day</option>
+       {{model_time}}
       </select>
       <br><br>
       <a class="btn btn-info" ng-click="saveScenario()">Save Current Scenario</a>

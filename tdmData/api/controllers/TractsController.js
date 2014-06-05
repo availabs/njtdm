@@ -141,33 +141,28 @@ surveyTrips : function(req,res){
 		});
 	});
 },
-ctppTrips : function(req,res){
-	var version = "0.0.1";
-	console.log("CTPP "+version);
-	if (!req.param('tracts') instanceof Array) {
-		res.send('Must post Array of 11 digit fips codes to LEHD Trip Table');
-	}
+generateTrips : function(req,res){
+	var version = "0.0.5";
+	var mode = 'lehd'
+	if(typeof req.param('mode') != 'undefined'){ mode =req.param('mode');}
+	if (!req.param('tracts') instanceof Array) { res.send('Must post Array of 11 digit fips codes to LEHD Trip Table');}
 	var odtype = "stops";
-	if(typeof req.param('od') != 'undefined'){
-		odtype =req.param('od');
-	}
+	if(typeof req.param('od') != 'undefined'){ odtype =req.param('od');}
 	var timeOfDay = "am";
-	if(typeof req.param('timeofday') != 'undefined'){
-		timeOfDay = req.param('timeofday');
-	}
-	console.log(odtype);
-	output = [];
-	var fips_in = "(";
-	req.param('tracts').forEach(function(tract){
-		fips_in += "'"+tract+"',";
-	});
-	
-	
-	var trip_table = [];
-	var cantRoute = [];
+	if(typeof req.param('timeOfDay') != 'undefined'){ timeOfDay = req.param('timeOfDay');}
+	console.log(mode+version+' '+odtype+' '+timeOfDay)
+	var output = [],
+		trip_table = [], 
+		cantRoute = [];
+	var fips_in = toPostgresArray(req.param('tracts'));
 					
 	fips_in = fips_in.slice(0, -1)+")";
-	var sql="SELECT from_tract as home_tract, to_tract as work_tract, est as bus_total from ctpp_a302103_tracts where (from_tract in "+fips_in+" or to_tract in "+fips_in+")";
+
+	
+	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where s000 > 5 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
+	if(mode == 'ctpp'){
+		sql="SELECT from_tract as home_tract, to_tract as work_tract, est as bus_total from ctpp_a302103_tracts where (from_tract in "+fips_in+" or to_tract in "+fips_in+")";
+	}
 	//console.log('ctpp sql',sql);
 	Gtfs.query(sql,{},function(err,tracts_data){
 		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
@@ -175,6 +170,7 @@ ctppTrips : function(req,res){
 			getSurveyOD(fips_in,function(origin_points,destination_points){
 				var id = 0;
 				tracts_data.rows.forEach(function(tract){
+					var percent_trips = 0.05;
 					var percent_intime = 1;
 					var timeMatrix = {};
 					if(typeof req.param('buspercent') != 'undefined'){
@@ -196,9 +192,14 @@ ctppTrips : function(req,res){
 						// if(tract.home_tract == '34009021400'){
 						// console.log('what is happeniing?',regessionRiders,regPercent,req.param('cenData')[tract.home_tract].car_0,req.param('cenData')[tract.home_tract].car_1);
 						// }
+						
 						num_trips =  tract.bus_total*percent_intime*Math.abs(regPercent);
-					}else{
+					}else if(mode == 'ctpp'){
 						num_trips = tract.bus_total*percent_intime;
+						
+					}else{
+						num_trips = Math.round(tract.bus_total*percent_trips);
+						
 					}
 					for(var i = 0; i < num_trips;i++){
 						var trip = {};
@@ -225,17 +226,16 @@ ctppTrips : function(req,res){
 			getStopsOD(tracts_data,function(stop_points){
 				var id = 0;
 				tracts_data.rows.forEach(function(tract){
-					var percent_trips = 0.05;
-					var percent_intime = 1;
-					var timeMatrix = {};
+					
 					if(typeof req.param('buspercent') != 'undefined'){
-						var vars = calculateCensus(req.param('buspercent'),tract,timeOfDay);
-						percent_trips =  vars.percent_trips;
-						percent_intime = vars.percent_intime;
-						timeMatrix = vars.timeMatrix;
+						var vars = calculateCensus(req.param('buspercent'),tract,timeOfDay,mode);
+						var percent_trips =  vars.percent_trips;
+						var percent_intime = vars.percent_intime;
+						var timeMatrix = vars.timeMatrix;
 					}
-					var regPercent = 1;
+
 					if(typeof req.param('cenData')!= 'undefined'){
+						var regPercent = 1;
 						if(typeof req.param('cenData')[tract.home_tract] != 'undefined'){
 							var regessionRiders = Math.round(38.794+(req.param('cenData')[tract.home_tract].car_0*0.544)+(req.param('cenData')[tract.home_tract].arts*0.158)+(req.param('cenData')[tract.home_tract].race_white*-0.027));
 							if(req.param('buspercent')[tract.home_tract].bus_to_work > 0){
@@ -244,139 +244,56 @@ ctppTrips : function(req,res){
 								regPercent= regessionRiders / 1;
 							}	
 						}
-						console.log(regessionRiders,regPercent);
 						num_trips =  tract.bus_total*percent_intime*Math.abs(regPercent);
+					}else if(mode == 'ctpp'){
+						num_trips = tract.bus_total*percent_intime;			
 					}else{
-						num_trips = tract.bus_total*percent_intime;
+						num_trips = Math.round(tract.bus_total*percent_trips*percent_intime);
 					}
+
 					for(var i = 0; i < num_trips;i++){
 						var trip = {};
 						trip.id = id;
 						id += 1;
+						
 						trip.from_geoid = tract.home_tract;
 						trip.to_geoid = tract.work_tract;
+
+						if(timeOfDay == 'pm'){
+							trip.from_geoid = tract.work_tract;
+							trip.to_geoid = tract.home_tract;
+						}
+
 						trip.from_coords = [];
 						trip.to_coords = [];
 						if(tract.home_tract in stop_points && tract.work_tract in stop_points){
-							trip.from_coords = stop_points[tract.home_tract][random(0,stop_points[tract.home_tract].length-1)];
+							if(timeOfDay == 'am'){
+								trip.from_coords = stop_points[tract.home_tract][random(0,stop_points[tract.home_tract].length-1)];
+							}else if(timeOfDay == 'pm'){
+								trip.from_coords = stop_points[tract.work_tract][random(0,stop_points[tract.work_tract].length-1)];
+							}
 							trip.from_coords[0] += pointVariation();
 							trip.from_coords[1] += pointVariation();
 							
-							trip.to_coords = stop_points[tract.work_tract][random(0,stop_points[tract.work_tract].length-1)];
+							if(timeOfDay == 'am'){
+								trip.to_coords = stop_points[tract.work_tract][random(0,stop_points[tract.work_tract].length-1)];
+							}else if(timeOfDay == 'pm'){
+								trip.to_coords = stop_points[tract.home_tract][random(0,stop_points[tract.home_tract].length-1)];
+							}
 							trip.to_coords[0] += pointVariation();
 							trip.to_coords[1] += pointVariation();
 							
-							trip.time = getTime(timeMatrix);
-							trip.source ="CTPP"+version;
+							trip.time = getTime(timeMatrix,timeOfDay);
+							trip.source = mode+version;
 							trip_table.push(trip);
 						}else{
+							//console.log('cantroute',trip.to_geoid,trip.from_geoid);
 							cantRoute.push(trip);
-						}
+						}	
 					}
 				});
 				res.send({'tt':trip_table,'failed':cantRoute});
 			});
-
-		}
-	});
-},
-lehdTrips : function(req,res){
-	var version = "0.0.4";
-	console.log("LEHD "+version);
-	if (!req.param('tracts') instanceof Array) { res.send('Must post Array of 11 digit fips codes to LEHD Trip Table');}
-	var odtype = "stops";
-	if(typeof req.param('od') != 'undefined'){ odtype =req.param('od');}
-	var timeOfDay = "am";
-	if(typeof req.param('timeofday') != 'undefined'){ timeOfDay = req.param('timeofday');}
-
-	var output = [],
-		trip_table = [], 
-		cantRoute = [];
-	var fips_in = toPostgresArray(req.param('tracts'));
-	
-	
-	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where CAST(s000/5 as integer) > 1 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
-	//console.log('lehd sql',sql);
-	Gtfs.query(sql,{},function(err,tracts_data){
-		if (err) { res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
-		if(odtype == "survey"){
-			getSurveyOD(fips_in,function(origin_points,destination_points){
-				var id = 0;
-				tracts_data.rows.forEach(function(tract){
-					var percent_trips = 0.05;
-					var percent_intime = 1;
-					var timeMatrix = {};
-					if(typeof req.param('buspercent') != 'undefined'){
-						var vars = calculateCensus(req.param('buspercent'),tract,timeOfDay);
-						percent_trips =  vars.percent_trips;
-						percent_intime = vars.percent_intime;
-						timeMatrix = vars.timeMatrix;
-					}
-					num_trips = Math.round(tract.bus_total*percent_trips);
-					for(var i = 0; i < num_trips;i++){
-						var trip = {};
-						trip.id = id;
-						id += 1;
-						trip.from_geoid = tract.home_tract;
-						trip.to_geoid = tract.work_tract;
-						trip.from_coords = [];
-						trip.to_coords = [];
-						if(tract.home_tract in origin_points && tract.work_tract in destination_points){
-							trip.from_coords = origin_points[tract.home_tract][random(0,origin_points[tract.home_tract].length-1)];
-							trip.to_coords = destination_points[tract.work_tract][random(0,destination_points[tract.work_tract].length-1)];
-							trip.time = getTime(timeMatrix);
-							trip.source ="LEHD"+version;
-							trip_table.push(trip);
-						}else{
-							cantRoute.push(trip);
-						}
-					}
-				});
-				res.send({'tt':trip_table,'failed':cantRoute});
-			});
-		}else if(odtype == "stops"){
-			getStopsOD(tracts_data,function(stop_points){
-				var id = 0;
-				tracts_data.rows.forEach(function(tract){
-					var percent_trips = 0.05;
-					var percent_intime = 1;
-					var timeMatrix = {};
-					if(typeof req.param('buspercent') != 'undefined'){
-						var vars = calculateCensus(req.param('buspercent'),tract,timeOfDay);
-						percent_trips =  vars.percent_trips;
-						percent_intime = vars.percent_intime;
-						timeMatrix = vars.timeMatrix;
-					}
-					num_trips = Math.round(tract.bus_total*percent_trips*percent_intime);
-					for(var i = 0; i < num_trips;i++){
-						var trip = {};
-						trip.id = id;
-						id += 1;
-						trip.from_geoid = tract.home_tract;
-						trip.to_geoid = tract.work_tract;
-						trip.from_coords = [];
-						trip.to_coords = [];
-						if(tract.home_tract in stop_points && tract.work_tract in stop_points){
-
-							trip.from_coords = stop_points[tract.home_tract][random(0,stop_points[tract.home_tract].length-1)];
-							trip.from_coords[0] += pointVariation();
-							trip.from_coords[1] += pointVariation();
-							
-							trip.to_coords = stop_points[tract.work_tract][random(0,stop_points[tract.work_tract].length-1)];
-							trip.to_coords[0] += pointVariation();
-							trip.to_coords[1] += pointVariation();
-							
-							trip.time = getTime(timeMatrix);
-							trip.source ="LEHD"+version;
-							trip_table.push(trip);
-						}else{
-							cantRoute.push(trip);
-						}
-					}
-				});
-				res.send({'tt':trip_table,'failed':cantRoute});
-			});
-
 		}
 	});
 },
@@ -389,33 +306,69 @@ lehdTrips : function(req,res){
   
 };
 
-var getTime = function(timeMatrix){
+var getTime = function(timeMatrix,ampm){
 	var hour = random(6,9);
 	var minutes = random(0,59);
+	min = 0;
+	maxKey = 'unset';
+	//Find the Time Category with the most trips
 	for(key in timeMatrix){
-		if(timeMatrix[key].count > 0){
-			hour = timeMatrix[key].hour;
-			minutes = random(timeMatrix[key].lowMin,timeMatrix[key].highMin);
-			timeMatrix[key].count--;
+		if(timeMatrix[key].count > min){
+			maxKey = key;
+			min = timeMatrix[key].count;
 		}
 	}
-	return  hour+":"+minutes+'am';
+	//Schedule the trip for the category
+	if(maxKey !== 'unset'){
+		hour = timeMatrix[maxKey].hour;
+		minutes = random(timeMatrix[maxKey].lowMin,timeMatrix[maxKey].highMin);
+		timeMatrix[maxKey].count--;
+	}
+	if(+minutes < 10){
+		minutes = '0'+minutes;
+	}
+	console.log('am hour',hour);
+	if(ampm == 'pm'){
+		hour = +hour+10;
+		hour = hour % 12;
+	}
+	console.log('pm hour',hour);
+	return  hour+":"+minutes+ampm;
 }
 
-var calculateCensus = function(censusData,tract,timeOfDay){
+
+var calculateCensus = function(censusData,tract,timeOfDay,mode){
 	var output = {percent_trips:0.05,percent_intime:0,timeMatrix:{}};
 	if(typeof censusData != 'undefined'){
 		if(typeof censusData[tract.home_tract] != 'undefined'){
 			output.percent_trips = censusData[tract.home_tract].buspercent;
-			var timeSum= 0;
+			var amTimeSum= 0,pmTimeSum=0,offpeakSum=0,timeSum;
+			
+			//---------------------------------------
+			// Determine ridership 
+			//---------------------------------------
 			for(key in censusData[tract.home_tract]){
-				if(timeOfDay == 'am'){
-					if(['6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt'].indexOf(key) !== -1){
-						timeSum+=censusData[tract.home_tract][key];
-					}
+				if(['6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt'].indexOf(key) !== -1){
+					amTimeSum+=censusData[tract.home_tract][key];
+				}
+				if(['4_00pmpt'].indexOf(key) !== -1){
+					pmTimeSum+=censusData[tract.home_tract][key];
+				}
+				if(['5_00ampt','5_30ampt','11_00ampt','12_00ampt','12_00pmpt'].indexOf(key) !== -1){
+					offpeakSum+=censusData[tract.home_tract][key];
 				}
 			}
-			output.percent_intime = timeSum/censusData[tract.home_tract].pttotal;
+
+			output.amPercent = amTimeSum/censusData[tract.home_tract].pttotal;
+			output.pmPercent = pmTimeSum/censusData[tract.home_tract].pttotal;
+			output.offpeakPercent = offpeakSum/censusData[tract.home_tract].pttotal;
+			output.percent_intime = output.amPercent;
+			timeSum = amTimeSum;
+			// if(timeOfDay == 'pm'){
+			// 	output.percent_intime = output.amPercent;
+			// 	timeSum = pmTimeSum;
+			// }
+
 			if(isNaN(output.percent_intime)){
 				output.percent_intime = 1;
 			}
@@ -423,29 +376,36 @@ var calculateCensus = function(censusData,tract,timeOfDay){
 			output.percent_trips = 0;
 		}
 	}
-	var num_trips = Math.round(tract.bus_total*output.percent_trips*output.percent_intime);
+
+	var num_trips = tract.bus_total;
+	if(mode == 'lehd'){ Math.ceil(num_trips = num_trips*output.percent_trips)};
 	
 	for(key in censusData[tract.home_tract]){
-		if(timeOfDay == 'am'){
-			if(['6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt'].indexOf(key) !== -1){
-				var hour = 6;
-				var lowMin = 0;
-				var highMin = 29;
-				if(key.length == 8){
-					hour = key[0];
-					if(key[2] == '3'){
-						lowMin = 30;
-						highMin = 59;
-					}
-				}
-				if(key.length == 9){
-					hour = key.substring(0,2);
-					lowMin = 0;
+		
+		if(['6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt'].indexOf(key) !== -1){
+			var hour = 6;
+			var lowMin = 0;
+			var highMin = 29;
+			if(key.length == 8){
+				hour = key[0];
+				if(key[2] == '3'){
+					lowMin = 30;
 					highMin = 59;
 				}
-				output.timeMatrix[key] = {'count':Math.round((censusData[tract.home_tract][key]/timeSum)*num_trips*1),'hour':hour,'lowMin':lowMin,'highMin':highMin};
 			}
+			if(key.length == 9){
+				hour = key.substring(0,2);
+				lowMin = 0;
+				highMin = 59;
+			}
+			output.timeMatrix[key] = {
+				'count':Math.ceil((censusData[tract.home_tract][key]/timeSum)*num_trips*1),
+				'hour':hour,
+				'lowMin':lowMin,
+				'highMin':highMin
+			};
 		}
+		
 	}
 	return output;
 }

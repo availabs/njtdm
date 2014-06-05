@@ -31,6 +31,8 @@ var reportMod = angular.module( 'njTDM.report', [
     {name:'Princeton / Trenton', id:1},
     {name:'Paterson', id:2}
   ];
+  $scope.time = 'am';
+  $scope.times = ['am','pm','full day'];
 
   $scope.loadedData = {0:[],1:[],2:[]};
 
@@ -48,6 +50,15 @@ var reportMod = angular.module( 'njTDM.report', [
   
   $scope.isActiveMarket = function(id){
     if($scope.activeMarket === id){ return 'active'; }
+    return '';
+  };
+
+  $scope.setActiveTime = function(id){
+    $scope.time = id;
+  };
+  
+  $scope.isActiveTime = function(id){
+    if($scope.time === id){ return 'active'; }
     return '';
   };
   

@@ -321,7 +321,7 @@ var homeMod = angular.module( 'njTDM.home', [
         busdata[tract]['12_00pmpt']= censusData.acs[tract]['12_00pmpt'];
         busdata[tract]['4_00pmpt'] = censusData.acs[tract]['4_00pmpt'];
       }
-    console.log('bus_data',busdata);
+    //console.log('bus_data',busdata);
     /*******
     * Model Types
     * 1 - LEHD + % Bus
@@ -331,12 +331,12 @@ var homeMod = angular.module( 'njTDM.home', [
     var promise = [];
     if(model_type == 'lehdbus'){
       
-      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
+      promise = $http.post($scope.api+'tracts/triptable', {timeOfDay:$scope.model_time,mode:'lehd',tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
         return data;
       });
     }
     else if(model_type == 'ctpp'){
-      promise = $http.post($scope.api+'tracts/ctppTrips', {tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata}).then(function(data){
+      promise = $http.post($scope.api+'tracts/triptable', {timeOfDay:$scope.model_time,mode:'ctpp',tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata}).then(function(data){
         return data;
       });
     }
@@ -365,6 +365,10 @@ var homeMod = angular.module( 'njTDM.home', [
 
   $scope.update_od = function(od){
     $scope.model_od = od;
+  };
+  $scope.update_time = function(time){
+    console.log('time',time);
+    $scope.model_time = time;
   };
 
   //Click On The Run Model Button

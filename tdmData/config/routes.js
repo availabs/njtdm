@@ -57,19 +57,14 @@ module.exports.routes = {
     action : 'acs',
     cors: accessible
   },
-  '/tracts/lehdTrips':{
+  '/tracts/triptable':{
     controller : 'TractsController',
-    action : 'lehdTrips',
+    action : 'generateTrips',
     cors: accessible
   },
   '/tracts/surveyTrips':{
     controller : 'TractsController',
     action : 'surveyTrips',
-    cors: accessible
-  },
-  '/tracts/ctppTrips':{
-    controller : 'TractsController',
-    action : 'ctppTrips',
     cors: accessible
   },
 

@@ -47,6 +47,8 @@ reportAnalyst = {
          d.durationMinutes = 0;
          d.waitMinutes = 0;
          d.distance = 0;
+         d.on_tract='';
+         d.off_tract='';
       }
 
     });
