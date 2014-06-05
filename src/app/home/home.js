@@ -387,7 +387,22 @@ var homeMod = angular.module( 'njTDM.home', [
             $scope.active_run = true;
             $scope.getRunStatus(newTT.id);
           });
-          var newScenario = new Scenario({name:model_name,center:$scope.scenario.center,parent:$scope.scenario.id,routes:$scope.scenario.routes,tracts:$scope.scenario.tracts,trip_table_id:newTT.id});
+          var ma = 0;
+          if($scope.scenario.id == 11){
+            ma = 1;
+          }else if($scope.scenario.id == 9){
+            ma = 2;
+          }
+          var newScenario = new Scenario({
+                                          name:model_name,
+                                          center:$scope.scenario.center,
+                                          parent:$scope.scenario.id,
+                                          routes:$scope.scenario.routes,
+                                          tracts:$scope.scenario.tracts,
+                                          trip_table_id:newTT.id,
+                                          ampm: $scope.model_time,
+                                          marketArea: ma
+                                        });
           newScenario.$save();
           // $scope.allScenarios.push(newScenario);
           // $scope.current_template_index = $scope.allScenarios.length-1;
