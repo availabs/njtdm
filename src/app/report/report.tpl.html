@@ -33,6 +33,9 @@
             <div class="list-group">
                 <a ng-repeat="market in marketAreas" class="list-group-item" ng-class="isActiveMarket(market.id)" ng-click="setActiveMarket(market.id)">{{market.name}}</a>
             </div>
+            <div class="list-group">
+                <a ng-repeat="time in times" class="list-group-item" ng-class="isActiveTime(time)" ng-click="setActiveTime(time)">{{time}}</a>
+            </div>
             <select ui-select2   ng-model="current_model_index" class='template_select'>
               <option  ng-repeat="model in finished_models | filter:{marketArea:activeMarket}" value="{{model.id}}">{{ model.name }}</option>
             </select>
@@ -58,10 +61,13 @@
             <div class="thumbnail" style="overflow:hidden;">
                 <div id="graphDiv">
                     <div id="route-count"></div>
+                    <div id="route-count-table"></div>
                     <div id="start-time"></div>
                     <div id="trip-duration"></div>
                     <div id="trip-wait-time"></div>
                     <div id="trip-distance"></div>
+                    <div id="boarding-choropleth"></div>
+                    <div id="alighting-choropleth"></div>
                 </div>
             </div>
 

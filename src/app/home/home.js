@@ -55,7 +55,7 @@ var homeMod = angular.module( 'njTDM.home', [
 .factory("TripTable", function ($resource) {
    //var api = 'http://lor.availabs.org:1338/'
     return $resource(
-        "http://lor.availabs.org\\:1338/triptable/:id",
+        "http://localhost\\:1337/triptable/:id",//"http://lor.availabs.org\\:1338/triptable/:id",
         {id: "@id" },
         {
           //custom routes
@@ -98,13 +98,13 @@ var homeMod = angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario,TripTable,$modal) {
-  $scope.api = 'http://lor.availabs.org:1338/';
-  //$scope.api = 'http://localhost:1337/';
+  //$scope.api = 'http://lor.availabs.org:1338/';
+  $scope.api = 'http://localhost:1337/';
   $scope.current_template_index = 0;
   $scope.model_time = 'am';
   $scope.census_vars = censusData.variables;
   $scope.census_categories = censusData.categories;
-  $scope.model_type = 'lehd';
+  $scope.model_type = 'lehdbus';
   $scope.model_message = '';
   $scope.active_run = false;
   $scope.run_progress = 0;
@@ -179,9 +179,10 @@ var homeMod = angular.module( 'njTDM.home', [
       $http.post($scope.api+'gtfs/routes', {routes:scenario.routes}).success(function(route_data){
         $http.post($scope.api+'gtfs/stops', {routes:scenario.routes}).success(function(stop_data){
           $scope.loadTripTable($scope.model_type).then(function(trip_table){
-            $scope.trip_table = trip_table.data;
-            $scope.tt_total = trip_table.data.length;
-            tripTable.update_data(trip_table.data);
+            $scope.trip_table = trip_table.data.tt;
+            $scope.tt_total = trip_table.data.tt.length;
+            $scope.tt_failed = trip_table.data.failed.length;
+            tripTable.update_data(trip_table.data.tt);
             //tripTable.draw_trips();
             censusData.update_data(tract_data);
             censusGeo.update_scenario();
@@ -202,8 +203,9 @@ var homeMod = angular.module( 'njTDM.home', [
             $scope.$watch('tracts', function () {
               $http.post($scope.api+'tracts/acs', {tracts:$scope.tracts}).success(function(data){
                 $scope.loadTripTable($scope.model_type).then(function(trip_table){
-                  $scope.trip_table = trip_table.data;
-                  tripTable.update_data(trip_table.data);
+                  $scope.trip_table = trip_table.data.tt;
+                  $scope.tt_failed = trip_table.data.failed.length;
+                  tripTable.update_data(trip_table.data.tt);
                   censusData.update_data(data);
                   censusGeo.choropleth_trip_table('outbound_trips');
                 });
@@ -269,8 +271,9 @@ var homeMod = angular.module( 'njTDM.home', [
 
   $scope.newTripTable =function(type){
     $scope.loadTripTable(type,$scope.scenario.tracts).then(function(trip_table){
-      $scope.trip_table = trip_table.data;
-      tripTable.update_data(trip_table.data);
+      $scope.trip_table = trip_table.data.tt;
+      $scope.tt_failed = trip_table.data.failed.length;
+      tripTable.update_data(trip_table.data.tt);
       if($scope.show_trips){
         tripTable.update_trips();
       }
@@ -318,27 +321,22 @@ var homeMod = angular.module( 'njTDM.home', [
         busdata[tract]['12_00pmpt']= censusData.acs[tract]['12_00pmpt'];
         busdata[tract]['4_00pmpt'] = censusData.acs[tract]['4_00pmpt'];
       }
+    //console.log('bus_data',busdata);
     /*******
     * Model Types
-    * 0 - LEHD
     * 1 - LEHD + % Bus
     * 1 - CTPP Bus Trips
     * 1 - AC Survey
     */
     var promise = [];
-    if(model_type == 'lehd'){
-      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata}).then(function(data){
-        return data;
-      });
-    }
-    else if(model_type == 'lehdbus'){
+    if(model_type == 'lehdbus'){
       
-      promise = $http.post($scope.api+'tracts/lehdTrips', {tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
+      promise = $http.post($scope.api+'tracts/triptable', {timeOfDay:$scope.model_time,mode:'lehd',tracts:$scope.tracts,buspercent:busdata,od:$scope.model_od}).then(function(data){
         return data;
       });
     }
     else if(model_type == 'ctpp'){
-      promise = $http.post($scope.api+'tracts/ctppTrips', {tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata}).then(function(data){
+      promise = $http.post($scope.api+'tracts/triptable', {timeOfDay:$scope.model_time,mode:'ctpp',tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata}).then(function(data){
         return data;
       });
     }
@@ -364,8 +362,13 @@ var homeMod = angular.module( 'njTDM.home', [
     }
     return promise;
   };
+
   $scope.update_od = function(od){
     $scope.model_od = od;
+  };
+  $scope.update_time = function(time){
+    console.log('time',time);
+    $scope.model_time = time;
   };
 
   //Click On The Run Model Button
@@ -384,7 +387,22 @@ var homeMod = angular.module( 'njTDM.home', [
             $scope.active_run = true;
             $scope.getRunStatus(newTT.id);
           });
-          var newScenario = new Scenario({name:model_name,center:$scope.scenario.center,parent:$scope.scenario.id,routes:$scope.scenario.routes,tracts:$scope.scenario.tracts,trip_table_id:newTT.id});
+          var ma = 0;
+          if($scope.scenario.id == 11){
+            ma = 1;
+          }else if($scope.scenario.id == 9){
+            ma = 2;
+          }
+          var newScenario = new Scenario({
+                                          name:model_name,
+                                          center:$scope.scenario.center,
+                                          parent:$scope.scenario.id,
+                                          routes:$scope.scenario.routes,
+                                          tracts:$scope.scenario.tracts,
+                                          trip_table_id:newTT.id,
+                                          ampm: $scope.model_time,
+                                          marketArea: ma
+                                        });
           newScenario.$save();
           // $scope.allScenarios.push(newScenario);
           // $scope.current_template_index = $scope.allScenarios.length-1;
