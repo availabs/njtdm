@@ -150,7 +150,9 @@ generateTrips : function(req,res){
 	if(typeof req.param('od') != 'undefined'){ odtype =req.param('od');}
 	var timeOfDay = "am";
 	if(typeof req.param('timeOfDay') != 'undefined'){ timeOfDay = req.param('timeOfDay');}
-	console.log(mode+version+' '+odtype+' '+timeOfDay)
+	var marketArea = 0;
+	if(typeof req.param('marketarea') != 'undefined'){ marketArea = req.param('marketarea');}
+	console.log(mode+version+' '+odtype+' '+timeOfDay+' '+marketArea)
 	var output = [],
 		trip_table = [], 
 		cantRoute = [];
@@ -182,9 +184,29 @@ generateTrips : function(req,res){
 					if(typeof req.param('cenData')!= 'undefined'){
 						if(typeof req.param('cenData')[tract.home_tract] != 'undefined'){
 							//var regessionRiders = Math.round(38.794+(req.param('cenData')[tract.home_tract].car_0*0.544)+(req.param('cenData')[tract.home_tract].arts*0.158)+(req.param('cenData')[tract.home_tract].race_white*-0.027));
-							var regessionRiders = Math.round((req.param('cenData')[tract.home_tract].car_0*0.743)+(req.param('cenData')[tract.home_tract].car_1*0.141)+(req.param('cenData')[tract.home_tract].information*-0.813))
+							var regressionRiders =  0;
+								if(marketArea == 0){
+									regressionRiders = 27.19931+req.param('cenData')[tract.home_tract].car_0*0.5003613;
+									regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.1239196;
+									regressionRiders += req.param('cenData')[tract.home_tract].foreign_born*0.1054442;
+									regressionRiders += req.param('cenData')[tract.home_tract].foreign_born*0.1054442;
+									regressionRiders += req.param('cenData')[tract.home_tract]['30000_34999']*0.1834702;
+									regressionRiders += req.param('cenData')[tract.home_tract]['50000_59999']*0.2794759;
+									regressionRiders += req.param('cenData')[tract.home_tract]['50+_units']*0.07907048;
+									regressionRiders += req.param('cenData')[tract.home_tract].race_black*0.03785962;
+									regressionRiders += req.param('cenData')[tract.home_tract].race_other*-0.05642658;
+									regressionRiders += req.param('cenData')[tract.home_tract].occupancy_renter*-0.06249458;
+									regressionRiders += req.param('cenData')[tract.home_tract].occupied_housing*-0.09579623;
+									console.log('rr',regressionRiders);
+								}else if(marketArea == 1){
+									regressionRiders = 38.794+req.param('cenData')[tract.home_tract].car_0*0.743
+									regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.141
+									regressionRiders += req.param('cenData')[tract.home_tract].race_white*-0.027
+
+								}
+
 							if(req.param('buspercent')[tract.home_tract].bus_to_work > 0){
-								regPercent= regessionRiders / req.param('buspercent')[tract.home_tract].bus_to_work;
+								regPercent= Math.ceil(regressionRiders) / req.param('buspercent')[tract.home_tract].bus_to_work;
 							}else{
 								regPercent= 1;
 							}	
@@ -192,7 +214,6 @@ generateTrips : function(req,res){
 						// if(tract.home_tract == '34009021400'){
 						// console.log('what is happeniing?',regessionRiders,regPercent,req.param('cenData')[tract.home_tract].car_0,req.param('cenData')[tract.home_tract].car_1);
 						// }
-						
 						num_trips =  tract.bus_total*percent_intime*Math.abs(regPercent);
 					}else if(mode == 'ctpp'){
 						num_trips = tract.bus_total*percent_intime;
@@ -237,12 +258,36 @@ generateTrips : function(req,res){
 					if(typeof req.param('cenData')!= 'undefined'){
 						var regPercent = 1;
 						if(typeof req.param('cenData')[tract.home_tract] != 'undefined'){
-							var regessionRiders = Math.round(38.794+(req.param('cenData')[tract.home_tract].car_0*0.544)+(req.param('cenData')[tract.home_tract].arts*0.158)+(req.param('cenData')[tract.home_tract].race_white*-0.027));
+							
+							var regressionRiders =  0;
+							if(marketArea == 0){
+								regressionRiders = 27.19931+req.param('cenData')[tract.home_tract].car_0*0.5003613;
+								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.1239196;
+								regressionRiders += req.param('cenData')[tract.home_tract].foreign_born*0.1054442;
+								regressionRiders += req.param('cenData')[tract.home_tract]['30000_34999']*0.1834702;
+								regressionRiders += req.param('cenData')[tract.home_tract]['50000_59999']*0.2794759;
+								regressionRiders += req.param('cenData')[tract.home_tract]['50+_units']*0.07907048;
+								regressionRiders += req.param('cenData')[tract.home_tract].race_black*0.03785962;
+								regressionRiders += req.param('cenData')[tract.home_tract].race_other*-0.05642658;
+								regressionRiders += req.param('cenData')[tract.home_tract].occupancy_renter*-0.06249458;
+								regressionRiders += req.param('cenData')[tract.home_tract].occupied_housing*-0.09579623;
+								///console.log('rr',regressionRiders);
+							}else if(marketArea == 1){
+								regressionRiders = 38.794+req.param('cenData')[tract.home_tract].car_0*0.743
+								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.141
+								regressionRiders += req.param('cenData')[tract.home_tract].race_white*-0.027
+
+							}
+
 							if(req.param('buspercent')[tract.home_tract].bus_to_work > 0){
-								regPercent= regessionRiders / req.param('buspercent')[tract.home_tract].bus_to_work;
+								regPercent= Math.round(regressionRiders) / req.param('buspercent')[tract.home_tract].bus_to_work;
 							}else{
-								regPercent= regessionRiders / 1;
+								regPercent= 0;
 							}	
+							//console.log('per',regPercent,regressionRiders,req.param('buspercent')[tract.home_tract].bus_to_work);
+						}
+						if(tract.home_tract == '34011040700'){
+						console.log('what is happeniing?',regressionRiders,req.param('buspercent')[tract.home_tract].bus_to_work,regPercent,tract.bus_total,req.param('cenData')[tract.home_tract].car_0,req.param('cenData')[tract.home_tract].car_1);
 						}
 						num_trips =  tract.bus_total*percent_intime*Math.abs(regPercent);
 					}else if(mode == 'ctpp'){
@@ -327,12 +372,12 @@ var getTime = function(timeMatrix,ampm){
 	if(+minutes < 10){
 		minutes = '0'+minutes;
 	}
-	console.log('am hour',hour);
+	//console.log('am hour',hour);
 	if(ampm == 'pm'){
 		hour = +hour+10;
 		hour = hour % 12;
 	}
-	console.log('pm hour',hour);
+	//console.log('pm hour',hour);
 	return  hour+":"+minutes+ampm;
 }
 

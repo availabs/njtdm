@@ -113,7 +113,8 @@ var homeMod = angular.module( 'njTDM.home', [
   $scope.model_od = 'stops';
   $scope.show_routes = true;
   $scope.show_stops = false;
-
+  $scope.marketArea = 0;
+    
 
   /**********************************************
   *
@@ -171,9 +172,16 @@ var homeMod = angular.module( 'njTDM.home', [
   //---------------------------------------------
   // This will query /accounts and return a promise.
   $scope.loadScenario = function(scenario){
-    $scope.marketArea = 0;
     $scope.scenario = scenario;
-    
+    if($scope.scenario.id == 11){
+      $scope.marketArea = 1;
+    }else if($scope.scenario.id == 9){
+      $scope.marketArea = 2;
+    }else if($scope.scenario.id == 7){
+      $scope.marketArea = 0;
+    }
+    console.log('marketArea',$scope.marketArea);
+
     $scope.map.panTo(new L.LatLng(scenario.center[1], scenario.center[0]));
     $scope.tracts = scenario.tracts;
     censusGeo.scenario_tracts = $scope.tracts;
@@ -349,11 +357,23 @@ var homeMod = angular.module( 'njTDM.home', [
         regData[tract].arts = censusData.acs[tract].arts;
         regData[tract].car_0 = censusData.acs[tract].car_0;
         regData[tract].car_1 = censusData.acs[tract].car_1;
-        regData[tract].information = censusData.acs[tract].information;
+        regData[tract].age18_19 = censusData.acs[tract].age18_19;
+        regData[tract].age21 = censusData.acs[tract].age21;
+        regData[tract].age25_29 = censusData.acs[tract].age25_29;
+        regData[tract]['10_19units'] = censusData.acs[tract]['10_19units'];
+        regData[tract]['20_49units'] = censusData.acs[tract]['20_49units'];
+        regData[tract]['50+_units'] = censusData.acs[tract]['50+_units'];
+        regData[tract]['25000_29999'] = censusData.acs[tract]['25000_29999'];
+        regData[tract]['30000_34999'] = censusData.acs[tract]['30000_34999'];
+        regData[tract]['50000_59999'] = censusData.acs[tract]['50000_59999'];
+        regData[tract].foreign_born = censusData.acs[tract].foreign_born;
+        regData[tract].occupancy_renter = censusData.acs[tract].occupancy_renter;
+        regData[tract].occupied_housing = censusData.acs[tract].occupied_housing;
+        regData[tract].race_other = censusData.acs[tract].race_other;
+        regData[tract].race_black = censusData.acs[tract].race_black;
         regData[tract].race_white = censusData.acs[tract].race_white;
       }
-      console.log(regData);
-      promise = $http.post($scope.api+'tracts/ctppTrips', {tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata,cenData:regData}).then(function(data){
+      promise = $http.post($scope.api+'tracts/triptable', {marketarea:$scope.marketArea,timeOfDay:$scope.model_time,mode:'ctpp',tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata,cenData:regData}).then(function(data){
         return data;
       });
     }
