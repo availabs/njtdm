@@ -55,7 +55,7 @@ var homeMod = angular.module( 'njTDM.home', [
 .factory("TripTable", function ($resource) {
    //var api = 'http://lor.availabs.org:1338/'
     return $resource(
-        "http://localhost\\:1337/triptable/:id",//"http://lor.availabs.org\\:1338/triptable/:id",
+        "http://lor.availabs.org\\:1338/triptable/:id",
         {id: "@id" },
         {
           //custom routes
@@ -98,8 +98,8 @@ var homeMod = angular.module( 'njTDM.home', [
  * CONTROLLER
  */
 .controller( 'HomeCtrl', function HomeController( $scope,$http,leafletData,$filter,Scenario,TripTable,$modal) {
-  //$scope.api = 'http://lor.availabs.org:1338/';
-  $scope.api = 'http://localhost:1337/';
+  $scope.api = 'http://lor.availabs.org:1338/';
+  //$scope.api = 'http://localhost:1337/';
   $scope.current_template_index = 0;
   $scope.model_time = 'am';
   $scope.census_vars = censusData.variables;
