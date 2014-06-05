@@ -1,0 +1,91 @@
+
+<scriptsrc="../build/assets/js/jquery.min.js"></script>
+<script src="../build/assets/js/crossfilter.min.js"></script>
+<script src="../build/assets/js/d3.js"></script>
+<script>
+var marketAreas = [7,11,9]; //Market Area template ids in tdmData.scenario
+ 
+var path = d3.geo.path()
+var variables = {
+		"bus_to_work":"b08301_011e",
+		"car_0":"b08014_002e",
+		"car_1":"b08014_003e",
+		"car_2":"b08014_003e",
+		"no_high_school":"b23006_002e",
+		"occupied_housing":"b25002_002e",
+		"total_population":"b01003_001e",
+		"poverty_status":"b17001_002e",
+		"foreign_born":"b05006_001e",
+		"spanish_speaking":"b06007_005e",
+		"other_non_english":"b06007_008e",
+		"5_9units":"b25024_006e",
+		"10_19units":"b25024_007e",
+		"20_49units":"b25024_008e",
+		"50_units":"b25024_009e",
+		"occupancy_renter":"b25003_003e",
+		"retail":"b08126_006e",
+		"information":"b08126_008e",
+		"finance":"b08126_009e",
+		"professional":"b08126_010e",
+		"education":"b08126_011e",
+		"15k_income":"b19001_004e",
+		"20k_income":"b19001_005e",
+		"25k_income":"b19001_006e",
+		"30k_income":"b19001_007e",
+		"35k_income":"b19001_008e",
+		"40k_income":"b19001_009e",
+		"45k_income":"b19001_010e",
+		"50k_income":"b19001_011e",
+		"60k_income":"b19001_012e",
+		"70k_income":"b19001_013e",
+		"race_white":"b02001_002e",
+		"race_black":"b02001_003e",
+		"race_asain":"b02001_005e",
+		"race_other":"b02001_007e",
+		"race_two":"b02001_008e",
+		"age_18_19":"b01001_007e",
+		"age_20":"b01001_008e",
+		"age_21":"b01001_009e",
+		"age_22-24":"b01001_010e",
+		"age_25-29":"b01001_011e",
+		"age_30-34":"b01001_012e",
+		"age_18_19":"b01001_031e",
+		"age_20":"b01001_032e",
+		"age_21":"b01001_033e",
+		"age_22-24":"b01001_034e",
+		"age_25-29":"b01001_035e",
+		"age_30-34":"b01001_036e",
+		};
+var num_stops = {"34001001200":19,"34001011701":23,"34009021803":6,"34001010501":7,"34001000300":10,"34001001300":24,"34011040400":6,"34001012302":7,"34011040800":2,"34001011401":12,"34001010105":10,"34001013101":8,"34001002400":29,"34001012802":12,"34001001100":9,"34001001400":15,"34001012501":9,"34001002500":36,"34009021701":6,"34011040500":7,"34001013202":12,"34009022101":9,"34011040700":9,"34001010104":13,"34029736002":4,"34001011202":9,"34001010300":15,"34009021400":7,"34009021500":4,"34001012401":16,"34001013302":9,"34001000500":9,"34009022000":2,"34001012200":17,"34029737000":6,"34009020902":12,"34009021300":24,"34001012702":3,"34001011500":14,"34009020302":6,"34001013102":7,"34001010506":7,"34001012602":17,"34001010200":19,"34001013201":13,"34001013000":10,"34011040300":7,"34001010800":9,"34001011600":8,"34009021900":16,"34029736001":2,"34009020901":6,"34009020102":3,"34001010505":12,"34001012801":11,"34001010900":5,"34001983400":4,"34001000400":7,"34001011803":4,"34001011000":7,"34001011403":11,"34011041100":11,"34001012100":11,"34001001500":14,"34001011900":14,"34009020203":6,"34029736102":17,"34001012701":6,"34001000200":9,"34009021804":10,"34001002300":11,"34001010101":7,"34009021805":9,"34009021100":22,"34001011404":15,"34001013301":13,"34001012502":16,"34001012402":11,"34029736101":7,"34011041000":15,"34001010401":9,"34009020700":7,"34001013500":40,"34009021002":3,"34009020206":2,"34009022102":28,"34001012000":31,"34001010102":24,"34001011802":1,"34011030100":5,"34001000100":15,"34009021001":2,"34001010403":4,"34009021702":14,"34001010503":3,"34011040600":4};
+
+var censusData = {};
+var api = 'http://localhost:1337';
+d3.json(api+'/tracts/scenario/'+marketAreas[1],function(err,geoData){
+	if(err){console.log(err);}
+	tracts = [];
+	geoData.features.forEach(function(d){
+		tracts.push(d.properties.geoid);
+	});
+	d3.json(api+'/tracts/acs')
+	.post({'tracts':JSON.stringify(tracts)},function(err,data){
+		data.forEach(function(d){
+			censusData[d.geoid] = d;
+		})
+		//console.log(censusData);
+		geoData.features.forEach(function(d){
+			for(var key in variables){
+				console.log(key,censusData[d.properties.geoid][variables[key]]);
+				d.properties[key] = 0;
+				d.properties[key] += censusData[d.properties.geoid][variables[key]];
+			}
+			d.properties.pop_density = d.properties.total_population / path.area(d);
+			//d.properties.num_stops = num_stops[d.properties.geoid] || 0;
+		})	
+		document.write(JSON.stringify(geoData));
+
+
+	})
+
+		
+});
+</script>

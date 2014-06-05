@@ -3,7 +3,7 @@
 <script src="../build/assets/js/d3.js"></script>
 <script>
 	var fareTrips = {};
-	$.ajax('http://localhost:1337/triptable/farebox',{data:{marketarea:1}})
+	$.ajax('http://localhost:1337/triptable/farebox',{data:{marketarea:0}})
 	.done(function(data){
 		console.log('hello farebox',data.length, data);
 		fareTrips = crossfilter(data);
@@ -23,7 +23,7 @@
 		    var median = d3.median(fairDayRoute.all(),function(d){ return d.value[key]; });
 		    for(var i = 0;i<max;i++){
 		    	var ride = {
-		    		modelRun: "Princeton AM median",
+		    		modelRun: "AC PM Max",
 					route: key
 		    	};
 		    	output.push(ride);
