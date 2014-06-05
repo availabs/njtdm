@@ -171,7 +171,9 @@ var homeMod = angular.module( 'njTDM.home', [
   //---------------------------------------------
   // This will query /accounts and return a promise.
   $scope.loadScenario = function(scenario){
+    $scope.marketArea = 0;
     $scope.scenario = scenario;
+    
     $scope.map.panTo(new L.LatLng(scenario.center[1], scenario.center[0]));
     $scope.tracts = scenario.tracts;
     censusGeo.scenario_tracts = $scope.tracts;

@@ -60,7 +60,7 @@ reportAnalyst = {
 
     //console.log(data);
 
-    console.log('update data',data);
+    //console.log('update data',data);
     reportAnalyst.modelBadTrips = [];
     // for (var i = data.length-1; i >= 0; i--) {
     //   if (data[i].waiting_time <= 3)
@@ -77,7 +77,6 @@ reportAnalyst = {
     //console.log('model analyst data', data);
     reportAnalyst.modelTrips = crossfilter(reportAnalyst.dataset);
     
-    console.log(1);
     reportAnalyst.modelRoutes = reportAnalyst.modelTrips.dimension(function(d){return d.route;});
     reportAnalyst.modelRoutesGroup = reportAnalyst.modelRoutes.group();
     reportAnalyst.modelRoutesRunGroup = reportAnalyst.modelRoutes.group().reduce(
@@ -86,7 +85,6 @@ reportAnalyst = {
       function () { return {}; }
     );
 
-    console.log(2);
     // reportAnalyst.modelOnStop = reportAnalyst.modelTrips.dimension(function(d){return d.on_stop_code;});
     // reportAnalyst.modelOnStopGroup = reportAnalyst.modelOnStop.group(function(d) {return d});
     // console.log(3);
@@ -101,13 +99,11 @@ reportAnalyst = {
 
     reportAnalyst.startMinuteDimension = reportAnalyst.modelTrips.dimension(function(d){return d.minute;}),
     reportAnalyst.startTimeGroup = reportAnalyst.startMinuteDimension.group();
-    console.log(6);
     reportAnalyst.modelStartTimeRunGroup = reportAnalyst.startMinuteDimension.group().reduce(
       function (p, v) {p[v.modelRun] = (p[v.modelRun] || 0) + 1; return p;},
       function (p, v) {p[v.modelRun] = (p[v.modelRun] || 0) - 1; return p;},
       function () { return {}; }
     );
-    console.log(7);
     reportAnalyst.durationMinuteDimension = reportAnalyst.modelTrips.dimension(function(d){return d.durationMinutes;}),
     reportAnalyst.modelDurationRunGroup = reportAnalyst.durationMinuteDimension.group().reduce(
       function (p, v) {p[v.modelRun] = (p[v.modelRun] || 0) + 1; return p;},
@@ -115,7 +111,6 @@ reportAnalyst = {
       function () { return {}; }
     );
 
-    console.log(8);
     reportAnalyst.waitTimeDimension = reportAnalyst.modelTrips.dimension(function(d){return Math.round(d.waitMinutes);}),
     reportAnalyst.waitTimeGroup = reportAnalyst.waitTimeDimension.group().reduce(
       function (p, v) {p[v.modelRun] = (p[v.modelRun] || 0) + 1; return p;},
@@ -400,7 +395,6 @@ function getProjection(width,height,json){
     // using the path determine the bounds of the current map and use 
     // these to determine better values for the scale and translation
     var bounds  = path.bounds(json);
-    console.log(bounds);
     var hscale  = scale*width  / (bounds[1][0] - bounds[0][0]);
     var vscale  = scale*height / (bounds[1][1] - bounds[0][1]);
     scale   = (hscale < vscale) ? hscale : vscale;

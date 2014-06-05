@@ -1,0 +1,48 @@
+SUMMARY OF OUTPUT: ORDINARY LEAST SQUARES ESTIMATION
+Data set            :  ac
+Dependent Variable  :  BUS_TO_WOR  Number of Observations:  108
+Mean dependent var  :     90.8981  Number of Variables   :   11
+S.D. dependent var  :     133.269  Degrees of Freedom    :   97 
+
+R-squared           :    0.747327  F-statistic           :     28.6896
+Adjusted R-squared  :    0.721278  Prob(F-statistic)     : 9.54398e-25
+Sum squared residual:      484665  Log likelihood        :    -607.336
+Sigma-square        :     4996.55  Akaike info criterion :     1236.67
+S.E. of regression  :     70.6863  Schwarz criterion     :     1266.18
+Sigma-square ML     :     4487.64
+S.E of regression ML:     66.9898
+
+-----------------------------------------------------------------------
+    Variable   Coefficient      Std.Error    t-Statistic   Probability  
+-----------------------------------------------------------------------
+    CONSTANT      27.19931       16.71463       1.627275    0.1069224
+       CAR_0     0.5003613     0.08264055        6.05467    0.0000000
+       CAR_1     0.1239196     0.05427577       2.283148    0.0246042
+  FOREIGN_BO     0.1054442     0.02426076       4.346285    0.0000341
+    50_UNITS    0.07907048     0.03554891       2.224273    0.0284490
+  OCCUPANCY_   -0.06249458     0.04264541      -1.465447    0.1460332
+  OCCUPIED_H   -0.09579623     0.01815576      -5.276355    0.0000008
+  RACE_BLACK    0.03785962     0.01340653       2.823969    0.0057572
+  RACE_OTHER   -0.05642658     0.03153836      -1.789141    0.0767132
+  30K_INCOME     0.3538676      0.1834702       1.928747    0.0566854
+  50K_INCOME     0.2794759      0.1426619       1.959009    0.0529829
+-----------------------------------------------------------------------
+
+
+REGRESSION DIAGNOSTICS  
+MULTICOLLINEARITY CONDITION NUMBER   14.842791
+TEST ON NORMALITY OF ERRORS
+TEST                  DF          VALUE            PROB
+Jarque-Bera            2           24.57728        0.0000046
+
+DIAGNOSTICS FOR HETEROSKEDASTICITY  
+RANDOM COEFFICIENTS
+TEST                  DF          VALUE            PROB
+Breusch-Pagan test    10            134.077        0.0000000
+Koenker-Bassett test  10           63.66368        0.0000000
+SPECIFICATION ROBUST TEST
+TEST                  DF          VALUE            PROB
+White                 65           100.6022        0.0030574
+========================= END OF REPORT ==============================
+
+
