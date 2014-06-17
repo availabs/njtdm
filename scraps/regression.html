@@ -10,7 +10,7 @@ var variables = {
 		"bus_to_work":"b08301_011e",
 		"car_0":"b08014_002e",
 		"car_1":"b08014_003e",
-		"car_2":"b08014_003e",
+		"car_2":"b08014_004e",
 		"no_high_school":"b23006_002e",
 		"occupied_housing":"b25002_002e",
 		"total_population":"b01003_001e",
@@ -60,7 +60,7 @@ var num_stops = {"34001001200":19,"34001011701":23,"34009021803":6,"34001010501"
 
 var censusData = {};
 var api = 'http://localhost:1337';
-d3.json(api+'/tracts/scenario/'+marketAreas[1],function(err,geoData){
+d3.json(api+'/tracts/scenario/'+marketAreas[2],function(err,geoData){
 	if(err){console.log(err);}
 	tracts = [];
 	geoData.features.forEach(function(d){

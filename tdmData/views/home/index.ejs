@@ -1,93 +1,899 @@
-<!-- Default home page -->
-<link type="text/css" href='http://sailsjs.org/styles/fonts.css' rel='stylesheet'/>
-<style>
-    /* Styles included inline since you'll probably be deleting this page anyway */
-    html,body{text-align:left;font-size:1em}html,body,img,form,textarea,input,fieldset,div,p,div,ul,li,ol,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,code{margin:0;padding:0}ul,li{list-style:none}img{display:block}a img{border:0}a{text-decoration:none;font-weight:normal;font-family:inherit}*:active,*:focus{outline:0;-moz-outline-style:none}h1,h2,h3,h4,h5,h6{font-weight:normal}div.clear{clear:both}.clearfix:after{clear:both;content:".";display:block;font-size:0;height:0;line-height:0;visibility:hidden}body{font-family:"Open Sans",Arial,sans-serif;font-weight:300;font-size:15px}h1{color:#0c8da0;font-size:2em;font-weight:300}h2{font-size:1.5em;font-weight:300;margin-top:4%}h3{font-size:1.25em;font-weight:300;font-style:italic;margin-bottom:5px}h4{color:#0c8da0;font-weight:300;font-size:1.5em}span{font-weight:700}ul{margin-top:5%;margin-bottom:5%}a{text-decoration:none;color:inherit}p{margin-bottom:7px;font-size:.9em}.container{max-width:997px;margin:0 auto;padding:0 4%}.sprite{font-weight:normal;background:url(http://sailsjs.org/images/newapp.sprite.png) no-repeat}.top-bar{position:relative;padding-top:10px;background-color:#001c20;height:55px}.main{float:left;max-width:610px;height:555px;margin-top:50px}.steps{height:250px}.getting-started p{ margin-bottom: 30px; line-height: 26px; }.getting-started div{float:left;width:540px}.getting-started li{clear:both;height:60px;margin-top:20px;margin-bottom:20px}.getting-started .sprite{margin-left:10px;padding-left:60px;height:42px;width:0}.getting-started .one{background-position:0 0}.getting-started .two{background-position:0 -42px}.getting-started .three{background-position:0 -83px}.delete{margin-top:5%;height:52px;background:#e3f0f1;border:1px solid #118798;color:#118798;clear:both}.delete .sprite{margin-top:10px;margin-bottom:10px;margin-left:9%;padding-left:42px;padding-top:7px;height:25px;background-position:0 -126px}.delete a{color:#0c8da0;font-weight:bold;padding-left:1%}.side-bar{max-width:327px;height:555px;float:left;border-left:1px solid #0c8da0;margin-left:25px;margin-top:50px;padding-left:25px}.side-bar ul{margin-bottom:10%}.side-bar ul li{margin-top:5px;margin-bottom:.25em}.side-bar ul li a{margin-bottom:.25em}.side-bar .sprite{padding-left:25px}.side-bar .single_page{background-position:0 -199px}.side-bar .traditional{background-position:0 -219px}.side-bar .realtime{background-position:0 -179px}.side-bar .api{background-position:0 -158px}.boxy{font-family:Courier,"Courier New",sans-serif;background-color:#e4edec;border:1px solid #d0d6d6;padding-left:5px;padding-right:5px;padding-top:2px;padding-bottom:2px;font-weight:100}.sixteen{margin-right:10px}.nineteen{margin-right:7px}
-        .main { width: 100%; }
-        body { min-width: 925px; }
-</style>
-<!--[if IE 7]>
-    <style>
-    .getting-started li{overflow:visible;clear:both}.delete{width:690px}
-    </style>
-<![endif]-->
-
-<div class="top-bar">
-    <div class="container clearfix">
-        <img class="logo" src="http://sailsjs.org/images/sails-logo.jpg" />
-    </div>
+<!DOCTYPE html>
+<!-- saved from url=(0030)http://demo.okendoken.com/2.1/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>NJTransit TDM</title>
+    <link href="assets/styles/application.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta charset="utf-8">
+<style type="text/css"></style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
+<body class="background-dark" style="">
+<div class="logo">
+    <h4><a href="http://demo.okendoken.com/2.1/index.html">NJTDM <strong>Admin</strong></a></h4>
 </div>
-
-<div class="container clearfix">
-    <div class="main">
-        <h1 id="main-title"><%= __('Welcome') %></h1>
-        <h2>Getting started</h2>
-        <p>Don't worry, we've got your back.</p>
-        <div class="steps">
-            <ul class="getting-started">
-                <li>
-                    <div class="sprite one"></div>
-                    <div>
-                        <h3>Get your API going.</h3>
-                        <p>
-                            Run <span class="boxy">sails generate foo</span>.  This will create a model <span class="boxy">Foo</span> and controller <span class="boxy">FooController</span>
-                        </p>
-                    </div>
-                </li>
-                <li>
-                    <div class="sprite two"></div>
-                    <div>
-                        <h3>
-                            Lift your app.
-                        </h3>
-                        <p>
-                            Run <span class="boxy">sails lift</span> to start up your app.  If you visit <span class="boxy">http://localhost:1337/foo</span> in your browser, you'll see a socket.io-compatible REST API was generated for your 'Foo' model.
-                        </p>
-                    </div>
-                </li>
-                <li>
-                    <div class="sprite three"></div>
-                    <div>
-                        <h3>
-                            Dive in and start building.
-                        </h3>
-                        <p>From here, you can modify your models, create custom controller methods as Express middleware, and create custom routes (routes are set up in <span class="boxy">config/routes.js</span>).  Visit <a href="http://sailsjs.org">the Sails website</a> for more information on next steps.</p>
-                    </div>
+<nav id="sidebar" class="sidebar nav-collapse collapse">
+    <ul id="side-nav" class="side-nav">
+        <li class="active">
+            <a href="index.html"><i class="fa fa-home"></i> <span class="name">Dashboard</span></a>
+        </li>
+        <li class="panel">
+            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#side-nav" href="http://demo.okendoken.com/2.1/#forms-collapse"><i class="fa fa-edit"></i> <span class="name">Market Areas</span></a>
+            <ul id="forms-collapse" class="panel-collapse collapse">
+                <li><a href="#">Atlanic City</a></li>  
+                <li><a href="#">Add New <i class="fa fa-plus"></i></a></li>
+            </ul>
+        </li>
+        <li class="panel">
+            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#side-nav" href="http://demo.okendoken.com/2.1/#stats-collapse"><i class="fa fa-bar-chart-o"></i> <span class="name">Data Sources</span></a>
+            <ul id="stats-collapse" class="panel-collapse collapse">
+                <li><a href="http://demo.okendoken.com/2.1/stat_statistics.html">GTFS</a></li>
+                <li><a href="http://demo.okendoken.com/2.1/stat_charts.html">ACS</a></li>
+                <li><a href="http://demo.okendoken.com/2.1/stat_realtime.html">CTPP</a></li>
+                <li><a href="http://demo.okendoken.com/2.1/stat_realtime.html">LODES</a></li>
+            </ul>
+        </li>
+        <li class="panel">
+            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#side-nav" href="http://demo.okendoken.com/2.1/#menu-levels-collapse"><i class="fa fa-code-fork"></i> <span class="name">User's Guide</span></a>
+            <ul id="menu-levels-collapse" class="panel-collapse collapse">
+                <li><a href="http://demo.okendoken.com/2.1/#">Overview</a></li>
+                <li><a href="http://demo.okendoken.com/2.1/#">Getting Started</a></li>
+                <li class="panel">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#menu-levels-collapse" href="http://demo.okendoken.com/2.1/#sub-menu-1-collapse">Item 1.3</a>
+                    <ul id="sub-menu-1-collapse" class="panel-collapse collapse">
+                        <li class="panel">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#sub-menu-1-collapse" href="http://demo.okendoken.com/2.1/#sub-menu-3-collapse">Item 2.1</a>
+                            <ul id="sub-menu-3-collapse" class="panel-collapse collapse">
+                                <li><a href="http://demo.okendoken.com/2.1/#">Item 3.1</a></li>
+                                <li><a href="http://demo.okendoken.com/2.1/#">Item 3.2</a></li>
+                                <li><a href="http://demo.okendoken.com/2.1/#">Item 3.3</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="http://demo.okendoken.com/2.1/#">Item 2.2</a></li>
+                        <li class="panel">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#sub-menu-1-collapse" href="http://demo.okendoken.com/2.1/#sub-menu-2-collapse">Item 2.3</a>
+                            <ul id="sub-menu-2-collapse" class="panel-collapse collapse">
+                                <li><a href="http://demo.okendoken.com/2.1/#">Item 3.4</a></li>
+                                <li><a href="http://demo.okendoken.com/2.1/#">Item 3.5</a></li>
+                                <li><a href="http://demo.okendoken.com/2.1/#">Item 3.6</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </li>
             </ul>
+        </li>
+        <li class="visible-xs">
+            <a href="http://demo.okendoken.com/2.1/login.html"><i class="fa fa-sign-out"></i> <span class="name">Sign Out</span></a>
+        </li>
+    </ul>
+    <div id="sidebar-settings" class="settings">
+    
+    
+    <button type="button" data-value="icons" class="btn-icons btn btn-transparent btn-sm">Icons</button>
+    <button type="button" data-value="auto" class="btn-auto btn btn-transparent btn-sm">Auto</button>
+    
+</div>
+</nav>
+<div class="wrap">
+    <header class="page-header">
+        <div class="navbar">
+                <ul class="nav navbar-nav navbar-right pull-right">
+                    <li class="visible-phone-landscape">
+                        <a href="http://demo.okendoken.com/2.1/#" id="search-toggle">
+                            <i class="fa fa-search"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="http://demo.okendoken.com/2.1/#" title="Messages" id="messages" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-comments"></i>
+                        </a>
+                        <ul id="messages-menu" class="dropdown-menu messages" role="menu">
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="message">
+                                    <img src="assets/js/1.jpg" alt="">
+                                    <div class="details">
+                                        <div class="sender">Jane Hew</div>
+                                        <div class="text">
+                                            Hey, John! How is it going? ...
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="message">
+                                    <img src="assets/js/2.jpg" alt="">
+                                    <div class="details">
+                                        <div class="sender">Alies Rumiancaŭ</div>
+                                        <div class="text">
+                                            I'll definitely buy this template
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="message">
+                                    <img src="assets/js/3.jpg" alt="">
+                                    <div class="details">
+                                        <div class="sender">Michał Rumiancaŭ</div>
+                                        <div class="text">
+                                            Is it really Lore ipsum? Lore ...
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="text-align-center see-all">
+                                    See all messages <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="http://demo.okendoken.com/2.1/#" title="8 support tickets" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-group"></i>
+                            <span class="count">8</span>
+                        </a>
+                        <ul id="support-menu" class="dropdown-menu support" role="menu">
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-important"><i class="fa fa-bell-o"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        Check out this awesome ticket
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-warning"><i class="fa fa-question-circle"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        "What is the best way to get ...
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-success"><i class="fa fa-tag"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        This is just a simple notification
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-info"><i class="fa fa-info-circle"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        12 new orders has arrived today
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-important"><i class="fa fa-plus"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        One more thing that just happened
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="text-align-center see-all">
+                                    See all tickets <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="hidden-xs">
+                        <a href="http://demo.okendoken.com/2.1/#" id="settings" title="" data-toggle="popover" data-placement="bottom" data-original-title="Settings">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                    </li>
+                    <li class="hidden-xs dropdown">
+                        <a href="http://demo.okendoken.com/2.1/#" title="Account" id="account" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-user"></i>
+                        </a>
+                        <ul id="account-menu" class="dropdown-menu account" role="menu">
+                            <li role="presentation" class="account-picture">
+                                <img src="assets/js/2.jpg" alt="">
+                                Philip Daineka
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/form_account.html" class="link">
+                                    <i class="fa fa-user"></i>
+                                    Profile
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/component_calendar.html" class="link">
+                                    <i class="fa fa-calendar"></i>
+                                    Calendar
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://demo.okendoken.com/2.1/#" class="link">
+                                    <i class="fa fa-inbox"></i>
+                                    Inbox
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="visible-xs">
+                        <a href="http://demo.okendoken.com/2.1/#" class="btn-navbar" data-toggle="collapse" data-target=".sidebar" title="">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </li>
+                    <li class="hidden-xs"><a href="http://demo.okendoken.com/2.1/login.html"><i class="fa fa-sign-out"></i></a></li>
+                </ul>
+                <form id="search-form" class="navbar-form pull-right" role="search">
+                    <input type="search" class="search-query" placeholder="Search...">
+                </form>
+                <div class="notifications pull-right">
+                    
+                </div>
         </div>
-        <div class="delete">
-            <div class="sprite">You're looking at: <span class="boxy">views/home/index.ejs</span></div>
+    </header>
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="page-title">Dashboard <small>Statistics and more</small></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <section class="widget">
+                    <header>
+                        <h4>
+                            Visits
+                            <small>
+                                Based on a three months data
+                            </small>
+                        </h4>
+                        <div class="widget-controls">
+                            <a title="Options" href="http://demo.okendoken.com/2.1/#"><i class="glyphicon glyphicon-cog"></i></a>
+                            <a data-widgster="expand" title="Expand" href="http://demo.okendoken.com/2.1/#" style="display: none;"><i class="glyphicon glyphicon-plus"></i></a>
+                            <a data-widgster="collapse" title="Collapse" href="http://demo.okendoken.com/2.1/#"><i class="glyphicon glyphicon-minus"></i></a>
+                            <a data-widgster="close" title="Close" href="http://demo.okendoken.com/2.1/#"><i class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </header>
+                    <div class="body no-margin">
+                        <div id="visits-chart" class="chart visits-chart">
+                           
+                        </div>
+                        <div class="visits-info well well-sm">
+                            <div class="row">
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="key"><i class="eicon-users"></i> Total Traffic</div>
+                                    <div class="value">24 541 <i class="fa fa-caret-up color-green"></i></div>
+                                </div>
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="key"><i class="eicon-user"></i> Unique Visits</div>
+                                    <div class="value">14 778 <i class="fa fa-caret-down color-red"></i></div>
+                                </div>
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="key"><i class="fa fa-plus-square"></i> Revenue</div>
+                                    <div class="value">$3 583.18 <i class="fa fa-caret-up color-green"></i></div>
+                                </div>
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="key"><i class="fa fa-user"></i> Total Sales</div>
+                                    <div class="value">$59 871.12 <i class="fa fa-caret-down color-red"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="widget">
+                    <header>
+                        <h4>
+                            Traffic Sources
+                            <small>
+                                One month tracking
+                            </small>
+                        </h4>
+                        <div class="widget-controls">
+                            <a data-widgster="expand" title="Expand" href="http://demo.okendoken.com/2.1/#" style="display: none;"><i class="glyphicon glyphicon-plus"></i></a>
+                            <a data-widgster="collapse" title="Collapse" href="http://demo.okendoken.com/2.1/#"><i class="glyphicon glyphicon-minus"></i></a>
+                            <a data-widgster="close" title="Close" href="http://demo.okendoken.com/2.1/#"><i class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </header>
+                    <div class="body">
+                        <table class="table table-striped no-margin sources-table">
+                            <thead>
+                            <tr>
+                                <th class="source-col-header">Source</th>
+                                <th>Amount</th>
+                                <th>Change</th>
+                                <th class="hidden-xs">Percent.,%</th>
+                                <th>Target</th>
+                                <th class="chart-col-header hidden-xs">Trend</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span class="label label-important">Direct</span></td>
+                                <td>713</td>
+                                <td><strong class="color-green">+53</strong></td>
+                                <td class="hidden-xs">+12</td>
+                                <td>900</td>
+                                <td class="chart-cell hidden-xs">
+                                    <div id="direct-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label label-warning">Refer</span></td>
+                                <td>562</td>
+                                <td><strong>+84</strong></td>
+                                <td class="hidden-xs">+64</td>
+                                <td>500</td>
+                                <td class="chart-cell hidden-xs">
+                                    <div id="refer-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label label-success">Social</span></td>
+                                <td>148</td>
+                                <td><strong class="color-red">-12</strong></td>
+                                <td class="hidden-xs">+3</td>
+                                <td>180</td>
+                                <td class="chart-cell hidden-xs">
+                                    <div id="social-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label label-info">Search</span></td>
+                                <td>653</td>
+                                <td><strong class="color-green">+23</strong></td>
+                                <td class="hidden-xs">+43</td>
+                                <td>876</td>
+                                <td class="chart-cell hidden-xs">
+                                    <div id="search-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="label label-inverse">Internal</span></td>
+                                <td>976</td>
+                                <td><strong>+101</strong></td>
+                                <td class="hidden-xs">-7</td>
+                                <td>844</td>
+                                <td class="chart-cell hidden-xs">
+                                    <div id="internal-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="widget large">
+                    <header>
+                        <h4>
+                            Chat
+                        </h4>
+                        <div class="widget-controls">
+                            <a title="Options" href="http://demo.okendoken.com/2.1/#"><i class="glyphicon glyphicon-cog"></i></a>
+                            <a data-widgster="close" title="Close" href="http://demo.okendoken.com/2.1/#"><i class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </header>
+                    <div class="body">
+                        <div id="chat" class="chat">
+                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 240px;"><div id="chat-messages" class="chat-messages" style="overflow: hidden; width: auto; height: 240px;">
+                                <div class="chat-message">
+                                    <div class="sender pull-left">
+                                        <div class="icon">
+                                            <img src="assets/js/2.jpg" class="img-circle" alt="">
+                                        </div>
+                                        <div class="time">
+                                            4 min
+                                        </div>
+                                    </div>
+                                    <div class="chat-message-body">
+                                        <span class="arrow"></span>
+                                        <div class="sender"><a href="http://demo.okendoken.com/2.1/#">Tikhon Laninga</a></div>
+                                        <div class="text">
+                                            Hey Sam, how is it going? But I must explain to you how all this mistaken
+                                            idea of denouncing of a pleasure and praising pain was born
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat-message">
+                                    <div class="sender pull-right">
+                                        <div class="icon">
+                                            <img src="assets/js/1.jpg" class="img-circle" alt="">
+                                        </div>
+                                        <div class="time">
+                                            3 min
+                                        </div>
+                                    </div>
+                                    <div class="chat-message-body on-left">
+                                        <span class="arrow"></span>
+                                        <div class="sender"><a href="http://demo.okendoken.com/2.1/#">Cenhelm Houston</a></div>
+                                        <div class="text">
+                                            Pretty good. Doing my homework..  No one rejects, dislikes, or avoids
+                                            pleasure itself, because it is pleasure, but because
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat-message">
+                                    <div class="sender pull-left">
+                                        <div class="icon">
+                                            <img src="assets/js/2.jpg" class="img-circle" alt="">
+                                        </div>
+                                        <div class="time">
+                                            2 min
+                                        </div>
+                                    </div>
+                                    <div class="chat-message-body">
+                                        <span class="arrow"></span>
+                                        <div class="sender"><a href="http://demo.okendoken.com/2.1/#">Tikhon Laninga</a></div>
+                                        <div class="text">
+                                            Any chance to go out? To take a trivial example, which of us ever undertakes
+                                            laborious physical exercise, except to obtain some advantage
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat-message">
+                                    <div class="sender pull-right">
+                                        <div class="icon">
+                                            <img src="assets/js/1.jpg" class="img-circle" alt="">
+                                        </div>
+                                        <div class="time">
+                                            2 min
+                                        </div>
+                                    </div>
+                                    <div class="chat-message-body on-left">
+                                        <span class="arrow"></span>
+                                        <div class="sender"><a href="http://demo.okendoken.com/2.1/#">Cenhelm Houston</a></div>
+                                        <div class="text">
+                                            .. Maybe 40-50 mins. I don't know exactly. On the other hand, we denounce
+                                            with righteous indignation and dislike men who are so beguiled
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat-message">
+                                    <div class="sender pull-left">
+                                        <div class="icon">
+                                            <img src="assets/js/2.jpg" class="img-circle" alt="">
+                                        </div>
+                                        <div class="time">
+                                            1 min
+                                        </div>
+                                    </div>
+                                    <div class="chat-message-body">
+                                        <span class="arrow"></span>
+                                        <div class="sender"><a href="http://demo.okendoken.com/2.1/#">Tikhon Laninga</a></div>
+                                        <div class="text">
+                                            Anyway sounds great! These cases are perfectly simple and easy to
+                                            distinguish.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="slimScrollBar ui-draggable" style="background-color: rgb(0, 0, 0); width: 5px; position: absolute; top: 0px; opacity: 0.4; display: block; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; z-index: 99; right: 1px; height: 141.87192118226602px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 5px; height: 100%; position: absolute; top: 0px; display: block; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
+                            <footer class="chat-footer row">
+                                <div class="col-xs-9">
+                                    <input id="new-message" type="text" class="form-control input-transparent" placeholder="Enter your message..">
+                                </div>
+                                <div class="col-xs-3">
+                                    <button type="button" id="new-message-btn" class="btn btn-transparent btn-block">Send</button>
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-4">
+                <section class="widget large">
+                    <header>
+                        <h4>
+                            Feed
+                            <span class="label label-success">412</span>
+                        </h4>
+                        <div class="actions">
+                            <button class="btn btn-transparent btn-xs">Show All <i class="fa fa-arrow-down"></i></button>
+                        </div>
+                    </header>
+                    <div class="body">
+                        <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 280px;"><div id="feed" class="feed" style="overflow: hidden; width: auto; height: 280px;">
+                            <div class="wrapper">
+                                <div class="vertical-line"></div>
+                                <section class="feed-item">
+                                    <div class="icon pull-left">
+                                        <i class="fa fa-comment"></i>
+                                    </div>
+                                    <div class="feed-item-body">
+                                        <div class="text">
+                                            <a href="http://demo.okendoken.com/2.1/#">John Doe</a> commented on <a href="http://demo.okendoken.com/2.1/#">What Makes Good Code Good</a>.
+                                        </div>
+                                        <div class="time pull-left">
+                                            3 h
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="feed-item">
+                                    <div class="icon pull-left">
+                                        <i class="fa fa-check color-green"></i>
+                                    </div>
+                                    <div class="feed-item-body">
+                                        <div class="text">
+                                            <a href="http://demo.okendoken.com/2.1/#">Merge request #42</a> has been approved by <a href="http://demo.okendoken.com/2.1/#">Jessica Lori</a>.
+                                        </div>
+                                        <div class="time pull-left">
+                                            10 h
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="feed-item">
+                                    <div class="icon pull-left">
+                                        <img src="assets/js/14.jpg" class="img-circle" alt="">
+                                    </div>
+                                    <div class="feed-item-body">
+                                        <div class="text">
+                                            New user <a href="http://demo.okendoken.com/2.1/#">Greg Wilson</a> registered.
+                                        </div>
+                                        <div class="time pull-left">
+                                            Today
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="feed-item">
+                                    <div class="icon pull-left">
+                                        <i class="fa fa-bolt color-orange"></i>
+                                    </div>
+                                    <div class="feed-item-body">
+                                        <div class="text">
+                                            Server fail level raises above normal. <a href="http://demo.okendoken.com/2.1/#">See logs</a> for details.
+                                        </div>
+                                        <div class="time pull-left">
+                                            Yesterday
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="feed-item">
+                                    <div class="icon pull-left">
+                                        <i class="eicon-database"></i>
+                                    </div>
+                                    <div class="feed-item-body">
+                                        <div class="text">
+                                            <a href="http://demo.okendoken.com/2.1/#">Database usage report</a> is ready.
+                                        </div>
+                                        <div class="time pull-left">
+                                            Yesterday
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="feed-item">
+                                    <div class="icon pull-left">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </div>
+                                    <div class="feed-item-body">
+                                        <div class="text">
+                                            <a href="http://demo.okendoken.com/2.1/#">Order #233985</a> needs additional processing.
+                                        </div>
+                                        <div class="time pull-left">
+                                            Wednesday
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="feed-item">
+                                    <div class="icon pull-left">
+                                        <i class="fa fa-arrow-down"></i>
+                                    </div>
+                                    <div class="feed-item-body">
+                                        <div class="text">
+                                            <a href="http://demo.okendoken.com/2.1/#">Load more...</a>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div><div class="slimScrollBar ui-draggable" style="background-color: rgb(0, 0, 0); width: 5px; position: absolute; top: 0px; opacity: 0.4; display: block; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; z-index: 99; right: 1px; height: 243.47826086956522px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 5px; height: 100%; position: absolute; top: 0px; display: block; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
+                    </div>
+                </section>
+                <section class="widget widget-tabs">
+                    <header>
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="http://demo.okendoken.com/2.1/#stats" data-toggle="tab">Users</a>
+                            </li>
+                            <li>
+                                <a href="http://demo.okendoken.com/2.1/#report" data-toggle="tab">Favorites</a>
+                            </li>
+                            <li>
+                                <a href="http://demo.okendoken.com/2.1/#dropdown1" data-toggle="tab">Commenters</a>
+                            </li>
+                        </ul>
+                    </header>
+                    <div class="body tab-content">
+                        <div id="stats" class="tab-pane active clearfix">
+                            <h5 class="tab-header"><span class="label label-primary"><i class="fa fa-facebook"></i></span> Last logged-in users</h5>
+                            <ul class="news-list">
+                                <li>
+                                    <img src="assets/js/1.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Finees Lund</a></div>
+                                        <div class="position">Product Designer</div>
+                                        <div class="time">Last logged-in: Mar 20, 18:46</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/3.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Erebus Novak</a></div>
+                                        <div class="position">Software Engineer</div>
+                                        <div class="time">Last logged-in: Mar 23, 9:02</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/2.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Leopoldo Reier</a></div>
+                                        <div class="position">Chief Officer</div>
+                                        <div class="time">Last logged-in: Jun 6, 15:34</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/13.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Frans Garey</a></div>
+                                        <div class="position">Financial Assistant</div>
+                                        <div class="time">Last logged-in: Jun 8, 17:20</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/14.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Jessica Johnsson</a></div>
+                                        <div class="position">Sales Manager</div>
+                                        <div class="time">Last logged-in: Jun 8, 9:13</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="report" class="tab-pane">
+                            <h5 class="tab-header"><i class="fa fa-star"></i> Popular contacts</h5>
+                            <ul class="news-list news-list-no-hover">
+                                <li>
+                                    <img src="assets/js/14.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Jessica Johnsson</a></div>
+                                        <div class="options">
+                                            <button class="btn btn-xs btn-success">
+                                                <i class="fa fa-phone"></i>
+                                                Call
+                                            </button>
+                                            <button class="btn btn-xs btn-warning">
+                                                <i class="fa fa-envelope-o"></i>
+                                                Message
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/13.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Frans Garey</a></div>
+                                        <div class="options">
+                                            <button class="btn btn-xs btn-success">
+                                                <i class="fa fa-phone"></i>
+                                                Call
+                                            </button>
+                                            <button class="btn btn-xs btn-warning">
+                                                <i class="fa fa-envelope-o"></i>
+                                                Message
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/3.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Erebus Novak</a></div>
+                                        <div class="options">
+                                            <button class="btn btn-xs btn-success">
+                                                <i class="fa fa-phone"></i>
+                                                Call
+                                            </button>
+                                            <button class="btn btn-xs btn-warning">
+                                                <i class="fa fa-envelope-o"></i>
+                                                Message
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/2.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Leopoldo Reier</a></div>
+                                        <div class="options">
+                                            <button class="btn btn-xs btn-success">
+                                                <i class="fa fa-phone"></i>
+                                                Call
+                                            </button>
+                                            <button class="btn btn-xs btn-warning">
+                                                <i class="fa fa-envelope-o"></i>
+                                                Message
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/1.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Finees Lund</a></div>
+                                        <div class="options">
+                                            <button class="btn btn-xs btn-success">
+                                                <i class="fa fa-phone"></i>
+                                                Call
+                                            </button>
+                                            <button class="btn btn-xs btn-warning">
+                                                <i class="fa fa-envelope-o"></i>
+                                                Message
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="dropdown1" class="tab-pane">
+                            <h5 class="tab-header"><i class="fa fa-comments"></i> Top Commenters</h5>
+                            <ul class="news-list">
+                                <li>
+                                    <img src="assets/js/13.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Frans Garey</a></div>
+                                        <div class="comment">
+                                            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,
+                                            sed quia
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/1.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Finees Lund</a></div>
+                                        <div class="comment">
+                                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                                            eu fugiat.
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/14.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Jessica Johnsson</a></div>
+                                        <div class="comment">
+                                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                                            deserunt.
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/3.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Erebus Novak</a></div>
+                                        <div class="comment">
+                                            Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium
+                                            doloremque.
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="assets/js/2.jpg" alt="" class="pull-left img-circle">
+                                    <div class="news-item-info">
+                                        <div class="name"><a href="http://demo.okendoken.com/2.1/#">Leopoldo Reier</a></div>
+                                        <div class="comment">
+                                            Laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis
+                                            et quasi.
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <section class="widget">
+                    <header>
+                        <h4>
+                            Server Overview
+                        </h4>
+                        <div class="actions">
+                            <small class="text-muted pull-right">2 days ago</small>
+                        </div>
+                    </header>
+                    <div class="body">
+                        <ul class="server-stats">
+                            <li>
+                                <div class="key pull-right">CPU</div>
+                                <div class="stat">
+                                    <div class="info">60% / 37°C / 3.3 Ghz</div>
+                                    <div class="progress progress-small">
+                                        <div class="progress-bar progress-bar-danger" style="width: 70%;"></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="key pull-right">Mem</div>
+                                <div class="stat">
+                                    <div class="info">29% / 4GB (16 GB)</div>
+                                    <div class="progress progress-small">
+                                        <div class="progress-bar" style="width: 29%;"></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="key pull-right">LAN</div>
+                                <div class="stat">
+                                    <div class="info">6 Mb/s <i class="fa fa-caret-down"></i> &nbsp; 3 Mb/s <i class="fa fa-caret-up"></i></div>
+                                    <div class="progress progress-small">
+                                        <div class="progress-bar progress-bar-inverse" style="width: 48%;"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
-    <div class="side-bar">
-        <h4 id="new">
-            New to Sails?
-        </h4>
-        <ul>
-            <li>
-                <a href="http://sailsjs.org">Visit sailsjs.org</a>
-            </li>
-            <li>
-                <a href="http://sailsjs.org/#!documentation">Documentation</a>
-            </li>
-        </ul>
-        <h4>
-            Next Steps
-        </h4>
-        <ul>
-            <li class="sprite single_page">
-                <a target="_blank" href="http://sailsjs.org">Build a single page app</a>
-            </li>
-            <li class="sprite traditional">
-                <a target="_blank" href="http://sailsjs.org">Build a traditional webapp</a>
-            </li>
-            <li class="sprite realtime">
-                <a target="_blank" href="http://sailsjs.org">Build a realtime app</a>
-            </li>
-            <li class="sprite api">
-                <a target="_blank" href="http://sailsjs.org">Build an API</a>
-            </li>
-        </ul>
+    <div class="loader-wrap hiding hide">
+        <i class="fa fa-spinner fa-spin"></i>
     </div>
 </div>
+
+<!-- jquery and friends -->
+<script src="assets/js/jquery-2.0.3.min.js"> </script>
+<script src="assets/js/jquery.pjax.js"></script>
+
+
+<!-- jquery plugins -->
+<script src="assets/js/jquery.icheck.js"></script>
+<script src="assets/js/jquery.sparkline.js"></script>
+<script src="assets/js/jquery-ui-1.10.3.custom.js"></script>
+<script src="assets/js/jquery.slimscroll.js"></script>
+
+<!-- d3, nvd3-->
+<script src="assets/js/d3.v2.js"></script>
+<script src="assets/js/nv.d3.custom.js"></script>
+
+<!-- nvd3 models -->
+<script src="assets/js/scatter.js"></script>
+<script src="assets/js/axis.js"></script>
+<script src="assets/js/legend.js"></script>
+<script src="assets/js/multiBar.js"></script>
+<script src="assets/js/multiBarChart.js"></script>
+<script src="assets/js/line.js"></script>
+<script src="assets/js/lineChart.js"></script>
+<script src="assets/js/stream_layers.js"></script>
+
+<!--backbone and friends -->
+<script src="assets/js/underscore-min.js"></script>
+<script src="assets/js/backbone-min.js"></script>
+<script src="assets/js/backbone.localStorage-min.js"></script>
+
+<!-- bootstrap default plugins -->
+<script src="assets/js/transition.js"></script>
+<script src="assets/js/collapse.js"></script>
+<script src="assets/js/alert.js"></script>
+<script src="assets/js/tooltip.js"></script>
+<script src="assets/js/popover.js"></script>
+<script src="assets/js/button.js"></script>
+<script src="assets/js/tab.js"> </script>
+<script src="assets/js/dropdown.js"></script>
+
+<!-- basic application js-->
+<script src="assets/js/app.js"></script>
+<script src="assets/js/settings.js"></script>
+
+<!-- page specific -->
+<script src="assets/js/index.js"></script>
+<script src="assets/js/chat.js"></script>
+
+
+
+<div id="jqstooltip" class="jqstooltip" style="width: 22px; height: 11px; visibility: visible; left: 1005px; top: 558px;"><div class="jqsfield"><span style="color: #56bc76">●</span> 65</div></div></body></html>

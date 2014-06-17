@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!-- 
+                                                          
+                                                        
+       444444444       000000000      333333333333333   
+      4::::::::4     00:::::::::00   3:::::::::::::::33 
+     4:::::::::4   00:::::::::::::00 3::::::33333::::::3
+    4::::44::::4  0:::::::000:::::::03333333     3:::::3
+   4::::4 4::::4  0::::::0   0::::::0            3:::::3
+  4::::4  4::::4  0:::::0     0:::::0            3:::::3
+ 4::::4   4::::4  0:::::0     0:::::0    33333333:::::3 
+4::::444444::::4440:::::0 000 0:::::0    3:::::::::::3  
+4::::::::::::::::40:::::0 000 0:::::0    33333333:::::3 
+4444444444:::::4440:::::0     0:::::0            3:::::3
+          4::::4  0:::::0     0:::::0            3:::::3
+          4::::4  0::::::0   0::::::0            3:::::3
+          4::::4  0:::::::000:::::::03333333     3:::::3
+        44::::::44 00:::::::::::::00 3::::::33333::::::3
+        4::::::::4   00:::::::::00   3:::::::::::::::33 
+        4444444444     000000000      333333333333333   
+                                          
+
+                                                        
+  This is the default "403: Forbidden" page.
+  User agents that don't "Accept" HTML will see a JSON version instead.
+  You can customize the control logic for your needs in `config/403.js`
+
+  You can trigger this response from one of your controllers or policies with:
+  `return res.forbidden( msg );`
+  (where `msg` is an optional error message to include in the response)
+
+
+
+
+-->
+<html>
+<head>
+    <title><%- title %>403</title>
+    <link rel="stylesheet" href="/linker/styles/application.min.css"><link rel="shortcut icon" href="img/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta charset="utf-8">
+    <script src="/linker/js/jquery-2.0.3.min.js"> </script>
+<script src="/linker/js/jquery.pjax.js"></script>
+    <!--<script src="lib/zepto/zepto.min.js"> </script>-->
+    <script src="/linker/js/parsley.js"> </script>
+    <script src="/linker/js/underscore-min.js"></script>
+    <script src="/linker/js/settings.js"> </script>
+</head>
+<body>
+<div class="single-widget-container error-page">
+    <section class="widget transparent widget-404">
+        <div class="body">
+            <div class="row">
+                <div class="col-md-5">
+                    <h1 class="text-align-center">404</h1>
+                </div>
+                <div class="col-md-7">
+                    <div class="description">
+                        <h3>You do not have permission for the page you are trying to reach.</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

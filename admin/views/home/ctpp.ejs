@@ -1,0 +1,17 @@
+<%- partial('partials/nav') %>
+<div class="wrap">
+    <%- partial('partials/header') %>    
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="page-title">CTPP <small>Census Transportation Planning Products</small></h2>
+            </div>
+        </div>
+        <%- partial('pages/ctpp-content') %>
+    </div>
+    <div class="loader-wrap hiding hide">
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+</div>
+<script src="/js/select2.js"></script>
+<script src="/js/ctpp.js"></script>

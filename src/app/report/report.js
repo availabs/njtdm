@@ -22,7 +22,7 @@ var reportMod = angular.module( 'njTDM.report', [
   //-------------------------------------------------------
   // Scope Setup
   ///------------------------------------------------------
-  //$scope.api = 'http://lor.availabs.org:1338/';
+  $scope.api = 'http://lor.availabs.org:1338/';
   //$scope.api = 'http://localhost:1337/';
   $scope.colors = colorbrewer.Set1[5];
 
@@ -84,8 +84,8 @@ var reportMod = angular.module( 'njTDM.report', [
   $scope.newData = function(data,name){
     var marketAreas = [7,11,9]; //Market Area template ids in tdmData.scenario
  
-    var api = 'http://localhost:1337';
-    d3.json(api+'/tracts/scenario/'+marketAreas[$scope.activeMarket],function(err,geoData){
+    
+    d3.json($scope.api+'tracts/scenario/'+marketAreas[$scope.activeMarket],function(err,geoData){
      
       reportAnalyst.geoData = geoData;
       reportAnalyst.update_data(data,name);
