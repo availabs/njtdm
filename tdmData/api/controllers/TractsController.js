@@ -261,16 +261,22 @@ generateTrips : function(req,res){
 							
 							var regressionRiders =  0;
 							if(marketArea == 0){
-								regressionRiders = 27.19931+req.param('cenData')[tract.home_tract].car_0*0.5003613;
-								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.1239196;
-								regressionRiders += req.param('cenData')[tract.home_tract].foreign_born*0.1054442;
-								regressionRiders += req.param('cenData')[tract.home_tract]['30000_34999']*0.1834702;
-								regressionRiders += req.param('cenData')[tract.home_tract]['50000_59999']*0.2794759;
-								regressionRiders += req.param('cenData')[tract.home_tract]['50+_units']*0.07907048;
-								regressionRiders += req.param('cenData')[tract.home_tract].race_black*0.03785962;
-								regressionRiders += req.param('cenData')[tract.home_tract].race_other*-0.05642658;
-								regressionRiders += req.param('cenData')[tract.home_tract].occupancy_renter*-0.06249458;
-								regressionRiders += req.param('cenData')[tract.home_tract].occupied_housing*-0.09579623;
+								// regressionRiders = 27.19931+req.param('cenData')[tract.home_tract].car_0*0.5003613;
+								// regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.1239196;
+								// regressionRiders += req.param('cenData')[tract.home_tract].foreign_born*0.1054442;
+								// regressionRiders += req.param('cenData')[tract.home_tract]['30000_34999']*0.1834702;
+								// regressionRiders += req.param('cenData')[tract.home_tract]['50000_59999']*0.2794759;
+								// regressionRiders += req.param('cenData')[tract.home_tract]['50+_units']*0.07907048;
+								// regressionRiders += req.param('cenData')[tract.home_tract].race_black*0.03785962;
+								// regressionRiders += req.param('cenData')[tract.home_tract].race_other*-0.05642658;
+								// regressionRiders += req.param('cenData')[tract.home_tract].occupancy_renter*-0.06249458;
+								// regressionRiders += req.param('cenData')[tract.home_tract].occupied_housing*-0.09579623;
+								regressionRiders = req.param('cenData')[tract.home_tract].car_0*0.629;
+								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.134;
+								regressionRiders += req.param('cenData')[tract.home_tract].information*-0.787;
+
+
+
 								///console.log('rr',regressionRiders);
 							}else if(marketArea == 1){
 								regressionRiders = -0.04630396+req.param('cenData')[tract.home_tract].car_0* 0.2751065;

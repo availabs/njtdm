@@ -6,6 +6,7 @@
  */
 function getNavData(cb){
   MarketArea.find().exec(function(err,ma){
+    if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
     var output = {};
     output.marketareas = [];
     ma.forEach(function(area){
@@ -15,21 +16,45 @@ function getNavData(cb){
   });
 }
 
+function getOverviewData(marketarea,cb){
+  var output = {};
+  MetaGtfs.find().exec(function(err,mgtfs){
+    if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+    output.metagtfs = mgtfs;
+    var currentGTFS = {};
+    mgtfs.forEach(function(gtfs){ if(gtfs.id === marketarea.origin_gtfs){ currentGTFS = gtfs; } });
+    var sql = 'SELECT route_id, route_short_name, route_long_name FROM '+currentGTFS.tableName+'.routes';
+    MetaGtfs.query(sql,{},function(err,data){
+      if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+      output.fullroutes = data.rows;
+      return cb(output);
+    });
+  });
+}
+
 module.exports = {
   
   manew:function(req,res){
     getNavData(function(navData){
-      res.view({page:'ma-new',panel:'marketarea',title:"New Market Area | NJTDM",nav:navData})
+      res.view({page:'ma-new',panel:'marketarea',nav:navData})
     })
   },
   overview:function(req,res){
     getNavData(function(navData){
-      res.view({page:'ma-overview',panel:'marketarea',title:"New Market Area | NJTDM",nav:navData})
+      MarketArea.findOne(req.param('id')).exec(function(err,ma){
+        if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
+        getOverviewData(ma,function(meta){
+          res.view({page:'ma-overview',panel:'marketarea',nav:navData,marketarea:ma,meta:meta})
+        })
+      })
     })
   },
   models:function(req,res){
     getNavData(function(navData){
-      res.view({page:'ma-models',panel:'marketarea',title:"New Market Area | NJTDM",nav:navData})
+      MarketArea.findOne(req.param('id')).exec(function(err,ma){
+        if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
+        res.view({page:'ma-models',panel:'marketarea',nav:navData,marketarea:ma})
+      });
     })
   },
 };

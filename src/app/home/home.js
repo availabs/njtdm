@@ -372,6 +372,7 @@ var homeMod = angular.module( 'njTDM.home', [
         regData[tract].race_other = censusData.acs[tract].race_other;
         regData[tract].race_black = censusData.acs[tract].race_black;
         regData[tract].race_white = censusData.acs[tract].race_white;
+        regData[tract].information = censusData.acs[tract].information;
       }
       promise = $http.post($scope.api+'tracts/triptable', {marketarea:$scope.marketArea,timeOfDay:$scope.model_time,mode:'ctpp',tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata,cenData:regData}).then(function(data){
         return data;
