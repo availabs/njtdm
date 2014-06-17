@@ -1,6 +1,6 @@
 var upload = require('jquery-file-upload-middleware');
 var pg = require('pg');
-var sh = require("execSync");
+var exec = require('child_process').exec
 
 // configure upload middleware
 console.log(__dirname + '/uploads');
@@ -21,21 +21,24 @@ upload.on('end', function (fileInfo) {
     client.connect(function(err) {
         if(err) {return console.error('Could not connect to database', err);}
         var now = new Date();
-        var schemaName = "gtfs_"+now.getFullYear()+''+now.getMonth()+""+now.getDate()+"_"+now.getHours()+":"+now.getMinutes();
+        var schemaName = "gtfs_"+now.getFullYear()+''+now.getMonth()+''+now.getDate()+'_'+now.getHours()+'_'+now.getMinutes();
         client.query('CREATE SCHEMA "'+schemaName+'" ', function(err, result) { 
             if(err) { return console.error('error running query:',query, err); } 
             var destinationStream = __dirname + '/uploads/'+fileInfo.name;
-            var result = sh.exec("gtfsdb-load --database_url "+conString+" --schema="+schemaName+" --is_geospatial "+destinationStream);
-            if(result.code == 1){
-                client.query('DROP SCHEMA "'+schemaName+'" ', function(err, result) { if(err) { return console.error('error running query:',query, err); } })
-            }
-            console.log('return code ' + result.code);
-            console.log('stdout + stderr ' + result.stdout);
+            console.log("RUNNING:gtfsdb-load --database_url "+conString+" --schema="+schemaName+" --is_geospatial "+destinationStream);
+            child = exec("gtfsdb-load --database_url "+conString+" --schema="+schemaName+" --is_geospatial "+destinationStream,
+              function (error, stdout, stderr) {
+                console.log('stdout: ' + stdout);
+                console.log('stderr: ' + stderr);
+                if (error !== null) {
+                  console.log('exec error: ' + error);
+                  client.query('DROP SCHEMA "'+schemaName+'" ', function(err, result) { if(err) { return console.error('error running query:',query, err); } })
+                }
+            });
         })
         
     });
     
-
 });
 
 module.exports.express = {

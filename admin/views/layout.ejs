@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%- title %></title>
+    <title>Admin | NJTDM</title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -55,6 +55,13 @@
     <script src="/js/settings.js"></script>
     <script src="/js/index.js"></script>
     <!--SCRIPTS END-->
-    <%- body %>
+    <%- partial('partials/nav') %>
+    <div class="wrap">
+        <%- partial('partials/header') %>
+        <%- body %>
+        <div class="loader-wrap hiding hide">
+            <i class="fa fa-spinner fa-spin"></i>
+        </div>
+    </div>
   </body>
 </html>

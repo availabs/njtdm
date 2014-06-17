@@ -11,7 +11,7 @@
 module.exports.routes = {
 
   //---------------------------------
-  // Admin Pages
+  // Home Pages
   //---------------------------------
   '/': 'HomeController.dashboard',
   '/data/gtfs': 'HomeController.gtfs',
@@ -20,10 +20,18 @@ module.exports.routes = {
   '/data/lodes': 'HomeController.lodes',
   '/marketarea/new': 'HomeController.marketareaNew',
 
+
+  //---------------------------------
+  // Market Area Pages
+  //---------------------------------
+  '/marketarea/new': 'MarketAreaController.manew',
+  '/marketarea/:id': 'MarketAreaController.overview',
+  '/marketarea/:id/models': 'MarketAreaController.models',
+
   //----------------------------------
   //File Uploads
   //----------------------------------
-  //'/data/gtfs/upload':'HomeController.gtfs_file_upload'
+  //'/data/gtfs/upload':'UploadsController.gtfsupload'
 
 
   // Custom routes here...

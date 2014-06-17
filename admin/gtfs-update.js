@@ -104,7 +104,7 @@ var gtfsdbLoad = function(schemaName,destinationStream){
 
 var createSchema = function(client,schemaName){
     var query = 'CREATE SCHEMA "'+schemaName+'" ';
-    client.query(query, function(err, result) { if(err) { return console.error('error running query:',query, err); } })
+    client.query(query, function(err, result) { if(err) { return console.error('error running query:',query, err); }})
 }
 
 var writeAgency = function(agency){

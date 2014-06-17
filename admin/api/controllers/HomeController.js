@@ -13,51 +13,56 @@
  *                 NOTE: The code you write here supports both HTTP and Socket.io automatically.
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
- */
- 
+*/
+function getNavData(cb){
+  MarketArea.find().exec(function(err,ma){
+    var output = {};
+    output.marketareas = [];
+    ma.forEach(function(area){
+      output.marketareas.push({id:area.id,name:area.name});
+    });
+    return cb(output);
+  });
+}
 
 module.exports = {
   
 
   dashboard:function(req,res){
-  	res.view({page:'dashboard',panel:'none'});
+	  getNavData(function(navData){
+      res.view({page:'dashboard',panel:'none',title:"Dashboard | NJTDM",nav:navData});
+    })
   },
+  
   gtfs:function(req,res){
-  	res.view({page:'gtfs',panel:'data'});
+    getNavData(function(navData){
+  	 res.view({page:'gtfs',panel:'data',title:"GTFS | NJTDM",nav:navData});
+    });
   },
+  
   acs:function(req,res){
-  	MetaAcs.find().exec(function(err,meta){
-        res.view({page:'acs',panel:'data',error:err,records:meta});
-    });
-  },
-  ctpp:function(req,res){
-  	MetaCtpp.find().exec(function(err,meta){
-        res.view({page:'ctpp',panel:'data',error:err,records:meta});
-    });
-  },
-  lodes:function(req,res){
-  	MetaLodes.find().exec(function(err,meta){
-        res.view({page:'lodes',panel:'data',error:err,records:meta});
-    });
-  },
-  marketareaNew:function(req,res){
-    res.view({page:'ma-new',panel:'marketarea'})
-  },
-  gtfs_file_upload:function(req,res){
-    //console.log(req.file('files'));
-    if(typeof req.file('files[]') != 'undefined'){
-      req.file('files[]').upload(function (err, files) {
-      if (err) return res.serverError(err);
-        console.log(files);
-        return res.json({
-          message: files.length + ' file(s) uploaded successfully!',
-          o:{files: files}
-        });
+  	getNavData(function(navData){
+      MetaAcs.find().exec(function(err,meta){
+        res.view({page:'acs',panel:'data',error:err,records:meta,title:"ACS | NJTDM",nav:navData});
       });
-    }
-
+    })
   },
-
+  
+  ctpp:function(req,res){
+    getNavData(function(navData){
+    	MetaCtpp.find().exec(function(err,meta){
+          res.view({page:'ctpp',panel:'data',error:err,records:meta,title:"CTPP | NJTDM",nav:navData});
+      });
+    });
+  },
+  
+  lodes:function(req,res){
+    getNavData(function(navData){
+    	MetaLodes.find().exec(function(err,meta){
+          res.view({page:'lodes',panel:'data',error:err,records:meta,title:"LODES | NJTDM",nav:navData});
+      });
+    });
+  },
   /**
    * Overrides for the settings in `config/controllers.js`
    * (specific to HomeController)

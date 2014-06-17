@@ -1,18 +1,12 @@
-<%- partial('partials/nav') %>
-<div class="wrap">
-    <%- partial('partials/header') %>    
-    <div class="content container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="page-title">GTFS <small>upload and manage schedule data</small></h2>
-            </div>
+<div class="content container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="page-title">GTFS <small>upload and manage schedule data</small></h2>
         </div>
-        <%- partial('pages/gtfs-content') %>
     </div>
-    <div class="loader-wrap hiding hide">
-        <i class="fa fa-spinner fa-spin"></i>
-    </div>
+    <%- partial('pages/gtfs-content') %>
 </div>
+
 
 <script src="/js/jquery.ui.widget.js"></script>
 <script src="/js/http_blueimp.github.io_JavaScript-Templates_js_tmpl.js"></script>
