@@ -50,7 +50,8 @@
                                         <%})%>
                                 </select>
                                 <button type="button" class="btn btn-danger">Add Route</button>
-                                <table class="table table-striped">
+
+                                <table class="table table-striped table-condensed col-sm-8">
                                   <thead>
                                   <tr>
                                       <th>Route Name</th>
@@ -58,15 +59,14 @@
                                   </tr>
                                   </thead>
                                   <tbody>
-                                  <tr>
-                                      <td>1</td>
-                                      <td>Mark</td>
-                                      <td class="hidden-xs-portrait">Otto</td>
-                                      <td><a href="#">ottoto@example.com</a></td>
-                                      <td class="hidden-xs-portrait"><span class="badge badge-success">New</span></td>
-                                  </tr>
+                                  <% JSON.parse(marketarea.routes).forEach(function(route){ %>  
+                                    <tr>
+                                        <td><%=route%></td>
+                                        <td><i class="fa fa-minus-square"></i></td>
+                                    </tr>
+                                  <%})%>
                                   </tbody>
-                              </table>
+                                </table>
                             </div>
                         </div>
                         

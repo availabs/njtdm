@@ -1,0 +1,82 @@
+<div class="row">
+    <div class="col-md-10">
+        <section class="widget">
+            <div class="body">
+                <fieldset>
+                    <legend>Running a Model<small> Introduction</small></legend>
+                </fieldset>
+                Running a model is done through the map explorer view, which allows your to dynamically edit data sources and visualize the impact on your model run. It also allows you to closely monitor the trip origins and destinations of your trip table down to the geographical unit of your market area.
+                
+                Once you have your market area scenario selected you start your model run which runs a microsimulation of your trip table through <a href="http://opentripplanner.org" target="_blank">Open Trip Planner</a> to understand ridership from the whole market area level down to individual stops.
+
+                <fieldset>
+                    <legend class="section">Step 1 - Choose Your Market Area Template</legend>
+                    <div class="form-actions no-margin">
+                        Market Area templates have the basic information needed to run a model for a particular market area, which are the routes included and the census tracts of the market area.
+
+                        Simply selecting a new scenario from the selector will load that scenario onto the map. This will zoom you to that scenario and show all the routes from the map and load a trip table. The census tracts will be visualized based on out-bound trips from that census tracts.
+                        <br><br>
+                        <strong>Editing the Scenario</strong><br>
+                        You can add or remove census tracts from your market area simple by holding the ctrl button and clicking on the census tract you want to add or remove. When a census tract is changed the census data and trip table for the market area are automatically recalculated. 
+                        <br><br>
+                        <strong>Changing Data Sources</strong><br>
+                        The ability to switch data sources like ACS and LODES vintages will be added shortly.
+                    </div>
+                <fieldset>
+                <fieldset>
+                    <legend class="section">Step 2 - Choose Your Trip Table Generator</legend>
+                    <div class="form-actions no-margin">
+                        We have designed a number of algorithms to generate trip tables for a market area, they are based on different data sources and methodologies. These different algorithms perform differently in each different market area and respond to different factors. Specific regression models calibrated with ACS 5 Year 2010 data have been designed for Atlantic City, Princeton Trenton and Paterson.
+                        <br><br>
+                        <strong>LODES + ACS %</strong> - This model looks at the number of work trips from each tract in the lodes data and multiplies that data by the rate of bus ridership to work in that tract to get the number of trips generated for each destination tract.
+                        <br><br>
+                        <strong>CTPP Model</strong> - This model uses the public transporation to work value from CTPP 2010 to generate a trip table. 
+                        <br><br>
+                        <strong>Regression Model</strong> - Regression models take a number of ACS variables to estimate a number of transit riders from a specific tract. This number is then used with the total bus riders from the ACS to create a regression ratio 
+                        <br><br>
+                        <strong>Survey Based Model</strong> - Uses survey origin and destination and weights to generate trip table.
+                        <legend class="section">Step 2 A - Update Trip Table </legend>
+                        Once you have selected the trip table algorithm you want to use you click the update 
+                    </div>
+                <fieldset>
+                <fieldset>
+                    <legend class="section">Step 3 - Choose Your OD Points Source</legend>
+                    <div class="form-actions no-margin">
+                        Trip table generation algorithms work at the level of a geographic zone, like a census tract, to create a trip table that can be simulated by Open Trip Planner we need specific points of latitude and longitude inside each census tract to map those individual trips to. 
+                        <br><br>
+                        <strong>Bus Stops</strong> - Uses bus stops from GTFS as origin destination points.
+                        <br>
+                        <strong>Parcel Data</strong> (experimental) - Uses centroids of random parcels within 1/2 mile of bus stops
+                        <br>
+                        <strong>Survey Data</strong> - Uses survey origins and destinations as origin and destination points.
+                        <br>
+                    </div>
+                    
+                <fieldset>
+                <fieldset>
+                    <legend class="section">Step 4 - Choose Your Model Time Period</legend>
+                    <div class="form-actions no-margin">
+                        Data in CTPP, LODES and Regression Models use time of travel to work to understand and schedule ridership in the trip table during peak times. Survey data is available for AM only pm is generated by reversing the direction of AM work traffic.
+                        <br><br>
+                        <strong>AM Peak</strong> - AM peak includes work trips from 6am to 10am.
+                        <br>
+                        <strong>PM Peak</strong> - PM Peak includes trips from 3pm to 7pm.
+                        <br>
+                        <strong>Full Day</strong> - (Coming soon) All work trips from peaks, plus non work trip estimate.
+                        <br>
+                    </div>
+                <fieldset>
+                <fieldset>
+                    <legend class="section">Step 5 - Run the Model</legend>
+                    <div class="form-actions no-margin">
+                        Once you have chosen all your settings you are ready to run your model. Its worth noting that in the Trip Table tab of the model pane you can hide or show your trip table origins and destinations, you may want to investigate your trip table closely before running your model.
+                        
+                        Once you are satisfied with your trip table click run model. This will ask you to name your model, enter a name and click ok.
+
+                        You can track your model run progress on the bottom of the model run tab. However even if you navigate away from the page the model will continue to run on the server.  
+                    </div>
+                <fieldset>
+            </div>
+        </section>
+    </div>
+</div>

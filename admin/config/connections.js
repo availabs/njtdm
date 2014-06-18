@@ -32,8 +32,8 @@ module.exports.connections = {
   lorPostgres: {
     adapter: 'sails-postgresql',
     user: 'postgres',
-    password: 'transit',
-    host: 'lor.availabs.org',
+    password: 'am1238wk',//'transit',
+    host: 'localhost',
     database: 'njtdmData'
   }
 
