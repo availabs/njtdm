@@ -13,128 +13,33 @@
                 <table class="table table-striped no-margin sources-table">
                     <thead>
                     <tr>
-                        <th class="source-col-header">Source</th>
-                        <th>Amount</th>
-                        <th>Change</th>
-                        <th class="hidden-xs">Percent.,%</th>
-                        <th>Target</th>
-                        <th class="chart-col-header hidden-xs">Trend</th>
+                        <th class="source-col-header">Name</th>
+                        <th># of Routes</th>
+                        <th># of Zones</th>
+                        <th class="text-right"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td><span class="label label-important">Direct</span></td>
-                        <td>713</td>
-                        <td><strong class="color-green">+53</strong></td>
-                        <td class="hidden-xs">+12</td>
-                        <td>900</td>
-                        <td class="chart-cell hidden-xs">
-                            <div id="direct-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="label label-warning">Refer</span></td>
-                        <td>562</td>
-                        <td><strong>+84</strong></td>
-                        <td class="hidden-xs">+64</td>
-                        <td>500</td>
-                        <td class="chart-cell hidden-xs">
-                            <div id="refer-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="label label-success">Social</span></td>
-                        <td>148</td>
-                        <td><strong class="color-red">-12</strong></td>
-                        <td class="hidden-xs">+3</td>
-                        <td>180</td>
-                        <td class="chart-cell hidden-xs">
-                            <div id="social-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="label label-info">Search</span></td>
-                        <td>653</td>
-                        <td><strong class="color-green">+23</strong></td>
-                        <td class="hidden-xs">+43</td>
-                        <td>876</td>
-                        <td class="chart-cell hidden-xs">
-                            <div id="search-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="label label-inverse">Internal</span></td>
-                        <td>976</td>
-                        <td><strong>+101</strong></td>
-                        <td class="hidden-xs">-7</td>
-                        <td>844</td>
-                        <td class="chart-cell hidden-xs">
-                            <div id="internal-trend"><canvas width="150" height="30" style="display: inline-block; width: 150px; height: 30px; vertical-align: top;"></canvas></div>
-                        </td>
-                    </tr>
+                    <% nav.marketareas.forEach(function(area){ %>                    
+                        <tr>
+                            <td><a href="/marketarea/<%= area.id %>"><%= area.name %></a></td>
+                            <td><%= area.numRoutes %></td>
+                            <td><%= area.numTracts %></td>
+                            
+                            <td class="chart-cell hidden-xs">
+                               <button class="btn btn-warning">Edit</button>
+                            </td>
+                        </tr>
+                    <% }) %>
                     </tbody>
                 </table>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Add New Market Area</button>
+                    <a  class="btn btn-primary" href="/marketarea/new">Add New Market Area</a>
                 </div>
             </div>
         </section>
     </div>
     <div class="col-md-4">
-        <section class="widget">
-                    <header>
-                        <h4>
-                            <i class="fa fa-hand-o-up"></i>
-                            Datasets
-                        </h4>
-                    </header>
-                    <div class="body">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>First Name</th>
-                                <th class="hidden-xs-portrait">Last Name</th>
-                                <th>Email</th>
-                                <th class="hidden-xs-portrait">Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td class="hidden-xs-portrait">Otto</td>
-                                <td><a href="#">ottoto@example.com</a></td>
-                                <td class="hidden-xs-portrait"><span class="badge badge-important">Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jacob</td>
-                                <td class="hidden-xs-portrait">Thornton</td>
-                                <td><a href="#">fat.thor@example.com</a></td>
-                                <td class="hidden-xs-portrait"><span class="badge badge-warning">Unconfirmed</span></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Larry</td>
-                                <td class="hidden-xs-portrait">the Bird</td>
-                                <td><a href="#">larry@example.com</a></td>
-                                <td class="hidden-xs-portrait"><span class="badge badge-success">New</span></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Peter</td>
-                                <td class="hidden-xs-portrait">Horadnia</td>
-                                <td><a href="#">peter@example.com</a></td>
-                                <td class="hidden-xs-portrait"><span class="badge badge-info">Active</span></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <blockquote class="blockquote-sm">
-                            Trace only what's really important. <code>.table-hover</code> is made for it.
-                        </blockquote>
-                    </div>
-                </section>
-        
+        <%- partial('../guide/dashboard-guide') %>
     </div>
 </div>
