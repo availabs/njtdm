@@ -20,12 +20,14 @@ module.exports.routes = {
   '/data/lodes': 'HomeController.lodes',
   '/marketarea/new': 'HomeController.marketareaNew',
 
+  
+
 
   //---------------------------------
   // Market Area Pages
   //---------------------------------
-  '/marketarea/new': 'MarketAreaController.manew',
-  '/marketarea/:id': 'MarketAreaController.overview',
+  '/marketarea/new': 'MarketAreaController.new',
+  '/marketarea/:id': 'MarketAreaController.show',
   '/marketarea/:id/models': 'MarketAreaController.models',
 
   //---------------------------------
@@ -48,7 +50,12 @@ module.exports.routes = {
   '/guide/quickstart' : 'GuideController.quickstart',
   '/guide/triptables' : 'GuideController.triptables',
   '/guide/odsources' : 'GuideController.odsources',
-  '/guide/demographics' : 'GuideController.demographics'
+  //'/guide/demographics' : 'GuideController.demographics'
+
+  //---------------------------------
+  // Data Routes
+  //---------------------------------
+  '/gtfs/:id/routes' :'MetaGtfsController.getRoutes'
 
   //----------------------------------
   //File Uploads

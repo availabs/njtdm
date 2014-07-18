@@ -36,7 +36,9 @@ module.exports = {
   
   gtfs:function(req,res){
     getNavData(function(navData){
-  	 res.view({page:'gtfs',panel:'data',title:"GTFS | NJTDM",nav:navData});
+      MetaGtfs.find().exec(function(err,meta){
+  	   res.view({page:'gtfs',panel:'data',records:meta,title:"GTFS | NJTDM",nav:navData});
+     });
     });
   },
   

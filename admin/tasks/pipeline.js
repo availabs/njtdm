@@ -32,11 +32,9 @@ var jsFilesToInject = [
   // Below, as a demonstration, you'll see the built-in dependencies 
     // linked in the proper order order
 
-    // Bring in the socket.io client
-    'js/socket.io.js',
 
     // then beef it up with some convenience logic for talking to Sails.js
-    'js/sails.io.js',
+    //'js/sails.io.js',
 
     // *->    put other dependencies here   <-*
 

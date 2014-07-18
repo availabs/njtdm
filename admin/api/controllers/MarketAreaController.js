@@ -34,12 +34,14 @@ function getOverviewData(marketarea,cb){
 
 module.exports = {
   
-  manew:function(req,res){
+  new:function(req,res){
     getNavData(function(navData){
-      res.view({page:'ma-new',panel:'marketarea',nav:navData})
+      MetaGtfs.find().exec(function(err,metaGTFS){
+        res.view({page:'ma-new',panel:'marketarea',gtfs:metaGTFS,nav:navData})
+      })
     })
   },
-  overview:function(req,res){
+  show:function(req,res){
     getNavData(function(navData){
       MarketArea.findOne(req.param('id')).exec(function(err,ma){
         if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}

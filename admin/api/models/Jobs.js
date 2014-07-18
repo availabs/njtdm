@@ -8,6 +8,11 @@
 module.exports = {
 
   attributes: {
+  	start:'time',
+  	finish:'time',
+  	isFinished:'boolean',
+  	type:'STRING',
+
 
   }
 };
