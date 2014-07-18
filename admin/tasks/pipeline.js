@@ -34,56 +34,44 @@ var jsFilesToInject = [
 
 
     // then beef it up with some convenience logic for talking to Sails.js
-    //'js/sails.io.js',
+    'js/sails.io.js',
 
     // *->    put other dependencies here   <-*
 
-    // All of the rest of your app scripts imported here
-    "js/jquery-2.0.3.min.js",
-    "js/jquery.pjax.js",
+    "lib/angular/angular.min.js",
+    "lib/jquery/jquery-2.0.3.min.js",
+    "lib/jquery-pjax/jquery.pjax.js",
 
 
-    // <!-- jquery plugins -->
-    "js/jquery.icheck.js",
-    "js/jquery.sparkline.js",
-    "js/jquery-ui-1.10.3.custom.js",
-    "js/jquery.slimscroll.js",
+    //<!-- jquery plugins -->
+    "lib/icheck.js/jquery.icheck.js",
+    "lib/sparkline/jquery.sparkline.js",
+    "lib/jquery-ui-1.10.3.custom.js",
+    "lib/jquery.slimscroll.js",
 
-    // <!-- d3, nvd3-->
-    "js/d3.v2.js",
-    "js/nv.d3.custom.js",
+    //<!-- d3, nvd3-->
+    "lib/nvd3/lib/d3.v3.min.js",
+    
+    //<!--backbone and friends -->
+    "lib/backbone/underscore-min.js",
+    "lib/backbone/backbone-min.js",
+    "lib/backbone/backbone.localStorage-min.js",
 
-    // <!-- nvd3 models -->
-    "js/scatter.js",
-    "js/axis.js",
-    "js/legend.js",
-    "js/multiBar.js",
-    "js/multiBarChart.js",
-    "js/line.js",
-    "js/lineChart.js",
-    "js/stream_layers.js",
-
-    // <!--backbone and friends -->
-    "js/underscore-min.js",
-    "js/backbone-min.js",
-    "js/backbone.localStorage-min.js",
-
-    // <!-- bootstrap default plugins -->
-    "js/transition.js",
-    "js/collapse.js",
-    "js/alert.js",
-    "js/tooltip.js",
-    "js/popover.js",
-    "js/button.js",
-    "js/tab.js",
-    "js/dropdown.js",
+    //<!-- bootstrap default plugins -->
+    "lib/bootstrap/transition.js",
+    "lib/bootstrap/collapse.js",
+    "lib/bootstrap/alert.js",
+    "lib/bootstrap/tooltip.js",
+    "lib/bootstrap/popover.js",
+    "lib/bootstrap/button.js",
+    "lib/bootstrap/tab.js",
+    "lib/bootstrap/dropdown.js",
 
     // <!-- basic application js-->
     "js/app.js",
     "js/settings.js",
 
     // <!-- page specific -->
-    "js/index.js",
 ];
 
 

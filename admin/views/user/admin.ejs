@@ -1,0 +1,110 @@
+<%- partial('../partials/nav') %>
+<div class="wrap">
+    <%- partial('../partials/header') %>
+	<div class="content container">
+	  <div class="row" ng-controller='UserAdminController'>
+		  <div class="col-md-8">
+		    <section class="widget">
+		    	<header>
+		    		<fieldset>
+	            	<legend>User Administrator<small> Add &amp; Edit Users</small></legend>
+	        		</fieldset>
+		    		<div class="widget-controls">
+		              <a data-widgster="expand" title="" href="#" style="display: none;" data-original-title="Expand"><i class="glyphicon glyphicon-plus"></i></a>
+		              <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>          
+            		</div>
+		    	</header>
+			    <div class="body">
+			     	<table class='table'>
+							<tr>
+								<th></th>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Username</th>
+								<th>Email</th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
+							
+							<tr ng-repeat="user in users" data-model="user">
+								<td>
+									<i ng-show="user.online" style='color:green;' class="eicon-plus-circled"></i>
+									<i ng-show="!user.online" style='color:red;' class="eicon-minus-circled"></i>
+								</td>
+								<td>{{ user.id }}</td>
+								<td>{{ user.name }}</td>
+								<td>{{ user.username }}</td>
+								<td>{{ user.email }}</td>
+								<td>
+									<i ng-show="user.admin" class="fa fa-users"></i>
+									<i ng-show="!user.admin" class="fa fa-user"></i>
+								</td>
+								
+								<td><a ng-click="EditUser(user)" class="btn btn-sm btn-warning">Edit</a></td>
+
+								<td><a ng-click="DeleteUser(user)" class="btn btn-sm btn-danger"/>Delete</a></td>
+							</tr> 
+
+							
+						</table>
+			    </div>
+		    </section>
+		  </div>
+		  <div class="col-md-4">
+		  	<section class="widget">
+		  		<header>
+		    		<fieldset>
+	            	<legend>Create an Account</legend>
+	        		</fieldset>
+		    		<div class="widget-controls">
+		              <a data-widgster="expand" title="" href="#" style="display: none;" data-original-title="Expand"><i class="glyphicon glyphicon-plus"></i></a>
+		              <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>          
+            		</div>
+		    	</header>
+		    	<div class="body">
+	        				
+							<% if(flash && flash.err) { %>
+								<ul class="alert alert-success">
+							<% Object.keys(flash.err).forEach(function(error) { %>
+								<li><%- JSON.stringify(flash.err[error]) %></li>
+							<% }) %>
+							</ul>
+							<% } %>
+
+
+							<div class="control-group">
+							<input type="text" class="form-control" placeholder="your name" ng-model="newUser.name">
+							</div>
+
+							<div class="control-group">
+							<input type="text" class="form-control" placeholder="username" ng-model="newUser.username">
+							</div>
+
+							<div class="control-group">
+							<input type="text" class="form-control" placeholder="email address" ng-model="newUser.email">
+							</div>
+
+							<div class="control-group">
+							<input type="password" class="form-control" placeholder="password" ng-model="newUser.password" id="password">
+							</div>
+
+							<div class="control-group">
+							<input type="password" class="form-control" placeholder="password confirmation" ng-model="newUser.confirmation">
+							<br />
+							</div>
+
+							<button ng-click="createAccount()" class="btn btn-lg btn-primary btn-block" >Create Account</button>
+							<!-- <input type="hidden" ng-model="newUser._csrf" value="<%= _csrf %>" /> -->
+						</form>
+		    	</div>
+		 		</section>
+		  </div>
+		</div>
+	</div>
+ 	<div class="loader-wrap hiding hide">
+ 		<i class="fa fa-spinner fa-spin"></i>
+  </div>
+</div>
+<script type="text/javascript">users = JSON.parse("<%= JSON.stringify(users) %>".replace(/\&quot\;/g, "\"")); </script>
+<script src='/js/pages/userAdmin.js'></script>

@@ -9,6 +9,13 @@
  */
 
 module.exports.routes = {
+  //---------------------------------
+  // User Login & Admin
+  //---------------------------------
+  '/login':'UserController.login',
+  '/login/auth':'UserController.auth',
+  '/logout':'UserController.logout',
+  '/user/admin':'UserController.admin',
 
   //---------------------------------
   // Home Pages
@@ -19,9 +26,6 @@ module.exports.routes = {
   '/data/ctpp': 'HomeController.ctpp',
   '/data/lodes': 'HomeController.lodes',
   '/marketarea/new': 'HomeController.marketareaNew',
-
-  
-
 
   //---------------------------------
   // Market Area Pages
