@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-md-8">
+        <section class="widget widget-tabs">
+                    <header>
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#overview" data-toggle="tab">Model Analysis</a>
+                            </li>
+                            <li>
+                                <a href="#routes" data-toggle="tab">New Model</a>
+                            </li>
+                        </ul>
+                    </header>
+                    <div class="body tab-content" style="overflow:hidden;">
+                        <div id="overview" class="tab-pane active clearfix" ng-controller="OverviewController">
+                           <%- partial('model-tabs/analysis') %>
+                        </div>
+                        <div id="routes" class="tab-pane">
+                           <%- partial('model-tabs/new-model') %>
+                        </div>
+                       
+                        
+                    </div>
+                </section>
+    </div>
+    <div class="col-md-4">
+        <%- partial('../guide/models-guide') %>  
+    </div>
+</div>

@@ -1,0 +1,108 @@
+<header>
+    <h4>
+        <i class="fa fa-align-left"></i>
+        Overview
+    </h4>
+</header>
+<div class="row">
+	<div class="col-md-2 col-sm-4 col-xs-6">
+        <div class="box">
+            <h3>
+                <%= JSON.parse(marketarea.zones).length %>
+            </h3>
+            <div class="description">
+                Census Tracts
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6">
+        <div class="box">
+            <h3>
+                {{census_vars['total_population'].value | number}}
+            </h3>
+            <div class="description">
+                Population
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6">
+        <div class="box">
+            <h3>
+                {{census_vars['employment'].value | number}}
+            </h3>
+            <div class="description">
+                Employment
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6">
+        <div class="box">
+            <h3>
+               <%= JSON.parse(marketarea.routes).length %>
+            </h3>
+            <div class="description">
+                # Bus Routes
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 col-sm-4 col-xs-6">
+        <div class="box">
+            <h3>
+                {{census_vars['bus_to_work'].value | number}}
+            </h3>
+            <div class="description" style="margin-top:0px">
+            	%{{census_vars['bus_to_work'].value/census_vars['travel_to_work_total'].value | number}}<br>
+                Bus To Work
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 col-sm-4 col-xs-6">
+        <div class="box">
+            <h3>
+                {{census_vars['car_0'].value | number}}
+            </h3>
+            <div class="description" style="margin-top:0px">
+            	%{{census_vars['car_0'].value/census_vars['total_housing'].value | number}}<br>
+                0 Vehicle Households
+            </div>
+        </div>
+    </div>
+    
+</div>
+<header>
+    <h4>
+        <i class="fa fa-align-left"></i>
+        Demographics
+    </h4>
+</header>
+<div class="body">
+    <div class="tabbable tabs-left">
+    	<ul class="nav nav-tabs" id="myTabLeft">
+        	<li ng-repeat="(name,vars) in census_categories" class=""><a href="#{{vars[0]}}" data-toggle="tab">{{name}}</a></li>
+        </ul>
+	    <div id="myTabContentLeft" class="tab-content">
+		    <div ng-repeat="(name,vars) in census_categories" id="{{vars[0]}}" class="tab-pane fade" >
+		        <div class="row-fluid">
+		        	<div class="col-md-12" id="chart"><svg style="height:500px;width:608px;"></svg></div>
+		        	<div class="col-md-12">
+		        	<h4>{{name}}</h4>
+				        <table class="table table-striped table-hover">
+				          <tr ng-repeat="var in vars">
+				            <td> {{  census_vars[var].name }}</td>
+				            <td class="text-right"> {{ census_vars[var].value | number }} </i> </td>
+				          </tr>
+				        </table>
+				    </div>
+				    
+				</div>
+		    </div>
+	    </div>
+    </div>
+</div>
+<script type="text/javascript" src="/lib/nvd3/nv.d3.min.js"></script>
+<script type="text/javascript" src="/avail/acs_data.js"></script>
+<script type="text/javascript">
+	acs_data.update_data(JSON.parse("<%= JSON.stringify(census) %>".replace(/\&quot\;/g, "\"")));
+</script>

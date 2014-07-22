@@ -15,7 +15,8 @@
 // (if you're using LESS with the built-in default config, you'll want
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
-  'styles/application.min.css'
+  'styles/application.min.css',
+  'lib/nvd3/nvd3.css'
 ];
 
 
@@ -44,18 +45,18 @@ var jsFilesToInject = [
 
 
     //<!-- jquery plugins -->
-    "lib/icheck.js/jquery.icheck.js",
-    "lib/sparkline/jquery.sparkline.js",
+    //"lib/icheck.js/jquery.icheck.js",
+    //"lib/sparkline/jquery.sparkline.js",
     "lib/jquery-ui-1.10.3.custom.js",
     "lib/jquery.slimscroll.js",
 
-    //<!-- d3, nvd3-->
+    //<!-- d3-->
     "lib/nvd3/lib/d3.v3.min.js",
     
     //<!--backbone and friends -->
     "lib/backbone/underscore-min.js",
-    "lib/backbone/backbone-min.js",
-    "lib/backbone/backbone.localStorage-min.js",
+    //"lib/backbone/backbone-min.js",
+    //"lib/backbone/backbone.localStorage-min.js",
 
     //<!-- bootstrap default plugins -->
     "lib/bootstrap/transition.js",

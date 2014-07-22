@@ -1,0 +1,43 @@
+<header>
+    <h4>
+        <i class="fa fa-align-left"></i>
+        Routes
+    </h4>
+</header>
+<div class="body">
+    <form class="form-horizontal" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label for="dataSource" class="control-label">Routes</label>
+                <div class="controls form-group">
+                    <select id="dataSource" data-placeholder="Add Route to Market Area"
+                            required="required" class="col-xs-12 col-sm-8 chzn-select" name="routeSelect">
+                            <option value=""></option>
+                            <% meta.fullroutes.forEach(function(route){%>
+                              <option value="<%=route.route_id%>"><%=route.route_short_name%></option>
+                            <%})%>
+                    </select>
+                    <button type="button" class="btn btn-danger">Add Route</button>
+
+                    <table class="table table-striped table-condensed col-sm-8">
+                      <thead>
+                      <tr>
+                          <th>Route Name</th>
+                          <th>Remove</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <% JSON.parse(marketarea.routes).forEach(function(route){ %>  
+                        <tr>
+                            <td><%=route%></td>
+                            <td><i class="fa fa-minus-square"></i></td>
+                        </tr>
+                      <%})%>
+                      </tbody>
+                    </table>
+                
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

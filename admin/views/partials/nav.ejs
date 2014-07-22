@@ -17,7 +17,7 @@
                         <ul id="sub-menu-ma<%= index %>-collapse" class="panel-collapse collapse">
                             <li <% if(page == 'ma-overview') {%> class="active" <%}%>><a href="/marketarea/<%= ma.id %>">Overview</a></li>
                             <li <% if(page == 'ma-models') {%> class="active" <%}%>><a href="/marketarea/<%= ma.id %>/models">Model Runs</a></li>
-                            <li><a href="/map/">Map</a></li>
+                            <li><a href="/map/" targe="_blank">Map</a></li>
                         </ul>
                     </li>
                 <% }) %>
@@ -30,8 +30,8 @@
             <ul id="stats-collapse" class="panel-collapse <% if(panel == 'data') {%> in <%}else{%> collapse <%}%>">
                 <li <% if(page == 'gtfs') {%> class="active" <%}%> ><a href="/data/gtfs">GTFS</a></li>
                 <li <% if(page == 'acs') {%> class="active" <%}%> ><a href="/data/acs">ACS</a></li>
-                <li <% if(page == 'ctpp') {%> class="active" <%}%> ><a href="/data/ctpp">CTPP</a></li>
                 <li <% if(page == 'lodes') {%> class="active" <%}%> ><a href="/data/lodes">LODES</a></li>
+                <li <% if(page == 'ctpp') {%> class="active" <%}%> ><a href="/data/ctpp">CTPP</a></li>
             </ul>
         </li>
         <li class="panel <% if(panel == 'guide') {%> active <%}%>">

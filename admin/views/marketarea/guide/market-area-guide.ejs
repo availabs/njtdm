@@ -1,52 +1,4 @@
-<div class="row">
-    <div class="col-md-7">        
-        <section class="widget">
-            <header>
-                <h4>
-                    Current Data
-                </h4>
-            </header>
-            <div class="body">
-           
-                <table class="table table-striped no-margin sources-table">
-                    <thead>
-                    <tr>
-                        <th class="source-col-header">State FIPS</th>
-                        <th>Year</th>
-                        <th>Source</th>
-                        <th>Sum Level</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% 
-                        records.forEach(function(rec){
-                    %>
-                        <tr>
-                            <td><%= rec['stateFips'] %></td>
-                            <td><%= rec['year'] %></td>
-                            <td><%= rec['dataSource'] %></td>
-                            <td><%= rec['sumlevel'] %></td>
-                            <td>
-                            <button class="btn btn-danger btn-sm delete" ng-click="delete(<%=rec['id']%>)">
-                                <i class="fa fa-trash"></i>
-                                <span>Delete</span>
-                            </button>
-                            </td>
-                        </tr>
-                    <%        
-                        }) 
-                    %>
-                   
-                    
-                    </tbody>
-                </table>
-            </div>
-        </section>
-        
-    </div>
-    <div class="col-md-5">
-        <section class="widget">
+<section class="widget">
             <header>
                 <h5>
                     <i class="fa fa-tasks"></i>
@@ -64,7 +16,7 @@
                     <div class="panel">
                         <div class="panel-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                                About ACS
+                                Market Area Overview
                             </a>
                         </div>
                         <div id="collapseOne" class="panel-collapse in" style="height: auto;">
@@ -125,6 +77,3 @@
                 </div>
             </div>
         </section>
-        
-    </div>
-</div>

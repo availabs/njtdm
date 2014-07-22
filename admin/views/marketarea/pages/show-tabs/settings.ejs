@@ -1,0 +1,48 @@
+<header>
+    <h4>
+        <i class="fa fa-align-left"></i>
+        Settings
+    </h4>
+</header>
+<div class="body">
+    <form class="form-horizontal" method="post">
+        <fieldset>
+        <div class="control-group">
+            <label class="control-label " for="name">Name:</label>
+            <div class="controls form-group">
+                <div class="col-sm-10"><input type="text" id="name" class="form-control" disabled="disabled" value="<%= marketarea.name %>"></div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="dataSource" class="control-label">Geographic Units</label>
+            <div class="controls form-group">
+                <select id="dataSource" data-placeholder="Data Source"
+                        required="required" class="col-xs-12 col-sm-10 chzn-select" name="dataSouce">
+                        <option value=""></option>
+                    <option value="acs5" <% if(marketarea.geounit == 'tracts'){%> selected <%}%> >Tracts</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="dataSource" class="control-label">Base GTFS File</label>
+            <div class="controls form-group">
+                <select id="dataSource" data-placeholder="Data Source"
+                        required="required" class="col-xs-12 col-sm-10 chzn-select" name="dataSouce">
+                        <option value=""></option>
+                        <% meta.metagtfs.forEach(function(gtfs){%>
+                          <option value="<%=gtfs.id%>" <% if(marketarea.origin_gtfs == gtfs.id){%> selected <%}%>><%=gtfs.agency+" "+gtfs.startDate%></option>
+                        <%})%>
+                </select>
+            </div>
+        </div>
+        
+        
+        </fieldset>
+        <div class="form-actions">
+            <div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-default">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>
