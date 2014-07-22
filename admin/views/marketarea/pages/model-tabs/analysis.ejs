@@ -5,5 +5,49 @@
     </h4>
 </header>
 <div class="body">
-   
+   <div class="row">
+
+        <div class="col-md-12">
+            
+            <select   ng-model="current_model_index" class='template_select' style="width:80%;color:#000;">
+              <option  ng-repeat="model in finished_models | filter:{marketArea:activeMarket}" value="{{model.id}}">{{ model.name }}</option>
+            </select>
+            <p class='btn-grp pull-right'>
+                <a class='btn btn-info' ng-click="loadModelData(current_model_index)" ng-disabled='loading'> Load Model </a>
+            </p>
+            
+            <div class="progress progress-striped active" ng-show='loading'>
+              <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                <span class="sr-only">Loading Data</span>
+              </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+           <!--  <ol class="breadcrumb">
+              <li><a href="#">{{marketAreas[activeMarket].name}}</a></li>
+            </ol> -->
+            <div class="well" ng-show='loadedModels.length > 0'>
+                <span class="label" ng-repeat="model in loadedModels" style="{{'margin:3px;background-color:'+colors[$index]}}">{{model.name}}</span>
+            </div>
+
+            <div class="thumbnail" style="overflow:hidden;">
+                <div id="graphDiv">
+                    <div id="route-count"></div>
+                    <div id="route-count-table"></div>
+                    <div id="start-time"></div>
+                    <div id="trip-duration"></div>
+                    <div id="trip-wait-time"></div>
+                    <div id="trip-distance"></div>
+                    <div id="boarding-choropleth"></div>
+                    <div id="alighting-choropleth"></div>
+                </div>
+            </div>
+
+            <div class="well">
+
+
+        	</div>
+    	</div>
+    </div>
 </div>
