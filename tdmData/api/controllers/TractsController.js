@@ -209,9 +209,15 @@ generateTrips : function(req,res){
 									// regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.141
 									// regressionRiders += req.param('cenData')[tract.home_tract].race_white*-0.027
 									console.log('princeton reg')
-									regressionRiders = 11.58775+req.param('cenData')[tract.home_tract].car_0*0.3374579
-									regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.141
-									regressionRiders += req.param('cenData')[tract.home_tract].age25_29*-0.027
+
+									// regressionRiders = 3.520174+req.param('cenData')[tract.home_tract].car_0*0.3594752
+									// regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.141
+									// regressionRiders += req.param('cenData')[tract.home_tract].age25_29*-0.027
+
+									regressionRiders = 3.520174+req.param('cenData')[tract.home_tract].car_0*0.3594752;
+									regressionRiders += req.param('cenData')[tract.home_tract].age_25_29*0.1261646;
+									regressionRiders += req.param('cenData')[tract.home_tract].race_black*0.02306711;
+									regressionRiders += req.param('cenData')[tract.home_tract].poverty_st*-0.04343183;
 
 								}
 
