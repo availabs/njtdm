@@ -148,7 +148,8 @@ generateTrips : function(req,res){
 	// marketarea: market area id
 	//  
 	//*/
-	var version = "0.0.5";
+	
+	var version = "0.0.6";
 	var mode = 'lehd'
 	if(typeof req.param('mode') != 'undefined'){ mode =req.param('mode');}
 	if (!req.param('tracts') instanceof Array) { res.send('Must post Array of 11 digit fips codes to LEHD Trip Table');}
@@ -166,7 +167,7 @@ generateTrips : function(req,res){
 					
 	fips_in = fips_in.slice(0, -1)+")";
 
-	
+	console.log("generate trips",'mode',mode,'odtype',odtype)
 	var sql="SELECT h_geocode as home_tract, w_geocode as work_tract, s000 as bus_total from nj_od_j00_ct where s000 > 5 and (h_geocode in "+fips_in+" or w_geocode in "+fips_in+")";
 	if(mode == 'ctpp'){
 		sql="SELECT from_tract as home_tract, to_tract as work_tract, est as bus_total from ctpp_a302103_tracts where (from_tract in "+fips_in+" or to_tract in "+fips_in+")";
