@@ -9,7 +9,7 @@
 module.exports = {
 
   schema: true,
-
+  autosubscribe: ['create','destroy', 'update'],
   attributes: {
   	
   	name: {

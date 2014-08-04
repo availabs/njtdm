@@ -20,5 +20,11 @@ function UserAdminController ($scope) {
             console.log(message);
         });   
     }
+    $scope.deleteAccount = function(user){
+        io.socket.delete('/user/'+user.id,function(err,message){
+            if (err) {console.log(err);}
+            console.log(message)
+        })
+    }
 
 };

@@ -142,6 +142,12 @@ surveyTrips : function(req,res){
 	});
 },
 generateTrips : function(req,res){
+	/* mode : lehd || ctpp
+	// tracts : an array of census tracts fip11 ids
+	// odtype : stops, survey, [parcels]
+	// marketarea: market area id
+	//  
+	//*/
 	var version = "0.0.5";
 	var mode = 'lehd'
 	if(typeof req.param('mode') != 'undefined'){ mode =req.param('mode');}
@@ -197,11 +203,15 @@ generateTrips : function(req,res){
 									regressionRiders += req.param('cenData')[tract.home_tract].race_other*-0.05642658;
 									regressionRiders += req.param('cenData')[tract.home_tract].occupancy_renter*-0.06249458;
 									regressionRiders += req.param('cenData')[tract.home_tract].occupied_housing*-0.09579623;
-									console.log('rr',regressionRiders);
+									//console.log('rr',regressionRiders);
 								}else if(marketArea == 1){
-									regressionRiders = 38.794+req.param('cenData')[tract.home_tract].car_0*0.743
+									// regressionRiders = 38.794+req.param('cenData')[tract.home_tract].car_0*0.743
+									// regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.141
+									// regressionRiders += req.param('cenData')[tract.home_tract].race_white*-0.027
+									console.log('princeton reg')
+									regressionRiders = 11.58775+req.param('cenData')[tract.home_tract].car_0*0.3374579
 									regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.141
-									regressionRiders += req.param('cenData')[tract.home_tract].race_white*-0.027
+									regressionRiders += req.param('cenData')[tract.home_tract].age25_29*-0.027
 
 								}
 

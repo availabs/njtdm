@@ -18,8 +18,12 @@ module.exports.sockets = {
   // mixes in socket.io events for your routes and blueprints automatically.
   onConnect: function(session, socket) {
 
-    // By default, do nothing.
+    var socketId = sails.sockets.id(socket);
+    sails.sockets.emit(socketId, 'hello', {'foo':'bar'});
 
+    // By default, do nothing.
+    User.watch(socket);
+    //User.subscribe(socket);
   },
 
   // This custom onDisconnect function will be run each time a socket disconnects

@@ -48,7 +48,7 @@
                 <h4><i class="fa fa-cog"></i> Add New Data <small></small></h4>
             </header>
             <div class="body">
-                <form id="article-options" class="form-horizontal form-condensed label-left" method="post">
+                <form id="article-options" class="form-horizontal form-condensed label-left" action="/acs/load/" method="post">
                     <fieldset>
                         <legend class="section">Options</legend>
                         <div class="control-group">
@@ -57,13 +57,13 @@
                                     <select id="state" data-placeholder="Select state"
                                             required="required" class="col-xs-12 col-sm-6 chzn-select select" name="state">
                                         <option value=""></option>
-                                        <option value="AL">Alabama</option>
-                                        <option value="AK">Alaska</option>
-                                        <option value="AZ">Arizona</option>
-                                        <option value="AR">Arkansas</option>
-                                        <option value="CA">California</option>
-                                        <option value="CO">Colorado</option>
-                                        <option value="CT">Connecticut</option>
+                                        <option value="01">Alabama</option>
+                                        <option value="02">Alaska</option>
+                                        <option value="04">Arizona</option>
+                                        <option value="05">Arkansas</option>
+                                        <option value="06">California</option>
+                                        <option value="08">Colorado</option>
+                                        <option value="09">Connecticut</option>
                                         <option value="DE">Delaware</option>
                                         <option value="DC">District Of Columbia</option>
                                         <option value="FL">Florida</option>
@@ -87,15 +87,15 @@
                                         <option value="NE">Nebraska</option>
                                         <option value="NV">Nevada</option>
                                         <option value="NH">New Hampshire</option>
-                                        <option value="NJ">New Jersey</option>
-                                        <option value="NM">New Mexico</option>
-                                        <option value="NY">New York</option>
+                                        <option value="34">New Jersey</option>
+                                        <option value="35">New Mexico</option>
+                                        <option value="36">New York</option>
                                         <option value="NC">North Carolina</option>
                                         <option value="ND">North Dakota</option>
                                         <option value="OH">Ohio</option>
                                         <option value="OK">Oklahoma</option>
                                         <option value="OR">Oregon</option>
-                                        <option value="PA">Pennsylvania</option>
+                                        <option value="42">Pennsylvania</option>
                                         <option value="RI">Rhode Island</option>
                                         <option value="SC">South Carolina</option>
                                         <option value="SD">South Dakota</option>
@@ -126,7 +126,7 @@
                             </div>
 
                             <div class="control-group">
-                                <label for="year" class="control-label">Year</label>
+                                <label for="year" class="control-label">Base Year</label>
                                 <div class="controls form-group">
                                     <select id="year" data-placeholder="Year"
                                             required="required" class="col-xs-12 col-sm-6 chzn-select" name="year">
@@ -151,6 +151,13 @@
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary">Add Dataset</button>
                             </div>
+                            <% if(flash && flash.err) { %>
+                                <ul class="alert alert-info">
+                            <% Object.keys(flash.err).forEach(function(error) { %>
+                                    <li><%- flash.err[error].message %></li>
+                            <% }) %>
+                                </ul>
+                            <% } %>
 
                     </fieldset>
                 </form>

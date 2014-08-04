@@ -55,9 +55,7 @@ var jsFilesToInject = [
     
     //<!--backbone and friends -->
     "lib/backbone/underscore-min.js",
-    //"lib/backbone/backbone-min.js",
-    //"lib/backbone/backbone.localStorage-min.js",
-
+    
     //<!-- bootstrap default plugins -->
     "lib/bootstrap/transition.js",
     "lib/bootstrap/collapse.js",
@@ -70,9 +68,9 @@ var jsFilesToInject = [
 
     // <!-- basic application js-->
     "js/app.js",
+    "js/navController.js",
     "js/settings.js",
 
-    // <!-- page specific -->
 ];
 
 

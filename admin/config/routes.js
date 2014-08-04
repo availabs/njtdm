@@ -59,8 +59,9 @@ module.exports.routes = {
   //---------------------------------
   // Data Routes
   //---------------------------------
-  '/gtfs/:id/routes' :'MetaGtfsController.getRoutes'
-
+  '/gtfs/:id/routes' :'MetaGtfsController.getRoutes',
+  '/acs/load':'MetaAcsController.loadData'
+  
   //----------------------------------
   //File Uploads
   //----------------------------------

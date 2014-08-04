@@ -16,38 +16,36 @@
 		    	</header>
 			    <div class="body">
 			     	<table class='table'>
-							<tr>
-								<th></th>
-								<th>ID</th>
-								<th>Name</th>
-								<th>Username</th>
-								<th>Email</th>
-								<th></th>
-								<th></th>
-								<th></th>
-							</tr>
+						<tr>
+							<th></th>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Username</th>
+							<th>Email</th>
+							<th></th>
+							<th></th>
+							<th></th>
+						</tr>
+						
+						<tr ng-repeat="user in users" data-model="user">
+							<td>
+								<i ng-show="user.online" style='color:green;' class="eicon-plus-circled"></i>
+								<i ng-show="!user.online" style='color:red;' class="eicon-minus-circled"></i>
+							</td>
+							<td>{{ user.id }}</td>
+							<td>{{ user.name }}</td>
+							<td>{{ user.username }}</td>
+							<td>{{ user.email }}</td>
+							<td>
+								<i ng-show="user.admin" class="fa fa-users"></i>
+								<i ng-show="!user.admin" class="fa fa-user"></i>
+							</td>
 							
-							<tr ng-repeat="user in users" data-model="user">
-								<td>
-									<i ng-show="user.online" style='color:green;' class="eicon-plus-circled"></i>
-									<i ng-show="!user.online" style='color:red;' class="eicon-minus-circled"></i>
-								</td>
-								<td>{{ user.id }}</td>
-								<td>{{ user.name }}</td>
-								<td>{{ user.username }}</td>
-								<td>{{ user.email }}</td>
-								<td>
-									<i ng-show="user.admin" class="fa fa-users"></i>
-									<i ng-show="!user.admin" class="fa fa-user"></i>
-								</td>
-								
-								<td><a ng-click="EditUser(user)" class="btn btn-sm btn-warning">Edit</a></td>
+							<td><a ng-click="EditUser(user)" class="btn btn-sm btn-warning">Edit</a></td>
 
-								<td><a ng-click="DeleteUser(user)" class="btn btn-sm btn-danger"/>Delete</a></td>
-							</tr> 
-
-							
-						</table>
+							<td><a ng-click="deleteAccount(user)" class="btn btn-sm btn-danger"/>Delete</a></td>
+						</tr> 
+					</table>
 			    </div>
 		    </section>
 		  </div>
