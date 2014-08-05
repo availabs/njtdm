@@ -376,6 +376,7 @@ var homeMod = angular.module( 'njTDM.home', [
         regData[tract].information = censusData.acs[tract].information;
         regData[tract].employment_density = censusData.acs[tract].employment/d3.geo.area(feat);
       });
+      console.log(regData);
       promise = $http.post($scope.api+'tracts/triptable', {marketarea:$scope.marketArea,timeOfDay:$scope.model_time,mode:'ctpp',tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata,cenData:regData}).then(function(data){
         return data;
       });

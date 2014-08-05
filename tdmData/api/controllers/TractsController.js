@@ -298,7 +298,7 @@ generateTrips : function(req,res){
 								regressionRiders = -19.35818 + req.param('cenData')[tract.home_tract].car_0* 0.5432931;
 								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.1331132;
 								regressionRiders += req.param('cenData')[tract.home_tract].information*-0.7130553;
-								regressionRiders += req.param('cenData')[tract.home_tract].employment_density*-8.155064.toExponential(-10);
+								regressionRiders += req.param('cenData')[tract.home_tract].employment_density*-.000000000085064;
 
 								///console.log('rr',regressionRiders);
 							}else if(marketArea == 1){
