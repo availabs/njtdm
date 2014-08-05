@@ -9,11 +9,11 @@
 
         <div class="col-md-12">
             
-            <select   ng-model="current_model_index" class='template_select' style="width:80%;color:#000;">
+            <select   ng-model="current_model_index" class='template_select chzn-select' style="width:80%;color:#000;" id="model_run_select">
               <option  ng-repeat="model in finished_models | filter:{marketArea:activeMarket}" value="{{model.id}}">{{ model.name }}</option>
-            </select>
+            </select>{{template_select}}
             <p class='btn-grp pull-right'>
-                <a class='btn btn-info' ng-click="loadModelData(current_model_index)" ng-disabled='loading'> Load Model </a>
+                <a class='btn btn-info' ng-click="loadModelData()" ng-disabled='loading'> Load Model </a>
             </p>
             
             <div class="progress progress-striped active" ng-show='loading'>
@@ -27,27 +27,42 @@
            <!--  <ol class="breadcrumb">
               <li><a href="#">{{marketAreas[activeMarket].name}}</a></li>
             </ol> -->
+
             <div class="well" ng-show='loadedModels.length > 0'>
                 <span class="label" ng-repeat="model in loadedModels" style="{{'margin:3px;background-color:'+colors[$index]}}">{{model.name}}</span>
             </div>
 
-            <div class="thumbnail" style="overflow:hidden;">
-                <div id="graphDiv">
-                    <div id="route-count"></div>
-                    <div id="route-count-table"></div>
-                    <div id="start-time"></div>
-                    <div id="trip-duration"></div>
-                    <div id="trip-wait-time"></div>
-                    <div id="trip-distance"></div>
-                    <div id="boarding-choropleth"></div>
-                    <div id="alighting-choropleth"></div>
+
+            
+            <ul id="myTab" class="nav nav-tabs">
+                <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+                <li class=""><a href="#profile" data-toggle="tab">Profile</a></li>
+                
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="home">
+                     <div class="thumbnail" style="overflow:hidden;">
+                        <div id="graphDiv">
+                            <div id="route-count"></div>
+                            <div id="route-count-table"></div>
+                            <div id="start-time"></div>
+                            <div id="trip-duration"></div>
+                            <div id="trip-wait-time"></div>
+                            <div id="trip-distance"></div>
+                            <div id="boarding-choropleth"></div>
+                            <div id="alighting-choropleth"></div>
+                        </div>
+                    </div>
                 </div>
+                <div class="tab-pane fade" id="profile">
+                    <div class="well">
+                        <h4>Routes</h4>
+                       <button class='btn btn-danger' ng-repeat='route in routes'>{{route}}</button>
+                    </div>
+                </div>
+               
             </div>
-
-            <div class="well">
-
-
-        	</div>
+                    
     	</div>
     </div>
 </div>

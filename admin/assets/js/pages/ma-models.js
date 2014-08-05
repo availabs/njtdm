@@ -25,7 +25,7 @@ function ReportCtrl( $scope,$http,$filter) {
     {name:'Princeton / Trenton', id:1},
     {name:'Paterson', id:2}
   ];
-  
+  $scope.routes = [];
   $scope.time = 'am';
   $scope.times = ['am','pm','full day'];
 
@@ -57,8 +57,9 @@ function ReportCtrl( $scope,$http,$filter) {
     return '';
   };
   
-  $scope.loadModelData = function(index){
-  	console.log('loading',index)
+  $scope.loadModelData = function(){
+  	console.log('loading',$('#model_run_select').val())
+    var index = $('#model_run_select').val();
     $scope.loading = true;
     var v = -1;
     $scope.finished_models.forEach(function(model,i){
@@ -85,6 +86,10 @@ function ReportCtrl( $scope,$http,$filter) {
      
       reportAnalyst.geoData = geoData;
       reportAnalyst.update_data(data,name);
+      $scope.routes = []
+      reportAnalyst.modelRoutesGroup.all().reduce(function(one,two){$scope.routes.push(two.key)});
+      console.log($scope.routes);
+      $scope.$apply();
       reportAnalyst.clearGraphs();
       reportAnalyst.renderGraphs();
     });

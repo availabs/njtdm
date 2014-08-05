@@ -9,6 +9,7 @@ censusGeo = {
   g:{},
   feature : {},
   scenario_tracts : [],
+  scenario_tracts_features : [],
   bounds : [],
   legend_domain : {},
   ll:6,
@@ -24,6 +25,7 @@ censusGeo = {
 
     censusGeo.svg = d3.select(censusGeo.map.getPanes().overlayPane).append("svg");
     censusGeo.g = censusGeo.svg.append("g").attr("class", "leaflet-zoom-hide tracts");
+    censusGeo.scenario_tracts_features = [];
     censusGeo.feature = censusGeo.g.selectAll("path.tract")
       .data(geo.features)
       .enter()
@@ -32,6 +34,7 @@ censusGeo = {
       .attr("id",function(d){ return "tract_"+d.properties.geoid;})
       .attr("class", function(d){
         if(censusGeo.scenario_tracts.indexOf(d.properties.geoid) !== -1){
+          censusGeo.scenario_tracts_features.push(d);
           return "selected_tract";
         }
         return "tract";
@@ -251,12 +254,12 @@ censusGeo = {
         //viz.setLegend();
   },
   update_scenario:function(){
-      
+      censusGeo.scenario_tracts_features = [];
       censusGeo.g.selectAll("path.tract")
         .transition().duration(1000)
         .attr("class", function(d){
         if(censusGeo.scenario_tracts.indexOf(d.properties.geoid) !== -1){
-
+          censusGeo.scenario_tracts_features.push(d);
           return "selected_tract";
         }
         return "tract";
@@ -267,6 +270,7 @@ censusGeo = {
         .style('fill','none')
         .attr("class", function(d){
         if(censusGeo.scenario_tracts.indexOf(d.properties.geoid) !== -1){
+          censusGeo.scenario_tracts_features.push(d);
           return "selected_tract";
         }
         return "tract";

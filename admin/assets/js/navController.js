@@ -1,6 +1,5 @@
 function navController($scope) {
 
-   
     io.socket.post('/job',{},function(data){ 
         console.log('Users:',data); 
     });

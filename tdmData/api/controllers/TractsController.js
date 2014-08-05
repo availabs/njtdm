@@ -288,11 +288,17 @@ generateTrips : function(req,res){
 								// regressionRiders += req.param('cenData')[tract.home_tract].race_other*-0.05642658;
 								// regressionRiders += req.param('cenData')[tract.home_tract].occupancy_renter*-0.06249458;
 								// regressionRiders += req.param('cenData')[tract.home_tract].occupied_housing*-0.09579623;
-								regressionRiders = req.param('cenData')[tract.home_tract].car_0*0.629;
-								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.134;
-								regressionRiders += req.param('cenData')[tract.home_tract].information*-0.787;
+								
+
+								// regressionRiders = req.param('cenData')[tract.home_tract].car_0*0.629;
+								// regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.134;
+								// regressionRiders += req.param('cenData')[tract.home_tract].information*-0.787;
 
 
+								regressionRiders = -19.35818 + req.param('cenData')[tract.home_tract].car_0* 0.5432931;
+								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.1331132;
+								regressionRiders += req.param('cenData')[tract.home_tract].information*-0.7130553;
+								regressionRiders += req.param('cenData')[tract.home_tract].employment_density*-8.155064.toExponential(-10);
 
 								///console.log('rr',regressionRiders);
 							}else if(marketArea == 1){

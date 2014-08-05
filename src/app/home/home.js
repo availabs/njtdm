@@ -352,7 +352,8 @@ var homeMod = angular.module( 'njTDM.home', [
     }
     else if(model_type == 'censusregression'){
       var regData = {};
-      for(tract in censusData.acs){
+      censusGeo.scenario_tracts_features.forEach(function(feat){
+        tract = feat.properties.geoid;
         regData[tract] = {};
         regData[tract].arts = censusData.acs[tract].arts;
         regData[tract].car_0 = censusData.acs[tract].car_0;
@@ -373,7 +374,8 @@ var homeMod = angular.module( 'njTDM.home', [
         regData[tract].race_black = censusData.acs[tract].race_black;
         regData[tract].race_white = censusData.acs[tract].race_white;
         regData[tract].information = censusData.acs[tract].information;
-      }
+        regData[tract].employment_density = censusData.acs[tract].employment/d3.geo.area(feat);
+      });
       promise = $http.post($scope.api+'tracts/triptable', {marketarea:$scope.marketArea,timeOfDay:$scope.model_time,mode:'ctpp',tracts:$scope.tracts,od:$scope.model_od,buspercent:busdata,cenData:regData}).then(function(data){
         return data;
       });
