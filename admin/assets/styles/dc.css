@@ -1,4 +1,5 @@
-
+div.dc-chart {
+}
 
 .dc-chart rect.bar {
     stroke: none;
@@ -22,6 +23,15 @@
 .dc-chart rect.deselected {
     stroke: none;
     fill: #ccc;
+}
+
+.dc-chart .empty-chart .pie-slice path {
+    fill: #FFEEEE;
+    cursor: default;
+}
+
+.dc-chart .empty-chart .pie-slice {
+    cursor: default;
 }
 
 .dc-chart .pie-slice {
@@ -203,8 +213,8 @@
 }
 
 .dc-chart g.row text {
-    fill: black;
-    font-size: 14px;
+    fill: white;
+    font-size: 12px;
     cursor: pointer;
 }
 
