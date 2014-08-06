@@ -557,10 +557,18 @@ var homeMod = angular.module( 'njTDM.home', [
     tripTable.init();
 
     //Get Scenarios & Load the first one
-      $scope.allScenarios = Scenario.query(function(){
-        $scope.current_template= $scope.allScenarios[0];
-        $scope.loadScenario($scope.current_template);
+      $scope.loadScenarios = Scenario.query(function(){
+        $scope.allScenarios = [];
+        $scope.loadScenarios.forEach(function(scen){
+          if(scen.name.indexOf("Template") != -1){
+            console.log(scen.name,scen.name.indexOf("Template") != -1);
+            $scope.allScenarios.push(scen);
+          }
+        });
+        $scope.current_template= $scope.allScenarios[2];
+        $scope.first = true;
         $scope.scenario_select = function(index){
+          if($scope.first){index = 2;$scope.first=false;}
           $scope.loadScenario($scope.allScenarios[index]);
         };
         $http.post($scope.api+'triptable/finished').success(function(data){

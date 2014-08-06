@@ -16,7 +16,7 @@
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
   'styles/application.min.css',
-  'lib/nvd3/nvd3.css',
+  'styles/dc.css'
 ];
 
 

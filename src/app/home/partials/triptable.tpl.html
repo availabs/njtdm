@@ -1,9 +1,9 @@
 <tabset>
   <tab heading="Settings">
   <div class="info_container">
-    <label class="info_label">Scenario Template</label>
+    <label class="info_label">Market Area Template</label>
       <select ui-select2   ng-model="current_template_index" class='template_select' ng-change="scenario_select(current_template_index)">
-        <option  ng-repeat="scenario in allScenarios" value="{{ $index }}" ng-selected="{{ $index == current_template_index }}">{{ scenario.name }},{{ $index }},{{current_template_index}}</option>
+        <option  ng-repeat="scenario in allScenarios" value="{{ $index }}" ng-selected="{{ $index == current_template_index }}">{{ scenario.name }}</option>
       </select>
       <label class="info_label">Overview</label>
       <table class="table table-hover">

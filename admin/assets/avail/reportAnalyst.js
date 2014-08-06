@@ -27,6 +27,7 @@ reportAnalyst = {
     if(reportAnalyst.modelRuns.indexOf(name) == -1){
       reportAnalyst.modelRuns.push(name);
     }
+    console.log(data);
     var timeFormat = d3.time.format("%Y-%m-%dT%H:%M:%S.000Z");
     data.forEach(function(d){
       if(typeof(d.start_time) != 'undefined'){
@@ -131,6 +132,9 @@ reportAnalyst = {
     reportAnalyst.modelGeoIDAlighting = reportAnalyst.modelTrips.dimension(function(d){return d.off_tract;});
     reportAnalyst.modelGeoIDAlightingGroup = reportAnalyst.modelGeoIDAlighting.group(function(d){return d;});
     
+    reportAnalyst.modelRouteStart = reportAnalyst.modelTrips.dimension(function(d){return d.route+" "+d.trip_start_time;});
+    reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){return d;});
+
   },
   clearGraphs: function() {
     d3.select('#graphDiv').selectAll('svg').remove();
@@ -164,7 +168,7 @@ reportAnalyst = {
     routeTable.html(output);
   },
   RoutesGraph: function() {
-     var routeCountChart = dc.compositeChart("#route-count");
+     reportAnalyst.routeCountChart = dc.compositeChart("#route-count");
      var width=800,height=400;
      var gap = (width*.9)/(reportAnalyst.modelRoutesRunGroup.all().length*(reportAnalyst.modelRuns.length*2));
      var translate =  (width*.9)/(reportAnalyst.modelRoutesRunGroup.all().length*reportAnalyst.modelRuns.length)-gap;
@@ -172,7 +176,7 @@ reportAnalyst = {
      var colors = colorbrewer.Set1[5];
      //colors.shift();
      reportAnalyst.modelRuns.forEach(function(run,dex){
-        compositer.push(dc.barChart(routeCountChart)
+        compositer.push(dc.barChart(reportAnalyst.routeCountChart)
           .gap(gap)
           .barPadding(5)
           .outerPadding(25)
@@ -189,7 +193,7 @@ reportAnalyst = {
         );
      });
  
-    routeCountChart
+    reportAnalyst.routeCountChart
       .width(width)
       .height(height)
       .x(d3.scale.ordinal())
@@ -369,6 +373,18 @@ reportAnalyst = {
       //censusTractBoarding.legend(dc.legend());
 
   },
+  tripsGraph: function(){
+    var modelTripCountChart = dc.rowChart("#chart-model-trip-count");
+    reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){if(d.substring(0,3) == '501'){ return d;}});
+    modelTripCountChart
+      .width(550).height(700)
+      .dimension(reportAnalyst.modelRouteStart)
+      .group(reportAnalyst.modelRouteStartGroup)
+      .elasticX(true)
+      .renderTitleLabel(true);
+
+    modelTripCountChart
+  },
   renderGraphs: function(){
     reportAnalyst.RoutesGraph();
     reportAnalyst.RoutesTable();
@@ -377,6 +393,7 @@ reportAnalyst = {
     reportAnalyst.WaitTimeGraph();
     reportAnalyst.distanceGraph();
     reportAnalyst.boardingChoropleth();
+    reportAnalyst.tripsGraph();
     dc.renderAll();
   }
 };
