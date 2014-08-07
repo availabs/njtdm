@@ -80,12 +80,24 @@
 <div class="body">
     <div class="tabbable tabs-left">
     	<ul class="nav nav-tabs" id="myTabLeft">
-        	<li ng-repeat="(name,vars) in census_categories" class=""><a href="#{{vars[0]}}" data-toggle="tab">{{name}}</a></li>
+        	<li ng-class="{active:isActive(name)}" ng-repeat="(name,vars) in census_categories" >
+                <a ng-click="drawGraph(name)" href="#{{vars[0]}}" data-toggle="tab">{{name}}</a>
+            </li>
         </ul>
 	    <div id="myTabContentLeft" class="tab-content">
+
+        <!--
 		    <div ng-repeat="(name,vars) in census_categories" id="{{vars[0]}}" class="tab-pane fade" >
 		        <div class="row-fluid">
-		        	<div class="col-md-12" id="chart"><svg style="height:500px;width:608px;"></svg></div>
+        -->
+        
+		        	<div class="col-md-12" id="chart">
+                        <svg style="height:500px;width:608px;"></svg>
+                    </div>
+
+            <div ng-repeat="(name,vars) in census_categories" id="{{vars[0]}}" class="tab-pane fade" >
+                <div class="row-fluid">
+
 		        	<div class="col-md-12">
 		        	<h4>{{name}}</h4>
 				        <table class="table table-striped table-hover">
@@ -95,9 +107,14 @@
 				          </tr>
 				        </table>
 				    </div>
-				    
+
+                </div>
+            </div>
+
+        <!--
 				</div>
 		    </div>
+        -->
 	    </div>
     </div>
 </div>
