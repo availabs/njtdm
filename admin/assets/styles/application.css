@@ -4,37 +4,37 @@
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 300;
-  src: local("Open Sans Light"), local("OpenSans-Light"), url(/styles/font/open-sans-light.woff) format("woff");
+  src: local("Open Sans Light"), local("OpenSans-Light"), url(/styles/fonts/open-sans-light.woff) format("woff");
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 400;
-  src: local("Open Sans"), local("OpenSans"), url(/styles/font/open-sans.woff) format("woff");
+  src: local("Open Sans"), local("OpenSans"), url(/styles/fonts/open-sans.woff) format("woff");
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 600;
-  src: local("Open Sans Semibold"), local("OpenSans-Semibold"), url(/styles/font/open-sans-semibold.woff) format("woff");
+  src: local("Open Sans Semibold"), local("OpenSans-Semibold"), url(/styles/fonts/open-sans-semibold.woff) format("woff");
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 700;
-  src: local("Open Sans Bold"), local("OpenSans-Bold"), url(/styles/font/open-sans-bold.woff) format("woff");
+  src: local("Open Sans Bold"), local("OpenSans-Bold"), url(/styles/fonts/open-sans-bold.woff) format("woff");
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: italic;
   font-weight: 400;
-  src: local("Open Sans Italic"), local("OpenSans-Italic"), url(/styles/font/open-sans-italic.woff) format("woff");
+  src: local("Open Sans Italic"), local("OpenSans-Italic"), url(/styles/fonts/open-sans-italic.woff) format("woff");
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: italic;
   font-weight: 300;
-  src: local("Open Sans Light Italic"), local("OpenSansLight-Italic"), url(/styles/font/open-sans-italic-light.woff) format("woff");
+  src: local("Open Sans Light Italic"), local("OpenSansLight-Italic"), url(/styles/fonts/open-sans-italic-light.woff) format("woff");
 }
 /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
 html {
