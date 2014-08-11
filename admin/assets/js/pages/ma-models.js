@@ -77,6 +77,13 @@ function ReportCtrl( $scope,$http,$filter) {
       });
     }
   };
+  $scope.filterRoute = function(route){
+    reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){if(d.substring(0,3) == route){ return d;}});
+    reportAnalyst.modelTripCountChart      
+      .group(reportAnalyst.modelRouteStartGroup)
+      
+    dc.renderAll();
+  }
 
   $scope.newData = function(data,name){
     var marketAreas = [7,11,9]; //Market Area template ids in tdmData.scenario
@@ -97,7 +104,7 @@ function ReportCtrl( $scope,$http,$filter) {
 
   //$scope.isActiveZone = funtion()  
   $http.get($scope.api+'triptable/finished',{}).success(function(data){
-  	console.log('hola finished',data)
+  	//console.log('hola finished',data)
     $scope.finished_models = data;
     $scope.finished_models.push({id: 'acam', marketArea: 0,name:"AC AM Farebox",ampm:'am'});
     $scope.finished_models.push({id: 'acammin', marketArea: 0,name:"AC AM Farebox Min",ampm:'am'});

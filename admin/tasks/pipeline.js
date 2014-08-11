@@ -15,7 +15,7 @@
 // (if you're using LESS with the built-in default config, you'll want
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
-  'styles/application.min.css',
+  'styles/application.css',
   'styles/dc.css'
 ];
 
