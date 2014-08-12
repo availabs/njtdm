@@ -49,7 +49,7 @@ var jsFilesToInject = [
     //"lib/sparkline/jquery.sparkline.js",
     "lib/jquery-ui-1.10.3.custom.js",
     "lib/jquery.slimscroll.js",
-
+    "lib/jquery.ui.widget.js",
     //<!-- d3-->
     "lib/nvd3/lib/d3.v3.min.js",
     

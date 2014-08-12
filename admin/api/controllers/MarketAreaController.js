@@ -78,7 +78,7 @@ module.exports = {
         if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
         getOverviewData(ma,function(meta){
           getCensusData(ma,cenData,function(census){
-            console.log(census);
+            //console.log(census);
             res.view({page:'ma-overview',panel:'marketarea',nav:navData,marketarea:ma,meta:meta,census:census})
           })
         })

@@ -307,7 +307,7 @@ function initDemoFunctions(){
 $(function(){
 
     var $sidebar = $('#sidebar');
-
+    $('.widget').widgster();
     $sidebar.on("mouseleave",function(){
         if (($(this).is(".sidebar-icons") || $(window).width() < 1049) && $(window).width() > 767){
             setTimeout(function(){
@@ -718,6 +718,6 @@ $(function(){
     };
 
     $.fn.widgster.Constructor = Widgster;
-
+    
 
 }(window.jQuery);
