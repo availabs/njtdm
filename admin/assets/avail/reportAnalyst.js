@@ -27,7 +27,7 @@ reportAnalyst = {
     if(reportAnalyst.modelRuns.indexOf(name) == -1){
       reportAnalyst.modelRuns.push(name);
     }
-    console.log(data);
+    //console.log(data);
     var timeFormat = d3.time.format("%Y-%m-%dT%H:%M:%S.000Z");
     data.forEach(function(d){
       if(typeof(d.start_time) != 'undefined'){
@@ -374,16 +374,16 @@ reportAnalyst = {
 
   },
   tripsGraph: function(){
-    var modelTripCountChart = dc.rowChart("#chart-model-trip-count");
+    reportAnalyst.modelTripCountChart = dc.rowChart("#chart-model-trip-count");
     reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){if(d.substring(0,3) == '501'){ return d;}});
-    modelTripCountChart
+    reportAnalyst.modelTripCountChart
       .width(550).height(700)
       .dimension(reportAnalyst.modelRouteStart)
       .group(reportAnalyst.modelRouteStartGroup)
-      .elasticX(true)
-      .renderTitleLabel(true);
+      .elasticX(true);
+      //.renderTitleLabel(true);
 
-    modelTripCountChart
+    
   },
   renderGraphs: function(){
     reportAnalyst.RoutesGraph();

@@ -15,7 +15,7 @@
 // (if you're using LESS with the built-in default config, you'll want
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
-  'styles/application.min.css',
+  'styles/application.css',
   'styles/dc.css'
 ];
 
@@ -49,7 +49,7 @@ var jsFilesToInject = [
     //"lib/sparkline/jquery.sparkline.js",
     "lib/jquery-ui-1.10.3.custom.js",
     "lib/jquery.slimscroll.js",
-
+    "lib/jquery.ui.widget.js",
     //<!-- d3-->
     "lib/nvd3/lib/d3.v3.min.js",
     

@@ -7,6 +7,85 @@
 		            <h2 class="page-title">GTFS Data Guide <small></small></h2>
 		        </div>
 		    </div>
-		    <%- partial('pages/template-content') %>
+		   <section class="widget">
+            <header>
+                <h5>
+                    <i class="fa fa-tasks"></i>
+                    User's Guide
+                </h5>
+                <div class="widget-controls">
+                    <a title="Options" href="#"><i class="glyphicon glyphicon-cog"></i></a>
+                    <a data-widgster="expand" title="Expand" href="#" style="display: none;"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-minus"></i></a>
+                    <a data-widgster="close" title="Close" href="#"><i class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </header>
+            <div class="body">
+                <div class="panel-group" id="accordion2">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                                About GTFS
+                            </a>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse in" style="height: auto;">
+                            <div class="panel-body">
+                                The General Transit Feed Specifcation is a data standard for encoding transit schedule and operations information.  
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                                Loading New Data
+                            </a>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                GTFS is a collection of text files most often distributed in a compressed zip file. To upload new GTFS to the system drag and drop a GTFS zip file to the drop zone on the screen or click add files and search for the zip file to upload on your local file system.
+                                <br><br>
+                                The file will then appear underneath the upload section. To add the file to the TDM system simply click import GTFS. This will start a new import job, that can be monitored in the jobs drop down on the top of the screen or on the jobs page. You can now navigate away from this page and wait for the job to finish. Because of the geospatial processing required to import a GTFS file for use in this system it can take up to 3 hours to import a large GTFS file.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                                Agency
+                            </a>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                Every GTFS file is required to have an agency file that lists the agency that created the GTFS file. This colum lists the agency of loaded GTFS Data.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+                                Start &amp; End Date
+                            </a>
+                        </div>
+                        <div id="collapseFour" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                A GTFS file is only valid for a specific amount of time as specified by the Calendar and / or Calendar_Dates files of the GTFS feed. These listings let you know when the file starts and ends its valid use.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
+                                Stop and Route Count
+                            </a>
+                        </div>
+                        <div id="collapseFive" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                               Lists the number of stops and routes present in each GTFS file.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 		</div>
 

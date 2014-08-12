@@ -25,6 +25,7 @@ module.exports = {
 				name:"Test",
 				message: "job created "+job.id,
 			}];
+			
 			req.session.flash = {
 				err: flashMessage
 			}

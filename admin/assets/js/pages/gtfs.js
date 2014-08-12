@@ -19,7 +19,7 @@ $(function () {
                 '/cors/result.html?%s'
             )
         );
-
+        
     }
     pageLoad();
 
