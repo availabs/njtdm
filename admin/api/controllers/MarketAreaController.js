@@ -43,7 +43,7 @@ function getCensusData(marketarea,table,cb){
 
 }
 
-function getRoutesGeo(marketarea,cb){
+function getRoutess(marketarea,cb){
   var output = {};
   MetaGtfs.find().exec(function(err,mgtfs){
     if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
@@ -66,6 +66,47 @@ module.exports = {
       MetaGtfs.find().exec(function(err,metaGTFS){
         res.view({page:'ma-new',panel:'marketarea',gtfs:metaGTFS,nav:navData})
       })
+    })
+  },
+  getRouteGeo:function(req,res){
+    var gtfs_id = req.param('id'),
+        route_id = req.param('route');
+
+    if (!(gtfs_id && route_id)) {
+      res.send({status: 500, error: 'You must supply a table ID and route ID'}, 500);
+      return;
+    }
+
+    MetaGtfs.findOne(gtfs_id).exec(function(err,mgtfs){
+        var sql = "SELECT route_id, route_short_name, route_long_name, ST_AsGeoJSON(geom) as the_geom " +
+                  "FROM "+mgtfs.tableName+".routes " +
+                  "WHERE route_id = '" + route_id + "'";
+        MetaGtfs.query(sql,{},function(err,data){
+            if (err) {
+                res.send('{status:"error",message:"'+err+'"}',500);
+                return console.log(err);
+            }
+            var routesCollection = {};
+            routesCollection.type = "FeatureCollection";
+            routesCollection.features = [];
+            
+            // for each result in the result set, generate a new geoJSON feature object
+            data.rows.forEach(function(route){
+                var routeFeature = {};
+                routeFeature.type="Feature";
+                      // retrieve geometry data
+                routeFeature.geometry = JSON.parse(route.the_geom);
+                      // retrieve properties
+                routeFeature.properties = {};
+                routeFeature.properties.route_id = route.route_id;
+                routeFeature.properties.short_name = route.route_short_name;
+                routeFeature.properties.long_name = route.route_long_name;
+                routesCollection.features.push(routeFeature);
+            });
+
+            res.send(routesCollection);
+            console.log("??? ok route geo")
+        });
     })
   },
   show:function(req,res){

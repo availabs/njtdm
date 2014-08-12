@@ -33,6 +33,7 @@ module.exports.routes = {
   '/marketarea/new': 'MarketAreaController.new',
   '/marketarea/:id': 'MarketAreaController.show',
   '/marketarea/:id/models': 'MarketAreaController.models',
+  '/marketarea/:id/:route/route_geo': 'MarketAreaController.getRouteGeo',
 
   //---------------------------------
   // Users Guide Pages
