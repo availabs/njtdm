@@ -1,8 +1,7 @@
 $(function(){
     function pageLoad(){
                         
-        njmap.init('#new-market-svg');
-        
+        //njmap.init('#new-market-svg');
         $('.chzn-select').select2();
         $("#wizard").bootstrapWizard({onTabShow: function(tab, navigation, index) {
             var $total = navigation.find('li').length;
@@ -28,6 +27,8 @@ $(function(){
     PjaxApp.onPageLoad(pageLoad);
 });
 function maNewController($scope){
+    njmap.init('#new-market-svg');
+
     $scope.marketarea = {};
     $scope.geouint = 'tract';
     $('#gtfs-select').on('change',function(){
@@ -96,9 +97,15 @@ function maNewController($scope){
 
     var zoom,
         projection,
-        path;
+        path,
+        paths;
 
-    var tracts;
+    var tracts,
+        activeTracts = {},
+        tractsCollection = {
+            type: "FeatureCollection",
+            features: []
+        };
 
     var marketAreaTracts = {
             type: "FeatureCollection",
@@ -110,10 +117,18 @@ function maNewController($scope){
         projection.scale(zoom.scale())
             .translate(zoom.translate());
 
-        svg.selectAll('path').attr('d', path);
+        paths.attr('d', path);
     }
 
     njmap.init = function(svgID) {
+
+        d3.json('/data/tracts.json', function(error, data) {
+            tracts = data;
+
+            data.features.forEach(function(d, i) {
+                activeTracts[d.properties.geoid] = {index: i, count: 0};
+            })
+        })
 
         width = $('.tab-content').width()-15;
         height =  width;
@@ -131,14 +146,9 @@ function maNewController($scope){
         path = d3.geo.path()
             .projection(projection);
 
-        d3.json('/data/tracts.json', function(error, data) {
-            tracts = data;
-        });
-
         svg = d3.select(svgID)
             .attr('width', width)
             .attr('height', height)
-            //.style('background-color', '#fff')
             .call(zoom)
             .on("dragstart", function() {
                 d3.event.sourceEvent.stopPropagation(); // silence other listeners
@@ -155,20 +165,22 @@ function maNewController($scope){
 
         d3.json(route, function(error, data) {
             // data = topojson.feature(data, data.objects.states);
+
             console.log('get routes data',data);
             findIntersectingMarketAreas(data, routeID);
 
-            draw(data, 'route-'+routeID,'route');
+            draw(data, 'route-'+routeID, 'route');
             
             var b = d3.geo.bounds(marketAreaTracts);
             var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
+
             console.log('get route collisions',marketAreaTractsList);
+
             cb(marketAreaTractsList,center);
         })
-
     }
 
-    function findIntersectingMarketAreas(route, ID) {
+    function findIntersectingMarketAreas(route, increment) {
         if (!tracts) {
             return console.log("tracts data not loaded!");
         }
@@ -183,9 +195,15 @@ function maNewController($scope){
             var tractBounds = path.bounds(tract);
 
             if (boundsCollision(routeBounds, tractBounds)) {
-                collection.features.push(tract);
+                activeTracts[tract.properties.geoid].count += increment;
             }
         })
+
+        for (var key in activeTracts) {
+            if (activeTracts[key].count > 0) {
+                collection.features.push(tracts.features[activeTracts[key].index]);
+            }
+        }
 
         collection.features.forEach(function(feat){
             if(marketAreaTractsList.indexOf(feat.properties.geoid) === -1){
@@ -194,9 +212,30 @@ function maNewController($scope){
             }
         });
 
-        if (collection.features.length) {
-            draw(collection, 'market-'+ID,'zone')
-        }
+        zoomToBounds(collection);
+
+        draw(collection, 'market-group', 'market');
+    }
+
+    function zoomToBounds(collection) {
+        
+        var bounds = path.bounds(collection),
+            wdth = bounds[1][0] - bounds[0][0],
+            hght = bounds[1][1] - bounds[0][1],
+
+            k = Math.min(width/wdth, height/hght),
+            scale = zoom.scale()*k*0.95;
+
+        projection.scale(scale);
+        zoom.scale(scale);
+
+        var centroid = path.centroid(collection),
+            translate = projection.translate();
+
+        projection.translate([translate[0] - centroid[0] + width / 2,
+                             translate[1] - centroid[1] + height / 2]);
+
+        zoom.translate(projection.translate());
     }
 
     function boundsCollision(route, tract) {
@@ -213,37 +252,35 @@ function maNewController($scope){
         return xCollision && yCollision;
     }
 
-    function draw(data, groupID,type) {
-        var centroid = path.centroid(data),
-            translate = projection.translate();
-
-        projection.translate([translate[0] - centroid[0] + width / 2,
-                              translate[1] - centroid[1] + height / 2]);
-
-        zoom.translate(projection.translate());
+    function draw(data, groupID, type) {
 
         var group = svg.selectAll('#'+groupID)
-            .data([groupID], function(d) { return d; });
+            .data([data], function() { return groupID; });
 
         group.enter().append('g')
-            .attr('id', function(d) { return d; });
+            .attr('id', groupID);
 
         group.exit().remove();
 
-        var paths = group.selectAll('path')
+        group.selectAll('path')
             .data(data.features)
+            .enter().append('path')
+            .attr('class', type);
 
-        paths.enter().append('path')
-            .attr('class', type)
-            
-
-        paths.exit().remove();
-
-        d3.selectAll('path').attr('d', path)
+        paths = svg.selectAll('path').attr('d', path);
     }
 
-    njmap.removeRoute = function(routeID) {
+    njmap.removeRoute = function(routeID, cb) {
+        d3.selectAll('#route-'+routeID)
+            .each(function(data) {
+                findIntersectingMarketAreas(data, -1);
+            })
+            .remove();
+            
+        var b = d3.geo.bounds(marketAreaTracts);
+        var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
 
+        cb(marketAreaTractsList,center);
     }
 
     this.njmap = njmap;

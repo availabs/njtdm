@@ -1,30 +1,25 @@
 <div class="row">
     <div class="col-md-8">
         <section class="widget widget-tabs">
-                    <header>
-                        <ul class="nav nav-tabs">
-                            <li class="active">
-                                <a href="#overview" data-toggle="tab">Overview</a>
-                            </li>
-                            <li>
-                                <a href="#routes" data-toggle="tab">Edit</a>
-                            </li>
-                            
-                        </ul>
-                    </header>
-                    <div class="body tab-content" style="overflow:hidden;">
-                        <div id="overview" class="tab-pane active clearfix" ng-controller="OverviewController">
-                           <%- partial('show-tabs/overview') %>
-                        </div>
-                        <div id="routes" class="tab-pane">
-                           <%- partial('show-tabs/routes') %>
-                        </div>
-                       
-                        <!-- <div id="miz" class="tab-pane">
-                           <%- partial('show-tabs/settings') %>
-                        </div> -->
-                    </div>
-                </section>
+            <header>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#overview" data-toggle="tab">Overview</a>
+                    </li>
+                    <li>
+                        <a href="#routes" data-toggle="tab">Edit</a>
+                    </li>
+                </ul>
+            </header>
+            <div class="body tab-content" style="overflow:hidden;" ng-controller="OverviewController">
+                <div id="overview" class="tab-pane active clearfix" >
+                   <%- partial('show-tabs/overview') %>
+                </div>
+                <div id="routes" class="tab-pane">
+                   <%- partial('show-tabs/edit') %>
+                </div>
+            </div>
+        </section>
     </div>
     <div class="col-md-4">
         <%- partial('../guide/market-area-guide') %>  

@@ -43,7 +43,7 @@ function getCensusData(marketarea,table,cb){
 
 }
 
-function getRoutess(marketarea,cb){
+function getRoutes(marketarea,cb){
   var output = {};
   MetaGtfs.find().exec(function(err,mgtfs){
     if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
