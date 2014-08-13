@@ -133,13 +133,13 @@ $(function(){
         d3.json(route, function(error, data) {
             // data = topojson.feature(data, data.objects.states);
 
-            findIntersectingMarketAreas(data);
+            findIntersectingMarketAreas(data, 1);
 
             draw(data, 'route-'+routeID, 'route');
         })
     }
 
-    function findIntersectingMarketAreas(route) {
+    function findIntersectingMarketAreas(route, increment) {
         if (!tracts) {
             return console.log("tracts data not loaded!");
         }
@@ -154,7 +154,7 @@ $(function(){
             var tractBounds = path.bounds(tract);
 
             if (boundsCollision(routeBounds, tractBounds)) {
-                activeTracts[tract.properties.geoid].count++;
+                activeTracts[tract.properties.geoid].count += increment;
             }
         })
 
@@ -164,7 +164,30 @@ $(function(){
             }
         }
 
+        zoomToBounds(collection);
+
         draw(collection, 'market-group', 'market');
+    }
+
+    function zoomToBounds(collection) {
+        
+        var bounds = path.bounds(collection),
+            wdth = bounds[1][0] - bounds[0][0],
+            hght = bounds[1][1] - bounds[0][1],
+
+            k = Math.min(width/wdth, height/hght),
+            scale = zoom.scale()*k*0.95;
+
+        projection.scale(scale);
+        zoom.scale(scale);
+
+        var centroid = path.centroid(collection),
+            translate = projection.translate();
+
+        projection.translate([translate[0] - centroid[0] + width / 2,
+                             translate[1] - centroid[1] + height / 2]);
+
+        zoom.translate(projection.translate());
     }
 
     function boundsCollision(route, tract) {
@@ -182,19 +205,12 @@ $(function(){
     }
 
     function draw(data, groupID, type) {
-        var centroid = path.centroid(data),
-            translate = projection.translate();
-
-        projection.translate([translate[0] - centroid[0] + width / 2,
-                              translate[1] - centroid[1] + height / 2]);
-
-        zoom.translate(projection.translate());
 
         var group = svg.selectAll('#'+groupID)
-            .data([groupID], function(d) { return d; });
+            .data([data], function() { return groupID; });
 
         group.enter().append('g')
-            .attr('id', function(d) { return d; });
+            .attr('id', groupID);
 
         group.exit().remove();
 
@@ -207,7 +223,11 @@ $(function(){
     }
 
     njmap.removeRoute = function(routeID) {
-        d3.selectAll('.route-'+routeID).remove();
+        d3.selectAll('#route-'+routeID)
+            .each(function(data) {
+                findIntersectingMarketAreas(data, -1);
+            })
+            .remove();
     }
 
     this.njmap = njmap;
