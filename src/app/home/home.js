@@ -174,11 +174,14 @@ var homeMod = angular.module( 'njTDM.home', [
   $scope.loadScenario = function(scenario){
     $scope.scenario = scenario;
     if($scope.scenario.id == 11){
+      //atlantic city
       $scope.marketArea = 1;
     }else if($scope.scenario.id == 9){
+      //princeton trenton
       $scope.marketArea = 2;
     }else if($scope.scenario.id == 7){
-      $scope.marketArea = 0;
+      //paterson
+      $scope.marketArea = 6;
     }
     console.log('marketArea',$scope.marketArea);
 
