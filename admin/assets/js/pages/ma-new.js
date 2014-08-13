@@ -1,6 +1,5 @@
 $(function(){
     function pageLoad(){
-        $('new-market-svg').hide();
                         
         njmap.init('#new-market-svg');
         
@@ -21,45 +20,66 @@ $(function(){
                 $wizard.find('.pager .finish').hide();
             }
         }});
-        $('#gtfs-select').on('change',function(){
-            gtfsID = parseInt($('#gtfs-select').val());
-            if(typeof gtfsID === 'number'){
-               $.ajax('/gtfs/'+gtfsID+'/routes') 
-               .done(function(data) {
-                    var routes = {},
-                    selected_routes = [];
-
-                    data.forEach(function(route) {
-
-                        $('#routes-select')
-                            .append($('<option>', { 
-                                value : route.route_id, 
-                                text  : route.route_short_name
-                            })
-                        )
-                        routes[route.route_id] = route.route_short_name;
-                    });
-                    
-                    $('#add-route-btn').on('click',function(){
-//console.log($('#routes-select').val(), routes[$('#routes-select').val()]);
-                        $('#new-market-error-div').hide();
-                        $('new-market-svg').show();
-
-                        njmap.getRouteData($('#gtfs-select').val(), $('#routes-select').val());
-
-                        selected_routes.push($('#routes-select').val());
-                        $('#selected-routes-table').append('<tr><td>'+$('#routes-select').val()+'</td><td>'+routes[$('#routes-select').val()]+'</td><td class="text-right"><button type="button" class="btn btn-sm btn-danger" id="remove-route-btn"><i class="fa fa-minus"></i></button></td></tr>')
-                    })
-                })
-               .fail(function(err) { console.log('/gtfs/'+gtfsID+'/routes error',err); })
-            }
-        });
+        
     }
 
     pageLoad();
 
     PjaxApp.onPageLoad(pageLoad);
 });
+function maNewController($scope){
+    $scope.marketarea = {};
+    $('#gtfs-select').on('change',function(){
+        gtfsID = parseInt($('#gtfs-select').val());
+        if(typeof gtfsID === 'number'){
+           $.ajax('/gtfs/'+gtfsID+'/routes') 
+           .done(function(data) {
+                $scope.marketarea.origin_gtfs = gtfsID;
+                $scope.routes = {};
+                $scope.marketarea.routes = [];     
+
+                data.forEach(function(route) {
+
+                    $('#routes-select')
+                        .append($('<option>', { 
+                            value : route.route_id, 
+                            text  : route.route_short_name
+                        })
+                    )
+                    $scope.routes[route.route_id] = route.route_short_name;
+                });
+                
+                $('#add-route-btn').on('click',function(){
+                    $('#new-market-error-div').hide();
+                    $('new-market-svg').show();
+
+                    njmap.getRouteData($('#gtfs-select').val(), $('#routes-select').val(),function(tracts,center){
+                        $scope.marketarea.zones = tracts;
+                        $scope.marketarea.centroid = center
+                        $scope.$apply();
+                    });
+                    
+
+                    $scope.marketarea.routes.push($('#routes-select').val());
+                    $scope.$apply();
+                    
+                    
+                })
+            })
+           .fail(function(err) { console.log('/gtfs/'+gtfsID+'/routes error',err); })
+        }
+    });
+    $scope.removeRoute = function(index){
+        $scope.marketarea.routes.splice(index,1);
+        //$scope.appl
+    }
+    $scope.createMarketarea = function(){
+        io.socket.post('/marketarea',$scope.marketarea,function(data){ 
+            console.log('Created!',data); 
+        });
+    }
+}
+
 
 (function() {
     var njmap = {};
@@ -74,6 +94,12 @@ $(function(){
 
     var tracts;
 
+    var marketAreaTracts = {
+            type: "FeatureCollection",
+            features: []
+        },
+        marketAreaTractsList = [];
+
     function zoomed() {
         projection.scale(zoom.scale())
             .translate(zoom.translate());
@@ -83,11 +109,11 @@ $(function(){
 
     njmap.init = function(svgID) {
 
-        width = 790;
+        width = $('.tab-content').width();
         height = 790;
 
         zoom = d3.behavior.zoom()
-            .scale(1<<14)
+            .scale(1<<17)
             .translate([width/2, height/2])
             .scaleExtent([1<<12, 1<<20])
             .on("zoom", zoomed);
@@ -101,7 +127,7 @@ $(function(){
 
         d3.json('/data/tracts.json', function(error, data) {
             tracts = data;
-        })
+        });
 
         svg = d3.select(svgID)
             .attr('width', width)
@@ -118,7 +144,7 @@ $(function(){
             .attr('fill', '#fff')
     }
 
-    njmap.getRouteData = function(gtfsID, routeID) {
+    njmap.getRouteData = function(gtfsID, routeID,cb) {
         var route = '/marketarea/'+gtfsID+'/'+routeID+'/route_geo';
 
         d3.json(route, function(error, data) {
@@ -126,8 +152,13 @@ $(function(){
 
             findIntersectingMarketAreas(data, routeID);
 
-            draw(data, 'route-'+routeID);
+            draw(data, 'route-'+routeID,'route');
+            
+            var b = d3.geo.bounds(marketAreaTracts);
+            var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
+            cb(marketAreaTractsList,center);
         })
+
     }
 
     function findIntersectingMarketAreas(route, ID) {
@@ -148,9 +179,16 @@ $(function(){
                 collection.features.push(tract);
             }
         })
-console.log(tracts.features.length, collection.features.length)
+
+        collection.features.forEach(function(feat){
+            if(marketAreaTractsList.indexOf(feat.properties.geoid) === -1){
+               marketAreaTractsList.push(feat.properties.geoid);
+               marketAreaTracts.features.push(feat);     
+            }
+        });
+
         if (collection.features.length) {
-            draw(collection, 'market-'+ID)
+            draw(collection, 'market-'+ID,'zone')
         }
     }
 
@@ -168,7 +206,7 @@ console.log(tracts.features.length, collection.features.length)
         return xCollision && yCollision;
     }
 
-    function draw(data, groupID) {
+    function draw(data, groupID,type) {
         var centroid = path.centroid(data),
             translate = projection.translate();
 
@@ -189,9 +227,8 @@ console.log(tracts.features.length, collection.features.length)
             .data(data.features)
 
         paths.enter().append('path')
-            .attr('fill', 'none')
-            .attr('stroke', '#000')
-            .attr('stroke-width', 1);
+            .attr('class', type)
+            
 
         paths.exit().remove();
 
