@@ -154,7 +154,16 @@
     }
 
     njmap.removeRoute = function(routeID) {
+        d3.selectAll('#route-'+routeID)
+            .each(function(data) {
+                findIntersectingMarketAreas(data, -1);
+            })
+            .remove();
+            
+        var b = d3.geo.bounds(marketAreaTracts);
+        var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
 
+        cb(marketAreaTractsList,center);
     }
 
     this.njmap = njmap;

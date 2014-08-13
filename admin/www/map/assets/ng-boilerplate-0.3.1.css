@@ -1,0 +1,207 @@
+/**
+ * This is the main application stylesheet. It should include or import all
+ * stylesheets used throughout the application as this is the only stylesheet in
+ * the Grunt configuration that is automatically processed.
+ */
+
+/**
+ * Now that all app-wide styles have been applied, we can load the styles for
+ * all the submodules and components we are using. 
+ *
+ * TODO: In a later version of this boilerplate, I'd like to automate this.
+ */
+
+/* ---------- Geography & SVG ------------------------ */
+
+.tract {
+  opacity: 0.4;
+  fill: #fff;
+  stroke: #ccc;
+}
+
+.tract:hover {
+  stroke-width: 3px;
+  fill: #ff0000;
+}
+
+.selected_tract {
+  opacity: 0.7;
+  fill: #00f;
+  stroke: #ccc;
+}
+
+.selected_tract:hover {
+  stroke-width: 3px;
+  fill: #00ff00;
+}
+
+.route {
+  display: block;
+  opacity: .6;
+  stroke: #ED3A2D;
+  stroke-width: 3px;
+  fill: none;
+}
+
+.trip {
+  opacity: 0.6;
+}
+
+/*-------------Layout ----------------------------------*/
+
+.angular-leaflet-map {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+.info_overlay {
+  position: fixed;
+  top: 75px;
+  left: 10px;
+  z-index: 2;
+  width: 375px;
+  height: 85%;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 5px 5px 5px #888888;
+}
+
+.template_select {
+  width: 100%;
+}
+
+.info_container {
+  padding: 15px;
+}
+
+.info_label {
+  font-weight: bold;
+}
+
+.trip-display {
+  font-size: 9px;
+}
+
+.tt_search {
+  display: inline;
+  width: 135px;
+  margin-right: 5px;
+}
+
+/*-------------Info----------------------------------*/
+
+#info {
+  position: absolute;
+  z-index: 99;
+  display: none;
+  width: 300px;
+  padding: 10px 15px 5px 15px;
+  font-size: .875em;
+  color: #222;
+  background: #fff;
+  border-top: 5px solid #222;
+  border-bottom: 1px solid #222;
+}
+
+#info p {
+  margin: 0 0 10px 0;
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/*-------------Legend------------------------------------*/
+
+#legend {
+  position: fixed;
+  top: 0;
+  right: 0%;
+  z-index: 100;
+  float: right;
+  width: 200px;
+  color: #666;
+  background: #fff;
+}
+
+#legend h2 {
+  margin: 0;
+  font-size: 1em;
+  text-align: center;
+}
+
+#legend h2 a {
+  display: block;
+  padding: 5px 0 8px 0;
+  color: #222;
+  background: url(arrows.png) 15px 11px #dddddd no-repeat;
+  -webkit-transition: background 0.2s ease-in;
+     -moz-transition: background 0.2s ease-in;
+       -o-transition: background 0.2s ease-in;
+          transition: background 0.2s ease-in;
+}
+
+#legend h2 a:hover {
+  color: #222;
+  background-color: #eee;
+  background-position: 15px 9px;
+}
+
+#legend h2 a.closed {
+  color: #222;
+  background: url(arrows.png) 15px -57px #dddddd no-repeat;
+}
+
+#legend h2 a.closed:hover {
+  background-color: #eee;
+  background-position: 15px -55px;
+}
+
+#legend h3 {
+  margin: 0 0 5px 0;
+  font-size: .75em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+#legend hr {
+  margin: 15px 0;
+  border-top: 1px dotted #ccc;
+}
+
+#legend-detail {
+  display: none;
+  width: 170px;
+  padding: 10px 15px;
+  line-height: 1.25;
+  border-bottom: 1px solid #999;
+}
+
+#legend-detail li {
+  margin: 0 0 5px 0;
+  overflow: hidden;
+  font-size: .75em;
+}
+
+#legend-detail li svg {
+  display: block;
+  float: left;
+  margin: 0 5px 0 0;
+}
+
+#legend-detail li span {
+  display: block;
+  float: left;
+  padding: 2px 0 0 0;
+}
+
+#legend-detail li span.c-01 {
+  width: 85px;
+}
+
+#legend-detail li span.c-02 {
+  width: 85px;
+  text-align: right;
+}
