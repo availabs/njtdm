@@ -21,11 +21,13 @@ module.exports = {
 				 info:[{'state':state,'dataSource':dataSource,'year':year,'sumlevel':sumlevel}]
 				})
 		.exec(function(err,job){
+			sails.sockets.blast('job_created',job);
+
 			var flashMessage = [{
 				name:"Test",
 				message: "job created "+job.id,
 			}];
-			
+
 			req.session.flash = {
 				err: flashMessage
 			}

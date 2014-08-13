@@ -22,7 +22,7 @@ module.exports.sockets = {
     sails.sockets.emit(socketId, 'hello', {'foo':'bar'});
 
     // By default, do nothing.
-    User.watch(socket);
+    Job.watch(socket);
     //User.subscribe(socket);
   },
 
