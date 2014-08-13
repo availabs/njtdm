@@ -73,7 +73,12 @@ $(function(){
         path,
         paths;
 
-    var tracts;
+    var tracts,
+        activeTracts = {},
+        tractsCollection = {
+            type: "FeatureCollection",
+            features: []
+        };
 
     function zoomed() {
         projection.scale(zoom.scale())
@@ -83,6 +88,14 @@ $(function(){
     }
 
     njmap.init = function(svgID) {
+
+        d3.json('/data/tracts.json', function(error, data) {
+            tracts = data;
+
+            data.features.forEach(function(d, i) {
+                activeTracts[d.properties.geoid] = {index: i, count: 0};
+            })
+        })
 
         width = 790;
         height = 790;
@@ -112,11 +125,6 @@ $(function(){
             .attr('width', width)
             .attr('height', height)
             .attr('fill', '#fff')
-
-        d3.json('/data/tracts.json', function(error, data) {
-            tracts = data;
-            draw(data, 'market-areas', 'market')
-        })
     }
 
     njmap.getRouteData = function(gtfsID, routeID) {
@@ -125,13 +133,13 @@ $(function(){
         d3.json(route, function(error, data) {
             // data = topojson.feature(data, data.objects.states);
 
-            //findIntersectingMarketAreas(data, routeID);
+            findIntersectingMarketAreas(data);
 
             draw(data, 'route-'+routeID, 'route');
         })
     }
 
-    function findIntersectingMarketAreas(route, ID) {
+    function findIntersectingMarketAreas(route) {
         if (!tracts) {
             return console.log("tracts data not loaded!");
         }
@@ -146,13 +154,17 @@ $(function(){
             var tractBounds = path.bounds(tract);
 
             if (boundsCollision(routeBounds, tractBounds)) {
-                collection.features.push(tract);
+                activeTracts[tract.properties.geoid].count++;
             }
         })
 
-        if (collection.features.length) {
-            draw(collection, 'market-'+ID, 'market')
+        for (var key in activeTracts) {
+            if (activeTracts[key].count > 0) {
+                collection.features.push(tracts.features[activeTracts[key].index]);
+            }
         }
+
+        draw(collection, 'market-group', 'market');
     }
 
     function boundsCollision(route, tract) {
@@ -195,7 +207,7 @@ $(function(){
     }
 
     njmap.removeRoute = function(routeID) {
-
+        d3.selectAll('.route-'+routeID).remove();
     }
 
     this.njmap = njmap;
