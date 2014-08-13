@@ -16,8 +16,8 @@
                         <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#menu-levels-collapse" href="#sub-menu-ma<%= index %>-collapse"><%= ma.name %></a>
                         <ul id="sub-menu-ma<%= index %>-collapse" class="panel-collapse collapse">
                             <li <% if(page == 'ma-overview') {%> class="active" <%}%>><a href="/marketarea/<%= ma.id %>">Overview</a></li>
-                            <li <% if(page == 'ma-models') {%> class="active" <%}%>><a href="/marketarea/<%= ma.id %>/models">Model Runs</a></li>
-                            <li><a href="/map/" target="_blank">Map</a></li>
+                            <li <% if(page == 'ma-models') {%> class="active" <%}%>><a href="/marketarea/<%= ma.id %>/models">Model Analysis</a></li>
+                            <li><a href="/map/" target="_blank">Map View</a></li>
                         </ul>
                     </li>
                 <% }) %>
@@ -32,6 +32,8 @@
                 <li <% if(page == 'acs') {%> class="active" <%}%> ><a href="/data/acs">ACS</a></li>
                 <li <% if(page == 'lodes') {%> class="active" <%}%> ><a href="/data/lodes">LODES</a></li>
                 <li <% if(page == 'ctpp') {%> class="active" <%}%> ><a href="/data/ctpp">CTPP</a></li>
+                <li <% if(page == 'ctpp') {%> class="active" <%}%> ><a href="/data/ctpp">Farebox</a></li>
+                <li <% if(page == 'ctpp') {%> class="active" <%}%> ><a href="/data/ctpp">Custom</a></li>
             </ul>
         </li>
         <li class="panel <% if(panel == 'guide') {%> active <%}%>">

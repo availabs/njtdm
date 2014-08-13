@@ -76,7 +76,8 @@ function maNewController($scope){
     }
     $scope.createMarketarea = function(){
         io.socket.post('/marketarea',$scope.marketarea,function(data){ 
-            console.log('Created!',data); 
+            console.log('Created!',data);
+            window.location = '/marketarea/'+data.id;
         });
     }
 }
