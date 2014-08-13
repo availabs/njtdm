@@ -16937,7 +16937,7 @@ input.parsley-error {
   font-weight: 600;
 }
 .widget > header h1 small, .widget > header h2 small, .widget > header h3 small, .widget > header h4 small, .widget > header h5 small {
-  text-transform: lowercase;
+  /*text-transform: lowercase;*/
 }
 .widget > header h4 {
   font-size: 14px;
