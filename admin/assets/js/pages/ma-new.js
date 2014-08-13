@@ -262,10 +262,14 @@ function maNewController($scope){
 
         group.exit().remove();
 
-        group.selectAll('path')
+        var lines = group.selectAll('path')
             .data(data.features)
-            .enter().append('path')
-            .attr('class', type);
+
+        lines.enter().append('path')
+
+        lines.attr('class', type);
+
+        lines.exit().remove();
 
         paths = svg.selectAll('path').attr('d', path);
     }
