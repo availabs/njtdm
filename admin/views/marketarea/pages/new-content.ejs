@@ -5,7 +5,7 @@
                 <h4>
                     <i class="eicon-window"></i>
                     New Market Area Wizard
-                    <small>{{ma_name}}</small>
+                    <small>{{marketarea.name}}</small>
                 </h4>
             </header>
             <div class="body">
@@ -27,7 +27,7 @@
                                         <label class="control-label"  for="username">Market Area Name</label>
                                         <div class="controls form-group">
                                             <div class="col-md-10">
-                                                <input type="text" ng-model='ma_name' id="username" name="username" placeholder="" class="form-control">
+                                                <input type="text" ng-model='marketarea.name' id="username" name="username" placeholder="" class="form-control">
                                                 <span class="help-block">The display name for the market area.</span>
                                             </div>
                                         </div>
@@ -72,6 +72,7 @@
                                     </div>
                                     {{marketarea.routes}}
                                     {{marketarea.zones.length}}
+                                    {{marketarea.centroid}}
                                     <table class="table table-striped table-hover" id='selected-routes-table'>
 	                                    <thead>
 	                                    	<tr>
@@ -106,8 +107,26 @@
                             -->
                         </div>
                         <div class="tab-pane" id="tab4">
-                            <h2>Thank you!</h2>
-                            <p>Your submission has been received.</p>
+                            <h2>{{marketarea.name}}</h2>
+                            <h4>Overview
+                            <table class="table  table-hover" id='summary_table'>
+                                <thead>
+                                    <tr>                                  
+                                        <th>Routes</th>
+                                        <th>{{marketarea.routes.length}}</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Census Tracks</th>
+                                        <th>{{marketarea.zones.length}}</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Center Point</th>
+                                        <th>{{marketarea.centroid}}</th>
+                                    </tr>
+                                </thead>   
+                            </table>
+                            </h4>
+                            Click Finish to create this MarketArea
                         </div>
                         <div class="description">
                             <ul class="pager wizard">
@@ -117,8 +136,8 @@
                                 <li class="next">
                                     <button class="btn btn-primary pull-right" >Next <i class="fa fa-caret-right"></i></button>
                                 </li>
-                                <li class="finish" style="display: none">
-                                    <button class="btn btn-success pull-right" >Finish <i class="fa fa-check"></i></button>
+                                <li class="finish" style="display: none"  >
+                                    <button ng-click='createMarketarea()' class="btn btn-success pull-right" ng-disabled="marketarea.routes.length == 0 || marketarea.zones.length == 0">Finish <i class="fa fa-check"></i></button>
                                 </li>
                             </ul>
                         </div>
