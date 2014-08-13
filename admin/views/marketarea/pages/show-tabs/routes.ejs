@@ -6,39 +6,51 @@
 </header>
 <div class="body">
     <form class="form-horizontal" method="post">
-        <fieldset>
-            <div class="control-group">
-                <label for="dataSource" class="control-label">Routes</label>
-                <div class="controls form-group">
-                    <select id="dataSource" data-placeholder="Add Route to Market Area"
-                            required="required" class="col-xs-12 col-sm-8 chzn-select" name="routeSelect">
+        
+        <form class="form-horizontal form-condensed" action='' method="POST">
+            <fieldset>
+               
+                <div class="form-row control-group">
+                    <label for="routes-select" class="control-label">Add Routes</label>
+                    <div class="controls form-group">
+                        <div class="col-md-10">
+                        <select id="routes-select" data-placeholder="Add Route to Market Area"
+                            required="required" class="select-block-level chzn-select" name="routeSelect">
                             <option value=""></option>
                             <% meta.fullroutes.forEach(function(route){%>
                               <option value="<%=route.route_id%>"><%=route.route_short_name%></option>
                             <%})%>
-                    </select>
-                    <button type="button" class="btn btn-danger">Add Route</button>
-
-                    <table class="table table-striped table-condensed col-sm-8">
-                      <thead>
-                      <tr>
-                          <th>Route Name</th>
-                          <th>Remove</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <% JSON.parse(marketarea.routes).forEach(function(route){ %>  
-                        <tr>
-                            <td><%=route%></td>
-                            <td><i class="fa fa-minus-square"></i></td>
-                        </tr>
-                      <%})%>
-                      </tbody>
-                    </table>
-                
+                        </select>
+                        <span class="help-block pull-left">Select a Route and Click + to add to the Market Area</span>
+                        </div>
+                        <div class="input-group-btn">
+                            
+                            <button type="button" class="btn btn-success" id="add-route-btn"><i class="fa fa-plus"></i></button>
+                            
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
+                <table class="table table-striped table-hover" id='selected-routes-table'>
+                    <thead>
+                        <tr>
+                            <th>Route ID</th>
+                            <th>Route Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="route in marketarea.routes">
+                        <td>{{route}}</td>
+                        <td>{{routes[route]}}</td>
+                        <td class="text-right"><button type="button" class="btn btn-sm btn-danger" id="remove-route-btn" ng-click="removeRoute($index)"><i class="fa fa-minus"></i></button></td>
+                    </tr>
+                    
+                    </tbody>
+                </table>
+                <div id="new-market-error-div">You must select a route first...</div>
+                <svg id="new-market-svg" style='border:1px solid;'></svg>
+            </fieldset>
+        
         <div class="form-actions">
             <div>
                 <button type="submit" class="btn btn-primary">Save Changes</button>

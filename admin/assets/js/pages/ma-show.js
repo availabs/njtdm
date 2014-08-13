@@ -26,7 +26,6 @@ function OverviewController ($scope) {
   	}
   	// ng-class='isActive'
 	$scope.drawGraph = function(name) {
-		console.log(name)
 		$scope.active_category= name;
 	  	// for(key in acs_data.categories){
 	  	// 	//console.log(acs_data.categories[key])
