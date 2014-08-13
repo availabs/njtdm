@@ -19,8 +19,7 @@ module.exports.sockets = {
   onConnect: function(session, socket) {
 
     var socketId = sails.sockets.id(socket);
-    sails.sockets.emit(socketId, 'hello', {'foo':'bar'});
-
+    
     // By default, do nothing.
     Job.watch(socket);
     //User.subscribe(socket);
