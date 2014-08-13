@@ -14,6 +14,8 @@ $(function(){
 function OverviewController ($scope) {
     $scope.census_vars = acs_data.census_vars;
   	$scope.census_categories = acs_data.categories;
+  	$scope.marketarea = window.server_marketarea;
+  	console.log('overview',$scope.marketarea);
 
   	$scope.active_category='Age Categories';
   	$scope.isActive = function(name){

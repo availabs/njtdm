@@ -53,9 +53,10 @@ function maNewController($scope){
                 
                 $('#add-route-btn').on('click',function(){
                     $('#new-market-error-div').hide();
-                    $('new-market-svg').show();
+                    console.log('rotue added');
 
                     njmap.getRouteData($('#gtfs-select').val(), $('#routes-select').val(),function(tracts,center){
+                        console.log('route returned');
                         $scope.marketarea.zones = tracts;
                         $scope.marketarea.centroid = center
                         $scope.$apply();
@@ -77,7 +78,8 @@ function maNewController($scope){
     }
     $scope.createMarketarea = function(){
         io.socket.post('/marketarea',$scope.marketarea,function(data){ 
-            console.log('Created!',data); 
+            console.log('Created!',data);
+            window.location = '/marketarea/'+data.id;
         });
     }
 }
@@ -125,9 +127,8 @@ function maNewController($scope){
             })
         })
 
-        width = $('.tab-content').width();
-
-        height = 790;
+        width = $('.tab-content').width()-15;
+        height =  width;
 
         zoom = d3.behavior.zoom()
             .scale(1<<17)
@@ -162,12 +163,15 @@ function maNewController($scope){
         d3.json(route, function(error, data) {
             // data = topojson.feature(data, data.objects.states);
 
-            findIntersectingMarketAreas(data, 1);
+            console.log('get routes data',data);
+            findIntersectingMarketAreas(data, routeID);
 
             draw(data, 'route-'+routeID, 'route');
             
             var b = d3.geo.bounds(marketAreaTracts);
             var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
+
+            console.log('get route collisions',marketAreaTractsList);
 
             cb(marketAreaTractsList,center);
         })
