@@ -70,7 +70,8 @@ $(function(){
 
     var zoom,
         projection,
-        path;
+        path,
+        paths;
 
     var tracts;
 
@@ -78,7 +79,7 @@ $(function(){
         projection.scale(zoom.scale())
             .translate(zoom.translate());
 
-        svg.selectAll('path').attr('d', path);
+        paths.attr('d', path);
     }
 
     njmap.init = function(svgID) {
@@ -99,14 +100,9 @@ $(function(){
         path = d3.geo.path()
             .projection(projection);
 
-        d3.json('/data/tracts.json', function(error, data) {
-            tracts = data;
-        })
-
         svg = d3.select(svgID)
             .attr('width', width)
             .attr('height', height)
-            //.style('background-color', '#fff')
             .call(zoom)
             .on("dragstart", function() {
                 d3.event.sourceEvent.stopPropagation(); // silence other listeners
@@ -116,6 +112,11 @@ $(function(){
             .attr('width', width)
             .attr('height', height)
             .attr('fill', '#fff')
+
+        d3.json('/data/tracts.json', function(error, data) {
+            tracts = data;
+            draw(data, 'market-areas', 'market')
+        })
     }
 
     njmap.getRouteData = function(gtfsID, routeID) {
@@ -124,9 +125,9 @@ $(function(){
         d3.json(route, function(error, data) {
             // data = topojson.feature(data, data.objects.states);
 
-            findIntersectingMarketAreas(data, routeID);
+            //findIntersectingMarketAreas(data, routeID);
 
-            draw(data, 'route-'+routeID);
+            draw(data, 'route-'+routeID, 'route');
         })
     }
 
@@ -148,9 +149,9 @@ $(function(){
                 collection.features.push(tract);
             }
         })
-console.log(tracts.features.length, collection.features.length)
+
         if (collection.features.length) {
-            draw(collection, 'market-'+ID)
+            draw(collection, 'market-'+ID, 'market')
         }
     }
 
@@ -168,7 +169,7 @@ console.log(tracts.features.length, collection.features.length)
         return xCollision && yCollision;
     }
 
-    function draw(data, groupID) {
+    function draw(data, groupID, type) {
         var centroid = path.centroid(data),
             translate = projection.translate();
 
@@ -185,17 +186,12 @@ console.log(tracts.features.length, collection.features.length)
 
         group.exit().remove();
 
-        var paths = group.selectAll('path')
+        group.selectAll('path')
             .data(data.features)
+            .enter().append('path')
+            .attr('class', type);
 
-        paths.enter().append('path')
-            .attr('fill', 'none')
-            .attr('stroke', '#000')
-            .attr('stroke-width', 1);
-
-        paths.exit().remove();
-
-        d3.selectAll('path').attr('d', path)
+        paths = svg.selectAll('path').attr('d', path);
     }
 
     njmap.removeRoute = function(routeID) {
