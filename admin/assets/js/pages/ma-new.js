@@ -1,7 +1,7 @@
 $(function(){
     function pageLoad(){
                         
-        //njmap.init('#new-market-svg');
+        //newmamap.init('#new-market-svg');
         $('.chzn-select').select2();
         $("#wizard").bootstrapWizard({onTabShow: function(tab, navigation, index) {
             var $total = navigation.find('li').length;
@@ -28,7 +28,7 @@ $(function(){
 });
 
 function maNewController($scope){
-    njmap.init('#new-market-svg');
+    newmamap.init('#new-market-svg');
 
     $scope.marketarea = {};
     $scope.geouint = 'tract';
@@ -57,7 +57,7 @@ function maNewController($scope){
                     console.log('rotue added');
 
                     if($scope.marketarea.routes.indexOf($('#routes-select').val()) === -1){
-                        njmap.getRouteData($('#gtfs-select').val(), $('#routes-select').val(),function(tracts,center){
+                        newmamap.getRouteData($('#gtfs-select').val(), $('#routes-select').val(),function(tracts,center){
                             console.log('route returned');
                             $scope.marketarea.zones = tracts;
                             $scope.marketarea.center = center;
@@ -76,7 +76,7 @@ function maNewController($scope){
 
     $scope.removeRoute = function(index,id){
         $scope.marketarea.routes.splice(index,1);
-        njmap.removeRoute(id,function(){
+        newmamap.removeRoute(id,function(){
             $scope.marketarea.zones = tracts;
             $scope.marketarea.center = center;
             $scope.$apply();
@@ -94,7 +94,7 @@ function maNewController($scope){
 
 
 (function() {
-    var njmap = {};
+    var newmamap = {};
 
     var svg,
         width,
@@ -125,7 +125,7 @@ function maNewController($scope){
         paths.attr('d', path);
     }
 
-    njmap.init = function(svgID) {
+    newmamap.init = function(svgID) {
 
         d3.json('/data/tracts.json', function(error, data) {
             tracts = data;
@@ -165,7 +165,7 @@ function maNewController($scope){
             .attr('fill', '#fff')
     }
 
-    njmap.getRouteData = function(gtfsID, routeID,cb) {
+    newmamap.getRouteData = function(gtfsID, routeID,cb) {
         var route = '/marketarea/'+gtfsID+'/'+routeID+'/route_geo';
 
         d3.json(route, function(error, data) {
@@ -279,7 +279,7 @@ function maNewController($scope){
         paths = svg.selectAll('path').attr('d', path);
     }
 
-    njmap.removeRoute = function(routeID, cb) {
+    newmamap.removeRoute = function(routeID, cb) {
         d3.selectAll('#route-'+routeID)
             .each(function(data) {
                 findIntersectingMarketAreas(data, -1);
@@ -292,5 +292,5 @@ function maNewController($scope){
         cb(marketAreaTractsList,center);
     }
 
-    this.njmap = njmap;
+    this.newmamap = newmamap;
 })()

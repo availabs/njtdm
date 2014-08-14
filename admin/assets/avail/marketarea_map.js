@@ -65,8 +65,8 @@
 
                 }
             });
-            console.log('draw ma',marketAreaTracts);
-            draw(marketAreaTracts, 'ma12','market');
+            // console.log('draw ma',marketAreaTracts);
+            // draw(marketAreaTracts, 'ma12','market');
         });
 
        
