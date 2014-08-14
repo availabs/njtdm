@@ -16,61 +16,51 @@
             <div class="panel">
                 <div class="panel-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                        About ACS
+                        Add Market Area
                     </a>
                 </div>
                 <div id="collapseOne" class="panel-collapse in" style="height: auto;">
                     <div class="panel-body">
-                        The American Community Survey is the primary demographic data source for Transit Demand Modelling, regression models were build with 2010 ACS 5 Year Data but can be modelled with a number of different ACS Data sources. 
+                        You can add new market areas by following the step by step process of the Add Market Area Wizard.
                     </div>
                 </div>
             </div>
             <div class="panel">
                 <div class="panel-heading">
                     <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                        Loading New Data
+                        Setup
                     </a>
                 </div>
                 <div id="collapseTwo" class="panel-collapse collapse" style="height: 0px;">
                     <div class="panel-body">
-                        ACS Data is loaded directly from the census ACS api into our Transit Demand Modeling database.
+                        The first step is to give your market area a name and choose a base GTFS code. Then click next.
                     </div>
                 </div>
             </div>
             <div class="panel">
                 <div class="panel-heading">
                     <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-                        State Fips
+                        Routes &amp; Zones
                     </a>
                 </div>
                 <div id="collapseThree" class="panel-collapse collapse" style="height: 0px;">
                     <div class="panel-body">
-                        State fips is the code used by the census to identify a state. 
+                    <p>
+                        Here you’ll need some knowledge of your market area’s bus routes. You’ll need to type in the route numbers then click on the green plus symbol to add it to your market area.</p>
+
+                        <p>Each Route you add to the Market Area will be included as a red line in the map below. Each route you add will include its corresponding census tracts as seen in Figure 16 as black lines. After viewing the map of census tracts and bus routes click Next to go to step 3.</p>
                     </div>
                 </div>
             </div>
             <div class="panel">
                 <div class="panel-heading">
                     <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
-                        Sum Level
+                        Create
                     </a>
                 </div>
                 <div id="collapseFour" class="panel-collapse collapse" style="height: 0px;">
                     <div class="panel-body">
-                        In this case sum level is the geographic level to which the data is summed. For this tool we 
-                        can use either census tracts or block groups.
-                    </div>
-                </div>
-            </div>
-            <div class="panel">
-                <div class="panel-heading">
-                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
-                        Year and Data Source
-                    </a>
-                </div>
-                <div id="collapseFive" class="panel-collapse collapse" style="height: 0px;">
-                    <div class="panel-body">
-                       ACS Data is available in 1,3 &amp; 5 year summary groups, the datasource denotes which of these groups is being used. The year always denotes the last year of the summary group.
+                        Here you’ll view the number of routes and census tracts in your new Market Area. When you click Finish you will be brought to the Market Area > Overview page for your new Market Area.
                     </div>
                 </div>
             </div>
