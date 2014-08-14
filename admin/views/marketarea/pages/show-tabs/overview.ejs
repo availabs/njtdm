@@ -86,10 +86,28 @@
         </ul>
 	    <div id="myTabContentLeft" class="tab-content">
 
-        	<div class="col-md-12" id="chart">
-                <svg style="height:500px;width:608px;"></svg>
+    	    <div class="tabbable tabs">
+                <ul class="nav nav-tabs cen-tabs" id="displayTab">
+                    <li class='active'>
+                        <a href="#chart_pane" data-toggle="tab">Chart</a>
+                    </li>
+                     <li>
+                        <a href="#map_pane" data-toggle="tab">Map</a>
+                    </li>
+                </ul>
+                <div id="displayTabContent" class="tab-content">
+                    <div id="chart_pane" class="tab-pane active clearfix" >
+                        <div id="chart">
+                            <svg style="height:500px;width:608px;"></svg>
+                        </div>
+                    </div>
+                    <div id="map_pane" class="tab-pane clearfix" >
+                        <div id="map">
+                            <svg style="height:500px;width:608px;"></svg>
+                        </div>
+                    </div>
+                </div>
             </div>
-
         	<div class="col-md-12">
         	    <h4>{{name}}</h4>
 		        <table class="table table-striped table-hover" id="overview-table">
