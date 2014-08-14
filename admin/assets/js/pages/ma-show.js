@@ -63,11 +63,17 @@ function OverviewController ($scope) {
 		      	.datum(exampleData(name))
 		      	.call(chart);
 
+		    if(exampleData(name)[0].values.length > 10) {
+		    	$('.nv-x text').attr('transform','translate(15,20)rotate(45)');
+		    }
+	  	
 		  	nv.utils.windowResize(chart.update);
 		})
+
 	  // 	if (vars) {
 			// populateTable(vars);
 	  // 	}
+	  
 	}
 
   	$scope.active_category='Age Categories';
@@ -105,7 +111,7 @@ function OverviewController ($scope) {
 function exampleData(name) {
 	var output = [];
 	acs_data.categories[name].forEach(function(cen_var){
-		output.push({label:cen_var,value:parseInt(acs_data.census_vars[cen_var].value)});
+		output.push({label:cen_var.replace(/_/g," "),value:parseInt(acs_data.census_vars[cen_var].value)});
 	});
 	return [{/*key:"ages",*/values:output}];
 }
