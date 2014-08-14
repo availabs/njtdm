@@ -65,8 +65,8 @@
 
                 }
             });
-            console.log('draw ma',marketAreaTracts);
-            draw(marketAreaTracts, 'ma12','market');
+            // console.log('draw ma',marketAreaTracts);
+            // draw(marketAreaTracts, 'ma12','market');
         });
         console.log(marketarea.routes);
         // io.socket.post('/marketarea/'+marketarea.origin_gtfs+'/routes_geo',{route_id:marketarea.routes},function(routes){
