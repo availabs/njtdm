@@ -79,8 +79,13 @@ module.exports = {
 
     MetaGtfs.findOne(gtfs_id).exec(function(err,mgtfs){
         var sql = "SELECT route_id, route_short_name, route_long_name, ST_AsGeoJSON(geom) as the_geom " +
-                  "FROM "+mgtfs.tableName+".routes " +
-                  "WHERE route_id = '" + route_id + "'";
+                  "FROM "+mgtfs.tableName+".routes ";
+                  if(route_id instanceof Array){
+                    sql += "WHERE route_id in " + JSON.stringify(route_id).replace(/\"/g,"'").replace("[","(").replace("]",")");
+                  }else{
+                    sql += "WHERE route_id = '" + route_id + "'";
+                  }
+                  
         MetaGtfs.query(sql,{},function(err,data){
             if (err) {
                 res.send('{status:"error",message:"'+err+'"}',500);
@@ -105,7 +110,7 @@ module.exports = {
             });
 
             res.send(routesCollection);
-            console.log("??? ok route geo")
+            //console.log("??? ok route geo")
         });
     })
   },

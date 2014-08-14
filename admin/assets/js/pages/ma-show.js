@@ -22,9 +22,9 @@ function OverviewController ($scope) {
 
   	$scope.marketarea.routes = JSON.parse($scope.marketarea.routes);
   	$scope.marketarea.zones = JSON.parse($scope.marketarea.zones);
-  	console.log('overview',$scope.marketarea.routes);
+  	console.log('overview',acs_data);
 
-  	njmap.init('#new-market-svg',$scope.marketarea.routes,$scope.marketarea.zones);
+  	njmap.init('#new-market-svg',$scope.marketarea);
 
   	$scope.active_category='Age Categories';
   	$scope.isActive = function(name){
