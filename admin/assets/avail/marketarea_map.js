@@ -24,13 +24,13 @@
         svg.selectAll('path').attr('d', path);
     }
 
-    njmap.init = function(svgID) {
+    njmap.init = function(svgID,routes,input_tracts) {
 
         width = $('.tab-content').width()-15;
         height =  width;
 
         zoom = d3.behavior.zoom()
-            .scale(1<<17)
+            .scale(1<<16)
             .translate([width/2, height/2])
             .scaleExtent([1<<12, 1<<20])
             .on("zoom", zoomed);
@@ -41,10 +41,6 @@
 
         path = d3.geo.path()
             .projection(projection);
-
-        d3.json('/data/tracts.json', function(error, data) {
-            tracts = data;
-        });
 
         svg = d3.select(svgID)
             .attr('width', width)
@@ -59,6 +55,21 @@
             .attr('width', width)
             .attr('height', height)
             .attr('fill', '#fff')
+
+        d3.json('/data/tracts.json', function(error, data) {
+            tracts = data;
+            tracts.features.forEach(function(feat){
+                if(input_tracts.indexOf(feat.properties.geoid) !== -1){
+                   marketAreaTractsList.push(feat.properties.geoid);
+                   marketAreaTracts.features.push(feat);
+
+                }
+            });
+            console.log('draw ma',marketAreaTracts);
+            draw(marketAreaTracts, 'ma12','market');
+        });
+
+       
     }
 
     njmap.getRouteData = function(gtfsID, routeID,cb) {

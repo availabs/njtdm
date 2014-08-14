@@ -26,6 +26,7 @@ $(function(){
 
     PjaxApp.onPageLoad(pageLoad);
 });
+
 function maNewController($scope){
     njmap.init('#new-market-svg');
 
@@ -63,7 +64,6 @@ function maNewController($scope){
                             $scope.$apply();
                         });
                         
-
                         $scope.marketarea.routes.push($('#routes-select').val());
                         $scope.$apply();
                     }
@@ -74,8 +74,13 @@ function maNewController($scope){
         }
     });
 
-    $scope.removeRoute = function(index){
+    $scope.removeRoute = function(index,id){
         $scope.marketarea.routes.splice(index,1);
+        njmap.removeRoute(id,function(){
+            $scope.marketarea.zones = tracts;
+            $scope.marketarea.center = center;
+            $scope.$apply();
+        })
         //$scope.appl
     }
 

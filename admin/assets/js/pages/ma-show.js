@@ -15,10 +15,16 @@ function OverviewController ($scope) {
     $scope.census_vars = acs_data.census_vars;
   	$scope.census_categories = acs_data.categories;
   	$scope.marketarea = window.server_marketarea;
-  	$scope.routes = window.server_routes;
+  	$scope.routes = [];
+  	window.server_routes.forEach(function(route){
+  		$scope.routes[route.route_id] = route.route_short_name;
+  	});
 
   	$scope.marketarea.routes = JSON.parse($scope.marketarea.routes);
+  	$scope.marketarea.zones = JSON.parse($scope.marketarea.zones);
   	console.log('overview',$scope.marketarea.routes);
+
+  	njmap.init('#new-market-svg',$scope.marketarea.routes,$scope.marketarea.zones);
 
   	$scope.active_category='Age Categories';
   	$scope.isActive = function(name){

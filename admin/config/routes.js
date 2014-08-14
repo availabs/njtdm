@@ -34,6 +34,7 @@ module.exports.routes = {
   '/marketarea/:id': 'MarketAreaController.show',
   '/marketarea/:id/models': 'MarketAreaController.models',
   '/marketarea/:id/:route/route_geo': 'MarketAreaController.getRouteGeo',
+  '/marketarea/:id/routes_geo' : 'MarketAreaController.getRouteGeo',
 
   //---------------------------------
   // Users Guide Pages
