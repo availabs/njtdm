@@ -114,6 +114,50 @@ module.exports = {
         });
     })
   },
+  getCTPPstarts: function(req, res) {
+console.log('getCTPPstarts')
+      var sql = "SELECT from_tract, count(*) as amount " +
+                "FROM ctpp_34_2010_tracts " +
+                "GROUP BY from_tract";
+console.log('attempting: ', sql)
+      MarketArea.query(sql, {}, function(error, data) {
+          if (error) {
+              console.log("error executing "+sql, error);
+              return;
+          }
+console.log('executed: ', sql)
+          var response = {};
+          data.rows.forEach(function(row) {
+              response[row.from_tract] = row.amount;
+          })
+          res.json(response);
+      })
+  },
+  getCTPPends: function(req, res) {
+      var tractGeoID = req.param('id');
+
+      var sql = "SELECT to_tract, est, se " +
+                "FROM ctpp_34_2010_tracts " +
+                "WHERE from_tract = '" + tractGeoID + "'";
+
+      MarketArea.query(sql, {}, function(error, data) {
+          if (error) {
+              console.log("error executing "+sql, error);
+              return;
+          }
+          var response = [];
+          data.rows.forEach(function(row) {
+              var obj = {
+                  geoid: row.to_tract,
+                  est: row.est,
+                  se: row.se
+              };
+
+              response.push(obj);
+          })
+          res.send(response);
+      })
+  },
   show:function(req,res){
     var cenData = 'acs5_34_2011_tracts';
     //Allow user to specify census table

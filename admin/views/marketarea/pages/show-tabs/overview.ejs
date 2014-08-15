@@ -135,8 +135,10 @@
         	</div>
         </div>
         <div  id="ctpp" class="tab-pane clearfix body">
+            <svg id="ctpp-svg" width="810px" height="810px"></svg>
         </div>
         <div  id="lodes" class="tab-pane clearfix body">
+            <svg id="lodes-svg" width="810px" height="810px"></svg>
         </div>
     </div>
 </div>
@@ -146,6 +148,8 @@
 	acs_data.update_data(JSON.parse("<%= JSON.stringify(census) %>".replace(/\&quot\;/g, "\"")));
 </script>
 
+
+<script type="text/javascript" src="/avail/overview_map.js"></script>
 <style>
     .ma-tract {
         fill: #080;
@@ -153,11 +157,28 @@
         stroke: #080;
         stroke-width: 1;
     }
+    .ma-tract:hover {
+        fill: #0f0;
+        stroke: #0f0;
+    }
     .ma-active {
         fill-opacity: 1.0;
     }
     .dem-tabs li.active a{
         background-color: #ccc!important;
+    }
+</style>
+
+
+<script type="text/javascript" src="/avail/ctpp_map.js"></script>
+<style>
+    .ctpp-tract {
+        fill: #999;
+        stroke: #000;
+        stroke-width: 1;
+    }
+    .ctpp-tract-active {
+        fill: #090;
     }
 </style>
 
