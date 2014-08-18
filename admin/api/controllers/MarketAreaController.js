@@ -64,7 +64,7 @@ module.exports = {
   new:function(req,res){
     getNavData(function(navData){
       MetaGtfs.find().exec(function(err,metaGTFS){
-        res.view({page:'ma-new',panel:'marketarea',gtfs:metaGTFS,nav:navData})
+        res.view({marketarea:0,page:'ma-new',panel:'marketarea',gtfs:metaGTFS,nav:navData})
       })
     })
   },
