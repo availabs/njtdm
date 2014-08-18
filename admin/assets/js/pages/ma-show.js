@@ -69,10 +69,6 @@ function OverviewController ($scope) {
 	  	
 		  	nv.utils.windowResize(chart.update);
 		})
-
-	  // 	if (vars) {
-			// populateTable(vars);
-	  // 	}
 	  
 	}
 
@@ -86,26 +82,6 @@ function OverviewController ($scope) {
   	}
   	$scope.drawGraph($scope.active_category, acs_data.categories[$scope.active_category])
 
-	// function populateTable(vars) {
-	// 	var rows = d3.select('#overview-table')
-	// 		.selectAll('tr')
-	// 		.data(vars, function(d) { return acs_data.census_vars[d].name; })
-
-	// 	rows.exit().remove();
-
-	// 	rows.enter().append('tr');
-
-	// 	rows.each(function(d) {
-	// 		var row = d3.select(this);
-
-	// 		row.append('td')
-	// 			.text(acs_data.census_vars[d].name)
-
-	// 		row.append('td')
-	// 			.attr('class', 'text-right')
-	// 			.text(acs_data.census_vars[d].value)
-	// 	})
-	// }
 };
 
 function exampleData(name) {

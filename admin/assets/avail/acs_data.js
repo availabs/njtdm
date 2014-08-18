@@ -137,7 +137,7 @@ categories : {
   "Population":["total_population"],
   "Employment":["employment","unemployment"],
   "Journey To Work":["travel_to_work_total","car_to_work","bus_to_work","public_transportation_to_work"],
-  "Industry":["total","agriculture","construction","manufacturing","wholesale","retail","transportation","information","finance","professional","educational","arts","other","public_administration","armed_forces"],
+  "Industry":["agriculture","construction","manufacturing","wholesale","retail","transportation","information","finance","professional","educational","arts","other","public_administration","armed_forces"],
   "Income Categories":["poverty_status","10000_14999","15000_19999","20000_24999","25000_29999","30000_34999","35000_39999","40000_44999","45000_45999","50000_59999","60000_74999","75000_99999","100000_124999","125000_149999","150000_199999","200000+"],
   "School Enrollment":["public_school","private_school"],
   "Educational Attainment":["no_high_school","high_school","some_college","bachelors","graduate"],
