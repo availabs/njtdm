@@ -19604,3 +19604,7 @@ ol.text-list {
   fill: #0f0;
   stroke: #0f0;
 }
+
+.ma-toggle{
+  border-left:2px solid blue;
+}

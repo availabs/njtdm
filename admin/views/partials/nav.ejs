@@ -1,3 +1,4 @@
+<% if(!marketarea){ marketarea = 0;} %> 
 <div class="logo">
     <h4><a href="index.html">NJTDM <strong>Admin</strong></a></h4>
 </div>
@@ -11,12 +12,12 @@
                     <i class="fa eicon-map"></i> <span class="name">Market Areas</span>
             </a>
             <ul id="forms-collapse" class="panel-collapse <% if(panel == 'marketarea') {%> in <%}else{%> collapse <%}%>">
-                <% nav.marketareas.forEach(function(ma,index){ %>
+                <% nav.marketareas.forEach(function(curr_ma,index){ %>
                     <li class="panel">
-                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#menu-levels-collapse" href="#sub-menu-ma<%= index %>-collapse"><%= ma.name %></a>
-                        <ul id="sub-menu-ma<%= index %>-collapse" class="panel-collapse collapse">
-                            <li <% if(page == 'ma-overview') {%> class="active" <%}%>><a href="/marketarea/<%= ma.id %>">Overview</a></li>
-                            <li <% if(page == 'ma-models') {%> class="active" <%}%>><a href="/marketarea/<%= ma.id %>/models">Model Analysis</a></li>
+                        <a class="ma-toggle accordion-toggle <% if (marketarea.id != curr_ma.id) {%>collapsed<%}%>" data-toggle="collapse" data-parent="#menu-levels-collapse" href="#sub-menu-ma<%= index %>-collapse"><%= curr_ma.name %></a>
+                        <ul id="sub-menu-ma<%= index %>-collapse" class="panel-collapse <% if (marketarea.id != curr_ma.id) {%>collapse<%}%>">
+                            <li <% if(page == 'ma-overview' && marketarea.id == curr_ma.id) {%> class="active" <%}%>><a href="/marketarea/<%= curr_ma.id %>">Overview</a></li>
+                            <li <% if(page == 'ma-models' && marketarea.id == curr_ma.id) {%> class="active" <%}%>><a href="/marketarea/<%= curr_ma.id %>/models">Model Analysis</a></li>
                             <li><a href="/map/" target="_blank">Map View</a></li>
                         </ul>
                     </li>

@@ -1,7 +1,7 @@
 <header>
     <h4>
         <i class="fa fa-align-left"></i>
-        Model Analysis
+        Model Analysis<small> Detailed output of model runs</small>
     </h4>
 </header>
 <div class="body">
@@ -31,8 +31,6 @@
             <div class="well" ng-show='loadedModels.length > 0'>
                 <span class="label" ng-repeat="model in loadedModels" style="{{'margin:3px;background-color:'+colors[$index]}}">{{model.name}}</span>
             </div>
-
-
             
             <ul id="myTab" class="nav nav-tabs">
                 <li class="active"><a href="#home" data-toggle="tab">Home</a></li>

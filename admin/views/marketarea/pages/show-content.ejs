@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-controller="OverviewController">
     <div class="col-md-8">
         <section class="widget widget-tabs">
             <header>
@@ -11,7 +11,7 @@
                     </li>
                 </ul>
             </header>
-            <div class="body tab-content" style="overflow:hidden;" ng-controller="OverviewController">
+            <div class="body tab-content" style="overflow:hidden;" >
                 <div id="overview" class="tab-pane active clearfix" >
                    <%- partial('show-tabs/overview') %>
                 </div>
@@ -22,6 +22,7 @@
         </section>
     </div>
     <div class="col-md-4">
-        <%- partial('../guide/market-area-guide') %>  
+        <%- partial('../guide/market-area-guide') %>
+        <%- partial('show-tabs/data-pane') %>
     </div>
 </div>

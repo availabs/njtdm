@@ -30,14 +30,14 @@ module.exports = {
 
   dashboard:function(req,res){
 	  getNavData(function(navData){
-      res.view({page:'dashboard',panel:'none',title:"Dashboard | NJTDM",nav:navData});
+      res.view({marketarea:0,page:'dashboard',panel:'none',title:"Dashboard | NJTDM",nav:navData});
     })
   },
   
   gtfs:function(req,res){
     getNavData(function(navData){
       MetaGtfs.find().exec(function(err,meta){
-  	   res.view({page:'gtfs',panel:'data',records:meta,title:"GTFS | NJTDM",nav:navData});
+  	   res.view({marketarea:0,page:'gtfs',panel:'data',records:meta,title:"GTFS | NJTDM",nav:navData});
      });
     });
   },
@@ -45,7 +45,7 @@ module.exports = {
   acs:function(req,res){
   	getNavData(function(navData){
       MetaAcs.find().exec(function(err,meta){
-        res.view({page:'acs',panel:'data',error:err,records:meta,title:"ACS | NJTDM",nav:navData});
+        res.view({marketarea:0,page:'acs',panel:'data',error:err,records:meta,title:"ACS | NJTDM",nav:navData});
       });
     })
   },
@@ -53,7 +53,7 @@ module.exports = {
   ctpp:function(req,res){
     getNavData(function(navData){
     	MetaCtpp.find().exec(function(err,meta){
-          res.view({page:'ctpp',panel:'data',error:err,records:meta,title:"CTPP | NJTDM",nav:navData});
+          res.view({marketarea:0,page:'ctpp',panel:'data',error:err,records:meta,title:"CTPP | NJTDM",nav:navData});
       });
     });
   },
@@ -61,7 +61,7 @@ module.exports = {
   lodes:function(req,res){
     getNavData(function(navData){
     	MetaLodes.find().exec(function(err,meta){
-          res.view({page:'lodes',panel:'data',error:err,records:meta,title:"LODES | NJTDM",nav:navData});
+          res.view({marketarea:0,page:'lodes',panel:'data',error:err,records:meta,title:"LODES | NJTDM",nav:navData});
       });
     });
   },

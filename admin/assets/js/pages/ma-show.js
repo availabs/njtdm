@@ -61,10 +61,10 @@ function OverviewController ($scope) {
 		      	.transitionDuration(350)
 		  
 		  	d3.select('#chart svg')
-		      	.datum(exampleData(name))
+		      	.datum(processCensusData(name))
 		      	.call(chart);
 
-		    if(exampleData(name)[0].values.length > 10) {
+		    if(processCensusData(name)[0].values.length > 10) {
 		    	$('.nv-x text').attr('transform','translate(15,20)rotate(45)');
 		    }
 	  	
@@ -84,7 +84,7 @@ function OverviewController ($scope) {
 
 };
 
-function exampleData(name) {
+function processCensusData(name) {
 	var output = [];
 	acs_data.categories[name].forEach(function(cen_var){
 		output.push({label:cen_var.replace(/_/g," "),value:parseInt(acs_data.census_vars[cen_var].value)});
