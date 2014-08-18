@@ -34,7 +34,9 @@ module.exports.routes = {
   '/marketarea/:id': 'MarketAreaController.show',
   '/marketarea/:id/models': 'MarketAreaController.models',
   '/marketarea/:id/:route/route_geo': 'MarketAreaController.getRouteGeo',
-  '/marketarea/:id/routes_geo' : 'MarketAreaController.getRouteGeo',
+  '/marketarea/:id/routes_geo': 'MarketAreaController.getRouteGeo',
+  '/marketarea/:id/ctpp_start_data': 'MarketAreaController.getCTPPstarts',
+  '/marketarea/:id/ctpp_travel_data': 'MarketAreaController.getCTPPends',
 
   //---------------------------------
   // Users Guide Pages
