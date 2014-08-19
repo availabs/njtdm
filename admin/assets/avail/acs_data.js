@@ -53,6 +53,7 @@ acs_data = {
   "other_language":{"value":0,"vars":['b06007_008e'], "name":"Other Language Speaking"},
   "male_pop":{"value":0,"vars":['b01001_002e'], "name":"Male"},
   "female_pop":{"value":0,"vars":['b01001_026e'], "name":"Female"},
+  "age_under_5":{"value":0,"vars":['b01001_003e','b01001_027e'], "name":"5 to 9 years"},
   "age5_9":{"value":0,"vars":['b01001_004e','b01001_028e'], "name":"5 to 9 years"},
   "age10_14":{"value":0,"vars":['b01001_005e','b01001_029e'], "name":"10 to 14 years"},
   "age15_17":{"value":0,"vars":['b01001_006e','b01001_030e'], "name":"15 to 17 years"},
@@ -136,19 +137,21 @@ acs_data = {
 categories : {
   "Population":["total_population"],
   "Employment":["employment","unemployment"],
-  "Journey To Work":["travel_to_work_total","car_to_work","bus_to_work","public_transportation_to_work"],
+  "Journey To Work":["car_to_work","bus_to_work","public_transportation_to_work"],
   "Industry":["agriculture","construction","manufacturing","wholesale","retail","transportation","information","finance","professional","educational","arts","other","public_administration","armed_forces"],
-  "Income Categories":["poverty_status","10000_14999","15000_19999","20000_24999","25000_29999","30000_34999","35000_39999","40000_44999","45000_45999","50000_59999","60000_74999","75000_99999","100000_124999","125000_149999","150000_199999","200000+"],
+  "Income Categories":["10000_14999","15000_19999","20000_24999","25000_29999","30000_34999","35000_39999","40000_44999","45000_45999","50000_59999","60000_74999","75000_99999","100000_124999","125000_149999","150000_199999","200000+"],
+  "Poverty Status":["poverty_status"],
   "School Enrollment":["public_school","private_school"],
   "Educational Attainment":["no_high_school","high_school","some_college","bachelors","graduate"],
   "Foreign Born Population":["foreign_born"],
   "Language Spoken at Home":["spanish_speaking","other_language"],
   "Gender":["male_pop","female_pop"],
-  "Age Categories":["age5_9","age10_14","age15_17","age18_19","age20","age21","age22_24","age25_29","age30_34","age35_39","age40_44","age45_49","age50_54","age55_59","age60_62","age62_64","age65_66","age67_69","age70_74","age75_79","age80_84","age85+"],
+  "Age Categories":["age_under_5","age5_9","age10_14","age15_17","age18_19","age20","age21","age22_24","age25_29","age30_34","age35_39","age40_44","age45_49","age50_54","age55_59","age60_62","age62_64","age65_66","age67_69","age70_74","age75_79","age80_84","age85+"],
   "Race":["race_white","race_black","race_amerindian","race_asian","race_hawaii","race_other", "race_two"],
   "Housing Units":["total_housing","occupied_housing","vacant_housing","1_unit_det","1_unit_att","2_units","3_4units","5_9units","10_19units","20_49units","50+_units","mobile_home","other_home","occupancy_renter","occupancy_owner"],
   "Vehicles Available" :["car_0","car_1","car_2","car_3", "car_4", "car_5+"],
-  "Journey To Work by Time":['12_00am','s5_00am','5_30am','6_00am','6_30am','7_00am','7_30am','8_00am','8_30am','9_00am','10_00am','11_00am','12_00pm','4_00pm','pttotal','12_00ampt','5_00ampt','5_30ampt','6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt','11_00ampt','12_00pmpt','4_00pmpt'],
+  "Journey TW by Time":['12_00am','s5_00am','5_30am','6_00am','6_30am','7_00am','7_30am','8_00am','8_30am','9_00am','10_00am','11_00am','12_00pm','4_00pm'],
+  "Journey TW by Time Public Trans.":['12_00ampt','5_00ampt','5_30ampt','6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt','11_00ampt','12_00pmpt','4_00pmpt']
 },
 
   update_data:function(tracts){
