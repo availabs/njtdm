@@ -46,7 +46,22 @@ function OverviewController ($scope) {
 
 		$scope.current_vars = vars;
 
-	  	nv.addGraph(function(test){
+		$scope.current_total = 0;
+    $scope.current_percent_total = 0;
+    
+    $scope.current_vars.forEach(function(part){
+      if(isNaN($scope.census_vars[part].value)){
+        $scope.census_vars[part].value = 0;
+      }
+      $scope.current_total += $scope.census_vars[part].value;
+    });
+
+    $scope.current_vars.forEach(function(part){
+      $scope.census_vars[part].percent = ($scope.census_vars[part].value/$scope.current_total*100).toFixed(2);
+      $scope.current_percent_total += $scope.census_vars[part].percent*1;
+    });
+
+	  nv.addGraph(function(test){
 		  	var chart = nv.models.discreteBarChart()
 		      	.x(function(d) { return d.label })    //Specify the data accessors.
 		      	.y(function(d) { return d.value })
@@ -67,15 +82,20 @@ function OverviewController ($scope) {
 		})
 	}
 
-  	$scope.active_category='Age Categories';
+	$scope.active_category='Age Categories';
 
-  	$scope.isActive = function(name, vars){
-  		if(name === $scope.active_category){
-  			return true;
-  		}
-  		return false;
-  	}
-  	$scope.drawGraph($scope.active_category, acs_data.categories[$scope.active_category])
+	$scope.isActive = function(name, vars){
+		if(name === $scope.active_category){
+			return true;
+		}
+		return false;
+	}
+	$scope.drawGraph($scope.active_category, acs_data.categories[$scope.active_category])
+
+  $scope.downloadData = function(id){
+
+    console.log($('#'+id).table2CSV({delivery:'value'}));;
+  };
 
 
     $scope.current_overview_tab = 'ACS';
