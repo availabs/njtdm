@@ -12,6 +12,21 @@ $(function(){
 });
 
 function OverviewController ($scope) {
+    $scope.datasources = {};
+
+    d3.json('/metaAcs/',function(data){
+      $scope.datasources['ACS'] = data;
+      $scope.source_id = 1;
+    });
+    d3.json('/metaCtpp/',function(data){
+      $scope.datasources['CTPP'] = data;
+    });
+    d3.json('/metaLodes/',function(data){
+      $scope.datasources['LODES'] = data;
+      console.log($scope.datasources);
+      $('#datasource_select').val("1");
+    });
+
     $scope.census_vars = acs_data.census_vars;
   	$scope.census_categories = acs_data.categories;
     $scope.current_map_variable = '';
