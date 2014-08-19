@@ -16,7 +16,8 @@
 		MAtracts = {
 			type: "FeatureCollection",
 			features: []
-		};
+		},
+		tractFeatures = {};
 
 	var colorRange = {
 		1: ["#ffffbf"].reverse(),
@@ -33,7 +34,6 @@
 	}
 
 	var colorScale = d3.scale.quantize();
-		//.range(["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
 
 	lodesmap.init = function(svgID, input_tracts) {
 		tractsGeoIDs = input_tracts;
@@ -64,6 +64,7 @@
             tractData.features.forEach(function(feat){
                 if(tractsGeoIDs.indexOf(feat.properties.geoid) !== -1){
                    	MAtracts.features.push(feat);
+                   	tractFeatures[feat.properties.geoid] = feat;
                 }
             })
             lodesmap.draw();
@@ -161,6 +162,9 @@
 	}
 
 	function highlightTract(d) {
+		if (!(d.properties.geoid in tractFeatures)) {
+			return;
+		}
 		var bounds = path.bounds(d);
 
 		var center = [(bounds[0][0]+bounds[1][0]) / 2, (bounds[0][1]+bounds[1][1]) / 2];
@@ -201,9 +205,9 @@
         proj.scale(view.k)
             .translate([view.x, view.y]);
 
-        var temp = svg.selectAll('#temp-'+d.properties.geoid)
+        var temp = svg.selectAll('#lodes-temp-'+d.properties.geoid)
         	.data([d]).enter().append('path')
-        	.attr('id', 'temp-'+d.properties.geoid)
+        	.attr('id', 'lodes-temp-'+d.properties.geoid)
 			.attr('class', 'ctpp-tract temp-tract')
 			.style('fill', function(d) { return d3.select('#tract-'+d.properties.geoid).style('fill'); })
 			.attr('d', path)
@@ -216,7 +220,10 @@
 	}
 
 	function unhighlightTract(d) {
-		d3.select('#temp-'+d.properties.geoid)
+		if (!(d.properties.geoid in tractFeatures)) {
+			return;
+		}
+		d3.select('#lodes-temp-'+d.properties.geoid)
 			.transition()
 			.duration(250)
 			.attr('d', path)
@@ -267,7 +274,7 @@
 			.style('fill', null)
 			.classed('ctpp-tract-active', false);
 
-		d3.select(this)
+		d3.select('#tract-'+d.properties.geoid)
 			.classed('ctpp-tract-active', true);
 
 		d3.json('/marketarea/'+d.properties.geoid+'/lodes_travel_data', function(error, data) {
@@ -280,8 +287,14 @@
 				pushUnique(colorDomain, d.amount);
 				toTracts[d.geoid] = d.amount;
 
-				obj = {properties: {geoid: d.geoid}}
-				tableData.push(obj);
+				// obj = {properties: {geoid: d.geoid}}
+				// tableData.push(obj);
+				if (d.geoid in tractFeatures) {
+					tableData.push(tractFeatures[d.geoid]);
+				}
+				else {
+					tableData.push({properties: {geoid: d.geoid }});
+				}
 			})
 
             setColorScale(colorDomain)
