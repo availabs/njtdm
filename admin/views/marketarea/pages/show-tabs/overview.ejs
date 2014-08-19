@@ -88,6 +88,11 @@
         <li  >
             <a  href="#lodes" data-toggle="tab" ng-click="current_overview_tab = 'LODES'">LODES</a>
         </li>
+        <li class="pull-right">
+        <select class="form-control" style='width:200px;' id="datasource_select" ng-model="source_id">
+            <option ng-repeat="source in datasources[current_overview_tab]" value="{{source.id}}" selected>{{source.tableName}}</option>
+        </select>
+        </li>
     </ul>
     <div id="myDataTabContent" class="tab-content">
         <div  id="acs" class="tab-pane active clearfix body">
