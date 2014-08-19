@@ -18,10 +18,10 @@ module.exports.sockets = {
   // mixes in socket.io events for your routes and blueprints automatically.
   onConnect: function(session, socket) {
 
-    var socketId = sails.sockets.id(socket);
+    //var socketId = sails.sockets.id(socket);
     
     // By default, do nothing.
-    Job.watch(socket);
+    ///Job.watch(socket);
     //User.subscribe(socket);
   },
 

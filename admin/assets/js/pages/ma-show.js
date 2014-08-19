@@ -14,7 +14,7 @@ $(function(){
 function OverviewController ($scope) {
     $scope.census_vars = acs_data.census_vars;
   	$scope.census_categories = acs_data.categories;
-    $scope.current_map_variable = 
+    $scope.current_map_variable = '';
   	$scope.marketarea = window.server_marketarea;
   	$scope.routes = [];
   	window.server_routes.forEach(function(route){
@@ -31,6 +31,7 @@ function OverviewController ($scope) {
     lodesmap.init("#lodes-svg", $scope.marketarea.zones)
 
   	$scope.colorMap = function(category) {
+      $scope.current_map_variable = category;
   		overviewmap.color(category)
   	}
 
@@ -84,6 +85,12 @@ function OverviewController ($scope) {
 	}
 
 	$scope.active_category='Population';
+  $scope.isActiveVar = function(invar){
+    if(invar === $scope.current_map_variable){
+      return 'on';
+    }
+    return ''
+  }
 
 	$scope.isActive = function(name, vars){
 		if(name === $scope.active_category){
