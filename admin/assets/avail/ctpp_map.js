@@ -204,7 +204,7 @@
         var temp = svg.selectAll('#temp-'+d.properties.geoid)
         	.data([d]).enter().append('path')
         	.attr('id', 'temp-'+d.properties.geoid)
-			.attr('class', 'ctpp-tract')
+			.attr('class', 'ctpp-tract temp-tract')
 			.style('fill', function(d) { return d3.select('#tract-'+d.properties.geoid).style('fill'); })
 			.attr('d', path)
 
@@ -260,6 +260,8 @@
 			return;
 		}
 		clickedTract = d;
+
+		d3.selectAll('.temp-tract').remove();
 
 		var tracts = svg.selectAll('path')
 			.style('fill', null)
