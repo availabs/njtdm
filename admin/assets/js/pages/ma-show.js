@@ -28,6 +28,7 @@ function OverviewController ($scope) {
   	//njmap.init('#new-market-svg',$scope.marketarea);
   	overviewmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data.acs, function() { overviewmap.draw(); overviewmap.color('total_population'); });
   	ctppmap.init("#ctpp-svg", $scope.marketarea.zones)
+    lodesmap.init("#lodes-svg", $scope.marketarea.zones)
 
   	$scope.colorMap = function(category) {
   		overviewmap.color(category)
