@@ -19609,7 +19609,9 @@ ol.text-list {
   border-left:2px solid blue;
 }
 
-#overview-data-pane {
+.data-pane {
     max-height: 437px;
     overflow-y: auto;
+    margin-right:-10px;
 }
+.on {border:2px #e74c3c solid;}

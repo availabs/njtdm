@@ -148,7 +148,9 @@ categories : {
   "Gender":["male_pop","female_pop"],
   "Age Categories":["age_under_5","age5_9","age10_14","age15_17","age18_19","age20","age21","age22_24","age25_29","age30_34","age35_39","age40_44","age45_49","age50_54","age55_59","age60_62","age62_64","age65_66","age67_69","age70_74","age75_79","age80_84","age85+"],
   "Race":["race_white","race_black","race_amerindian","race_asian","race_hawaii","race_other", "race_two"],
-  "Housing Units":["total_housing","occupied_housing","vacant_housing","1_unit_det","1_unit_att","2_units","3_4units","5_9units","10_19units","20_49units","50+_units","mobile_home","other_home","occupancy_renter","occupancy_owner"],
+  "Housing Units":["1_unit_det","1_unit_att","2_units","3_4units","5_9units","10_19units","20_49units","50+_units","mobile_home","other_home"],
+  "Housing Occupied ":["occupied_housing","vacant_housing"],
+  "Housing Ownership": ["occupancy_renter","occupancy_owner"], 
   "Vehicles Available" :["car_0","car_1","car_2","car_3", "car_4", "car_5+"],
   "Journey TW by Time":['12_00am','s5_00am','5_30am','6_00am','6_30am','7_00am','7_30am','8_00am','8_30am','9_00am','10_00am','11_00am','12_00pm','4_00pm'],
   "Journey TW by Time Public Trans.":['12_00ampt','5_00ampt','5_30ampt','6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt','11_00ampt','12_00pmpt','4_00pmpt']
