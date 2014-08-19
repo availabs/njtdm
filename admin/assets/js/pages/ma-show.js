@@ -35,7 +35,7 @@ function OverviewController ($scope) {
   		overviewmap.color(category)
   	}
 
-  	$scope.active_category='Population';
+  	$scope.active_category='Vehicles Available';
   	$scope.isActive = function(name){
   		if(name === $scope.active_category){
   			return true;
@@ -84,7 +84,7 @@ function OverviewController ($scope) {
 		})
 	}
 
-	$scope.active_category='Population';
+	$scope.active_category='Vehicles Available';
   $scope.isActiveVar = function(invar){
     if(invar === $scope.current_map_variable){
       return 'on';
