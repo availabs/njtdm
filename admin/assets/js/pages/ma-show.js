@@ -14,6 +14,7 @@ $(function(){
 function OverviewController ($scope) {
     $scope.census_vars = acs_data.census_vars;
   	$scope.census_categories = acs_data.categories;
+    $scope.current_map_variable = 
   	$scope.marketarea = window.server_marketarea;
   	$scope.routes = [];
   	window.server_routes.forEach(function(route){
@@ -25,7 +26,7 @@ function OverviewController ($scope) {
   	console.log('overview',acs_data);
 
   	//njmap.init('#new-market-svg',$scope.marketarea);
-  	overviewmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data.acs, function() { overviewmap.draw(); overviewmap.color('age5_9'); });
+  	overviewmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data.acs, function() { overviewmap.draw(); overviewmap.color('total_population'); });
   	ctppmap.init("#ctpp-svg", $scope.marketarea.zones)
     lodesmap.init("#lodes-svg", $scope.marketarea.zones)
 
@@ -33,7 +34,7 @@ function OverviewController ($scope) {
   		overviewmap.color(category)
   	}
 
-  	$scope.active_category='Age Categories';
+  	$scope.active_category='Population';
   	$scope.isActive = function(name){
   		if(name === $scope.active_category){
   			return true;
@@ -82,7 +83,7 @@ function OverviewController ($scope) {
 		})
 	}
 
-	$scope.active_category='Age Categories';
+	$scope.active_category='Population';
 
 	$scope.isActive = function(name, vars){
 		if(name === $scope.active_category){
