@@ -115,17 +115,17 @@ module.exports = {
     })
   },
   getCTPPstarts: function(req, res) {
-console.log('getCTPPstarts')
       var sql = "SELECT from_tract, count(*) as amount " +
                 "FROM ctpp_34_2010_tracts " +
                 "GROUP BY from_tract";
-console.log('attempting: ', sql)
+
       MarketArea.query(sql, {}, function(error, data) {
           if (error) {
               console.log("error executing "+sql, error);
+              res.send({status: 500, message: 'internal error'}, 500);
               return;
           }
-console.log('executed: ', sql)
+
           var response = {};
           data.rows.forEach(function(row) {
               response[row.from_tract] = row.amount;
@@ -136,6 +136,11 @@ console.log('executed: ', sql)
   getCTPPends: function(req, res) {
       var tractGeoID = req.param('id');
 
+      if (!tractGeoID) {
+          res.send({status: 500, message: 'you must supply a tract GeoID'}, 500);
+          return;
+      }
+
       var sql = "SELECT to_tract, est, se " +
                 "FROM ctpp_34_2010_tracts " +
                 "WHERE from_tract = '" + tractGeoID + "'";
@@ -143,6 +148,7 @@ console.log('executed: ', sql)
       MarketArea.query(sql, {}, function(error, data) {
           if (error) {
               console.log("error executing "+sql, error);
+              res.send({status: 500, message: 'internal error'}, 500);
               return;
           }
           var response = [];
@@ -158,6 +164,57 @@ console.log('executed: ', sql)
           res.send(response);
       })
   },
+/****************/
+  getLODESstarts: function(req, res) {
+      var sql = "SELECT h_geocode, count(*) as amount " +
+                "FROM lodes_34_2010_tracts " +
+                "GROUP BY h_geocode";
+
+      MarketArea.query(sql, {}, function(error, data) {
+          if (error) {
+              console.log("error executing "+sql, error);
+              res.send({status: 500, message: 'internal error'}, 500);
+              return;
+          }
+          
+          var response = {};
+          data.rows.forEach(function(row) {
+              response[row.h_geocode] = row.amount;
+          })
+          res.json(response);
+      })
+  },
+  getLODESends: function(req, res) {
+      var tractGeoID = req.param('id');
+
+      if (!tractGeoID) {
+          res.send({status: 500, message: 'you must supply a tract GeoID'}, 500);
+          return;
+      }
+
+      var sql = "SELECT w_geocode, s000 " +
+                "FROM lodes_34_2010_tracts " +
+                "WHERE h_geocode = '" + tractGeoID + "'";
+
+      MarketArea.query(sql, {}, function(error, data) {
+          if (error) {
+              console.log("error executing "+sql, error);
+              res.send({status: 500, message: 'internal error'}, 500);
+              return;
+          }
+          var response = [];
+          data.rows.forEach(function(row) {
+              var obj = {
+                  geoid: row.w_geocode,
+                  amount: row.s000
+              };
+
+              response.push(obj);
+          })
+          res.send(response);
+      })
+  },
+/*****************/
   show:function(req,res){
     var cenData = 'acs5_34_2011_tracts';
     //Allow user to specify census table
