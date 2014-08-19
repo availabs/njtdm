@@ -24,16 +24,13 @@ function OverviewController ($scope) {
   	$scope.marketarea.zones = JSON.parse($scope.marketarea.zones);
   	console.log('overview',acs_data);
 
-  	njmap.init('#new-market-svg',$scope.marketarea);
-  	overviewmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data.acs, overviewmap.draw);
+  	//njmap.init('#new-market-svg',$scope.marketarea);
+  	overviewmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data.acs, function() { overviewmap.draw(); overviewmap.color('age5_9'); });
   	ctppmap.init("#ctpp-svg", $scope.marketarea.zones)
 
-  	$scope.colorMap = function(v) {
-  		overviewmap.color(v)
+  	$scope.colorMap = function(category) {
+  		overviewmap.color(category)
   	}
-
-  	setTimeout(function() {overviewmap.color('age5_9')}, 2000);
-
 
   	$scope.active_category='Age Categories';
   	$scope.isActive = function(name){
@@ -42,7 +39,6 @@ function OverviewController ($scope) {
   		}
   		return false;
   	}
-  	// ng-class='isActive'
 
 	$scope.drawGraph = function(name, vars) {
 		$scope.active_category= name;
@@ -64,7 +60,7 @@ function OverviewController ($scope) {
       $scope.current_percent_total += $scope.census_vars[part].percent*1;
     });
 
-	  	nv.addGraph(function(test){
+	  nv.addGraph(function(test){
 		  	var chart = nv.models.discreteBarChart()
 		      	.x(function(d) { return d.label })    //Specify the data accessors.
 		      	.y(function(d) { return d.value })
@@ -100,6 +96,12 @@ function OverviewController ($scope) {
     console.log($('#'+id).table2CSV({delivery:'value'}));;
   };
 
+
+    $scope.current_overview_tab = 'ACS';
+
+    $scope.setActiveOverviewTab = function(tab) {
+        return tab === $scope.current_overview_tab;
+    }
 };
 
 function processCensusData(name) {
