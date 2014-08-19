@@ -24,16 +24,13 @@ function OverviewController ($scope) {
   	$scope.marketarea.zones = JSON.parse($scope.marketarea.zones);
   	console.log('overview',acs_data);
 
-  	njmap.init('#new-market-svg',$scope.marketarea);
-  	overviewmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data.acs, overviewmap.draw);
+  	//njmap.init('#new-market-svg',$scope.marketarea);
+  	overviewmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data.acs, function() { overviewmap.draw(); overviewmap.color('age5_9'); });
   	ctppmap.init("#ctpp-svg", $scope.marketarea.zones)
 
-  	$scope.colorMap = function(v) {
-  		overviewmap.color(v)
+  	$scope.colorMap = function(category) {
+  		overviewmap.color(category)
   	}
-
-  	setTimeout(function() {overviewmap.color('age5_9')}, 2000);
-
 
   	$scope.active_category='Age Categories';
   	$scope.isActive = function(name){
@@ -42,14 +39,11 @@ function OverviewController ($scope) {
   		}
   		return false;
   	}
-  	// ng-class='isActive'
 
 	$scope.drawGraph = function(name, vars) {
 		$scope.active_category= name;
 
 		$scope.current_vars = vars;
-
-		//$scope.apply();
 
 	  	nv.addGraph(function(test){
 		  	var chart = nv.models.discreteBarChart()
@@ -82,12 +76,12 @@ function OverviewController ($scope) {
   	}
   	$scope.drawGraph($scope.active_category, acs_data.categories[$scope.active_category])
 
-    $scope.show_ctpp_data_pane_div = false;
 
-    $scope.clicked_ctpp_tab = function(bool) {
-        $scope.show_ctpp_data_pane_div = bool;
+    $scope.current_overview_tab = 'ACS';
+
+    $scope.setActiveOverviewTab = function(tab) {
+        return tab === $scope.current_overview_tab;
     }
-
 };
 
 function processCensusData(name) {

@@ -80,13 +80,13 @@
 <div class="tabbable tabs">
     <ul class="nav nav-tabs dem-tabs" id="myDataTab">
         <li class='active' >
-            <a  href="#acs" data-toggle="tab" ng-click="clicked_ctpp_tab(false)">ACS</a>
+            <a  href="#acs" data-toggle="tab" ng-click="current_overview_tab = 'ACS'">ACS</a>
         </li>
         <li   >
-            <a  href="#ctpp" data-toggle="tab" ng-click="clicked_ctpp_tab(true)">CTPP</a>
+            <a  href="#ctpp" data-toggle="tab" ng-click="current_overview_tab = 'CTPP'">CTPP</a>
         </li>
         <li  >
-            <a  href="#lodes" data-toggle="tab">LODES</a>
+            <a  href="#lodes" data-toggle="tab" ng-click="current_overview_tab = 'LODES'">LODES</a>
         </li>
     </ul>
     <div id="myDataTabContent" class="tab-content">
@@ -158,6 +158,12 @@
     }
     .dem-tabs li.active a{
         background-color: #ccc!important;
+    }
+    .acs-button {
+        fill: #d73027;
+    }
+    .acs-button-active {
+        fill: #1a9850;
     }
 </style>
 
