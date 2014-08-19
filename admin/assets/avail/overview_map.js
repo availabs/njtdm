@@ -145,7 +145,7 @@
 		})
 
 		domain.sort(function(a, b) { return a-b; });
-console.log(domain[domain.length-1])
+		
 		colorScale.domain([domain[0], domain[domain.length-1]]);
 
 		svg.selectAll('path')

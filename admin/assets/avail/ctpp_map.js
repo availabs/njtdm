@@ -80,6 +80,7 @@
 		svg.selectAll('path')
 			.data(MAtracts.features)
 			.enter().append('path')
+			.attr('id', function(d) { return 'tract-'+d.properties.geoid; })
 			.attr('class', 'ctpp-tract')
 			.attr('d', path)
 			.on('click', clicked);
@@ -154,7 +155,72 @@
         	row.append('td')
         		.text(map[d.properties.geoid] || 0);
         })
-        .on('click', clicked);
+        .on('click', clicked)
+        .on('mouseover', highlightTract)
+        .on('mouseout', unhighlightTract);
+	}
+
+	function highlightTract(d) {
+		var bounds = path.bounds(d);
+
+		var center = [(bounds[0][0]+bounds[1][0]) / 2, (bounds[0][1]+bounds[1][1]) / 2];
+
+		var w = bounds[1][0] - bounds[0][0],
+			h = bounds[1][1] - bounds[0][1];
+
+		var proj = d3.geo.albers()
+			.translate(projection.translate())
+			.scale(projection.scale()),
+
+			pth = d3.geo.path()
+				.projection(proj);
+
+		var min = 100;
+
+		var zoom = Math.max(2, Math.min(min / w, min / h));
+
+		var targetZoom = Math.round(projection.scale() * zoom),
+            translate = projection.translate(),
+            translate0 = [],
+            l = [],
+            view = {
+                x: translate[0],
+                y: translate[1],
+                k: projection.scale()
+            };
+
+        translate0 = [(center[0]-view.x)/view.k, (center[1]-view.y)/view.k];
+
+        view.k = targetZoom;
+
+        l = [translate0[0]*view.k+view.x, translate0[1]*view.k+view.y];
+
+        view.x += center[0]-l[0];
+        view.y += center[1]-l[1];
+
+        proj.scale(view.k)
+            .translate([view.x, view.y]);
+
+        var temp = svg.append('path')
+        	.datum(d)
+        	.attr('id', 'temp-'+d.properties.geoid)
+			.attr('class', 'ctpp-tract')
+			.style('fill', function(d) { console.log(d3.select('#tract-'+d.properties.geoid).style('fill'));return d3.select('#tract-'+d.properties.geoid).style('fill'); })
+			.attr('d', path)
+
+		temp
+			.transition()
+			.duration(500)
+			.attr('d', pth)
+			.style('fill', '#080')
+	}
+
+	function unhighlightTract(d) {
+		d3.select('#temp-'+d.properties.geoid)
+			.transition()
+			.duration(250)
+			.attr('d', path)
+			.each('end', function() { d3.select(this).remove(); })
 	}
 
 	function reset() {

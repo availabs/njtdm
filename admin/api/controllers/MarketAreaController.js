@@ -115,7 +115,7 @@ module.exports = {
     })
   },
   getCTPPstarts: function(req, res) {
-      var sql = "SELECT from_tract, count(*) as amount " +
+      var sql = "SELECT from_tract, sum(est) as amount " +
                 "FROM ctpp_34_2010_tracts " +
                 "GROUP BY from_tract";
 
@@ -166,7 +166,7 @@ module.exports = {
   },
 /****************/
   getLODESstarts: function(req, res) {
-      var sql = "SELECT h_geocode, count(*) as amount " +
+      var sql = "SELECT h_geocode, sum(s000) as amount " +
                 "FROM lodes_34_2010_tracts " +
                 "GROUP BY h_geocode";
 

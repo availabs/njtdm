@@ -16,7 +16,7 @@
         <h4 class="pull-right"><a class="btn btn-info" ng-click="downloadData('overview-table')"><i class="fa fa-download"></i>Download CSV</a></h4>
             <table class="table table-striped table-hover" id="overview-table">
                 <tr ng-repeat="var in current_vars">
-                    <td ng-click="colorMap(var)">{{census_vars[var].name}}</td>
+                    <td ng-click="colorMap(var)" >{{census_vars[var].name}}</td>
                     <td>{{census_vars[var].percent}}%</td>
                     <td>{{census_vars[var].value | number}}</td>
                 </tr>

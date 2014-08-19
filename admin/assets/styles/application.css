@@ -19613,3 +19613,7 @@ ol.text-list {
     max-height: 437px;
     overflow-y: auto;
 }
+
+.data-pane-active-category {
+    background-color: #f00;
+}
