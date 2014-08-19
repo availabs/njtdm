@@ -69,9 +69,11 @@
             draw(marketAreaTracts, 'ma12','market');
         });
         console.log(marketarea.routes);
-        // io.socket.post('/marketarea/'+marketarea.origin_gtfs+'/routes_geo',{route_id:marketarea.routes},function(routes){
-        //     console.log(routes);
-        // })
+        d3.json('/marketarea/'+marketarea.origin_gtfs+'/routes_geo')
+            .post(JSON.stringify({route:marketarea.routes}),function(error, routes){
+            //console.log('njmap route',data);
+            draw(routes, 'routes12','route');
+        })
 
        
     }

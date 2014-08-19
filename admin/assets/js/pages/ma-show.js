@@ -12,20 +12,12 @@ $(function(){
 });
 
 function OverviewController ($scope) {
-    $scope.datasources = {};
-
-    d3.json('/metaAcs/',function(data){
-      $scope.datasources['ACS'] = data;
-      $scope.source_id = 1;
-    });
-    d3.json('/metaCtpp/',function(data){
-      $scope.datasources['CTPP'] = data;
-    });
-    d3.json('/metaLodes/',function(data){
-      $scope.datasources['LODES'] = data;
-      console.log($scope.datasources);
-      $('#datasource_select').val("1");
-    });
+    
+    $scope.source_id = 1;
+    $scope.datasources = {};    
+    d3.json('/metaAcs/',function(data){ $scope.datasources['ACS'] = data; });
+    d3.json('/metaCtpp/',function(data){ $scope.datasources['CTPP'] = data; });
+    d3.json('/metaLodes/',function(data){ $scope.datasources['LODES'] = data; });
 
     $scope.census_vars = acs_data.census_vars;
   	$scope.census_categories = acs_data.categories;
@@ -38,9 +30,9 @@ function OverviewController ($scope) {
 
   	$scope.marketarea.routes = JSON.parse($scope.marketarea.routes);
   	$scope.marketarea.zones = JSON.parse($scope.marketarea.zones);
-  	console.log('overview',acs_data);
+  	//console.log('overview',acs_data);
 
-  	//njmap.init('#new-market-svg',$scope.marketarea);
+  	njmap.init('#new-market-svg',$scope.marketarea);
   	overviewmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data.acs, function() { overviewmap.draw(); overviewmap.color('total_population'); });
   	ctppmap.init("#ctpp-svg", $scope.marketarea.zones)
     lodesmap.init("#lodes-svg", $scope.marketarea.zones)
