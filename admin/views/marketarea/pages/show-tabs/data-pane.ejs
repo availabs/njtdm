@@ -1,23 +1,51 @@
-<section class="widget">
-    <header>
-        <h5>
-            <i class="fa fa-tasks"></i>
-            Data - {{active_category}}
-        </h5>
-        <div class="widget-controls">
-            <a title="Options" href="#"><i class="glyphicon glyphicon-cog"></i></a>
-            <a data-widgster="expand" title="Expand" href="#" style="display: none;"><i class="glyphicon glyphicon-plus"></i></a>
-            <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-minus"></i></a>
-            <a data-widgster="close" title="Close" href="#"><i class="glyphicon glyphicon-remove"></i></a>
+<section class="widget" id="overview-data-pane">
+    <div ng-hide="show_ctpp_data_pane_div">
+        <header>
+            <h5>
+                <i class="fa fa-tasks"></i>
+                Data - {{active_category}}
+            </h5>
+            <div class="widget-controls">
+                <a title="Options" href="#"><i class="glyphicon glyphicon-cog"></i></a>
+                <a data-widgster="expand" title="Expand" href="#" style="display: none;"><i class="glyphicon glyphicon-plus"></i></a>
+                <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-minus"></i></a>
+                <a data-widgster="close" title="Close" href="#"><i class="glyphicon glyphicon-remove"></i></a>
+            </div>
+        </header>
+        <div class="body">
+        <h4></h4>
+            <table class="table table-striped table-hover" id="overview-table">
+                <tr ng-repeat="var in current_vars">
+                    <td ng-click="colorMap(var)">{{census_vars[var].name}}</td>
+                    <td>{{census_vars[var].value}}</td>
+                </tr>
+            </table>
         </div>
-    </header>
-    <div class="body">
-    <h4></h4>
-        <table class="table table-striped table-hover" id="overview-table">
-            <tr ng-repeat="var in current_vars">
-                <td ng-click="colorMap(var)">{{census_vars[var].name}}</td>
-                <td>{{census_vars[var].value}}</td>
-            </tr>
-        </table>
-    </div>    
+    </div>
+
+    <div ng-show="show_ctpp_data_pane_div" id="ctpp-data-pane-div">
+        <header>
+            <h5>
+                <i class="fa fa-tasks"></i>
+                Data - CTPP
+            </h5>
+            <div class="widget-controls">
+                <a title="Options" href="#"><i class="glyphicon glyphicon-cog"></i></a>
+                <a data-widgster="expand" title="Expand" href="#" style="display: none;"><i class="glyphicon glyphicon-plus"></i></a>
+                <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-minus"></i></a>
+                <a data-widgster="close" title="Close" href="#"><i class="glyphicon glyphicon-remove"></i></a>
+            </div>
+        </header>
+        <div class="body">
+            <h4></h4>
+            <table class="table table-striped table-hover" id="ctpp-table">
+                <tbody>
+                </tbody>
+                <!--<tr ng-repeat="var in current_vars">
+                    <td ng-click="colorMap(var)">{{census_vars[var].name}}</td>
+                    <td>{{census_vars[var].value}}</td>
+                </tr>-->
+            </table>
+        </div>
+    </div>
 </section>

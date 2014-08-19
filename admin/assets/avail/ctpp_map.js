@@ -5,6 +5,10 @@
 		height,
 		width;
 
+	var margin = {top: 30};
+
+	var legendGroup;
+
 	var projection,
 		path;
 
@@ -14,16 +18,35 @@
 			features: []
 		};
 
-	var colorScale = d3.scale.quantize()
-		.range(["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
+	var colorRange = {
+		1: ["#ffffbf"].reverse(),
+		2: ["#fc8d59","#91bfdb"].reverse(),
+		3: ["#fc8d59","#ffffbf","#91bfdb"].reverse(),
+		4: ["#d7191c","#fdae61","#abd9e9","#2c7bb6"].reverse(),
+		5: ["#d7191c","#fdae61","#ffffbf","#abd9e9","#2c7bb6"].reverse(),
+		6: ["#d73027","#fc8d59","#fee090","#e0f3f8","#91bfdb","#4575b4"].reverse(),
+		7: ["#d73027","#fc8d59","#fee090","#ffffbf","#e0f3f8","#91bfdb","#4575b4"].reverse(),
+		8: ["#d73027","#f46d43","#fdae61","#fee090","#e0f3f8","#abd9e9","#74add1","#4575b4"].reverse(),
+		9: ["#d73027","#f46d43","#fdae61","#fee090","#ffffbf","#e0f3f8","#abd9e9","#74add1","#4575b4"].reverse(),
+		10: ["#a50026","#d73027","#f46d43","#fdae61","#fee090","#e0f3f8","#abd9e9","#74add1","#4575b4","#313695"].reverse(),
+		11: ["#a50026","#d73027","#f46d43","#fdae61","#fee090","#ffffbf","#e0f3f8","#abd9e9","#74add1","#4575b4","#313695"].reverse()
+	}
+
+	var colorScale = d3.scale.quantize();
+		//.range(["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
 
 	ctppmap.init = function(svgID, input_tracts) {
 		tractsGeoIDs = input_tracts;
 
-		svg = d3.select(svgID);
+		var temp = d3.select(svgID);
 
-		height = parseInt(svg.attr('height'));
-		width = parseInt(svg.attr('width'));
+		height = parseInt(temp.attr('height')) - margin.top;
+		width = parseInt(temp.attr('width'));
+
+		svg = temp.append('g')
+			.attr('transform', 'translate(0, '+margin.top+')');
+
+		legendGroup = temp.append('g');
 
 		svg.append('rect')
 			.attr('width', width)
@@ -62,17 +85,91 @@
 			.on('click', clicked);
 	}
 
+	function drawLegend() {
+		var legend = legendGroup.selectAll('g')
+			.data(colorScale.range());
+
+		var wdth = width / colorScale.range().length;
+
+		legend.exit().remove();
+
+		legend.enter().append('g');
+
+		legend
+			.attr('transform', function(d, i) {
+				return 'translate('+(i * wdth)+',0)';
+			})
+			.each(function(d) {
+				var group = d3.select(this),
+					format = d3.format('<,');
+
+				group.append('rect')
+					.attr('height', margin.top)
+					.attr('width', wdth)
+					.attr('fill', function(d) { return d; })
+
+				group.append('text')
+					.text(function(d) {
+						return format(Math.round(colorScale.invertExtent(d)[0]));
+					})
+					.attr('x', 5)
+					.attr('y', margin.top-5)
+					.style('fill', '#000')
+					.style('text-anchor', 'left');
+			})
+	}
+
+	function setColorScale(colorDomain) {
+
+		colorDomain.sort(function(a, b) { return a-b; })
+
+		colorScale.domain([colorDomain[0], colorDomain[colorDomain.length-1]]);
+
+        colorScale.range(colorRange[Math.min(11, colorDomain.length)]);
+
+	}
+
+	function populateCTPPtable(data, map) {
+		data.sort(function(a, b) {
+			var c = map[a.properties.geoid] || 0,
+				d = map[b.properties.geoid] || 0;
+
+			return d-c;
+		})
+        var rows = d3.select("#ctpp-table").select('tbody')
+        	.selectAll('tr').data(data);
+
+        rows.exit().remove();
+
+        rows.enter().append('tr');
+
+        rows.each(function(d, i) {
+        	var row = d3.select(this);
+
+        	row.selectAll('*').remove();
+
+        	row.append('td')
+        		.text(d.properties.geoid);
+
+        	row.append('td')
+        		.text(map[d.properties.geoid] || 0);
+        })
+        .on('click', clicked);
+	}
+
 	function reset() {
 		d3.json('/marketarea/2/ctpp_start_data', function(error, data) {
 
 			var colorDomain = [];
 
-			MAtracts.features.forEach(function(d, i) {
+            MAtracts.features.forEach(function(d, i) {
                 MAtracts.features[i].properties.numTrips = data[d.properties.geoid] || 0;
-                colorDomain.push(data[d.properties.geoid] || 0);
+                pushUnique(colorDomain, data[d.properties.geoid] || 0);
             })
 
-            colorScale.domain(d3.extent(colorDomain));
+            populateCTPPtable(MAtracts.features, data);
+
+            setColorScale(colorDomain)
 
 			svg.selectAll('path')
 				.classed('ctpp-tract-active', false)
@@ -82,10 +179,22 @@
 					}
 					return colorScale(d.properties.numTrips);
 				})
+
+			drawLegend();
+
+			clickedTract = null;
 		})
 	}
 
+	var clickedTract = null;
+
 	function clicked(d) {
+		if (d.properties.numTrips === 0 || d === clickedTract) {
+			reset();
+			return;
+		}
+		clickedTract = d;
+
 		var tracts = svg.selectAll('path')
 			.style('fill', null)
 			.classed('ctpp-tract-active', false);
@@ -95,18 +204,33 @@
 
 		d3.json('/marketarea/'+d.properties.geoid+'/ctpp_travel_data', function(error, data) {
 			var toTracts = {},
-				domain = [];
+				colorDomain = [];
 
-			data.forEach(function(d2) {
-				domain.push(d2.est);
-				toTracts[d2.geoid] = d2.est;
+            var tableData = [];
+				
+			data.forEach(function(d) {
+				pushUnique(colorDomain, d.est);
+				toTracts[d.geoid] = d.est;
+
+				obj = {properties: {geoid: d.geoid}}
+				tableData.push(obj);
 			})
 
-			colorScale.domain(d3.extent(domain));
+            setColorScale(colorDomain)
 
-			tracts.filter(function(d2) { return (d2.properties.geoid in toTracts); })
-				.style('fill', function(d) { return colorScale(toTracts[d.properties.geoid]); });
+			tracts.filter(function(d) { return (d.properties.geoid in toTracts); })
+				.style('fill', function(d) { return colorScale(toTracts[d.properties.geoid]); })
+
+			populateCTPPtable(tableData, toTracts);
+
+			drawLegend();
 		})
+	}
+
+	function pushUnique(array, value) {
+		if (array.indexOf(value) === -1 && value !== 0) {
+			array.push(value);
+		}
 	}
 
     function zoomToBounds(collection) {

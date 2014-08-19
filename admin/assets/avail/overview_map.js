@@ -5,6 +5,10 @@
 		height,
 		width;
 
+	var margin = {top: 30};
+
+	var legendGroup;
+
 	var projection,
 		path;
 
@@ -23,10 +27,15 @@
 		tractsGeoIDs = input_tracts;
 		ACSdata = acs_data;
 
-		svg = d3.select(svgID);
+		var temp = d3.select(svgID);
 
-		height = parseInt(svg.attr('height'));
-		width = parseInt(svg.attr('width'));
+		height = parseInt(temp.attr('height')) - margin.top;
+		width = parseInt(temp.attr('width'));
+
+		svg = temp.append('g')
+			.attr('transform', 'translate(0, '+margin.top+')');
+
+		legendGroup = temp.append('g');
 
 		projection = d3.geo.albers()
 			.translate([width/2, height/2]);
@@ -72,6 +81,42 @@
 			.classed('ma-active', true)
 			.style('fill', function(d) {
 				return colorScale(ACSdata[d.properties.geoid][category]);
+			})
+
+		drawLegend();
+	}
+
+	function drawLegend() {
+		var legend = legendGroup.selectAll('g')
+			.data(colorScale.range());
+
+		var wdth = width / colorScale.range().length;
+
+		legend.exit().remove();
+
+		legend.enter().append('g');
+
+		legend
+			.attr('transform', function(d, i) {
+				return 'translate('+(i * wdth)+',0)';
+			})
+			.each(function(d) {
+				var group = d3.select(this),
+					format = d3.format('<,');
+
+				group.append('rect')
+					.attr('height', margin.top)
+					.attr('width', wdth)
+					.attr('fill', function(d) { return d; })
+
+				group.append('text')
+					.text(function(d) {
+						return format(Math.round(colorScale.invertExtent(d)[0]));
+					})
+					.attr('x', 5)
+					.attr('y', margin.top-5)
+					.style('fill', '#000')
+					.style('text-anchor', 'left');
 			})
 	}
 

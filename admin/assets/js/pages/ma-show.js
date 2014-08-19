@@ -82,6 +82,12 @@ function OverviewController ($scope) {
   	}
   	$scope.drawGraph($scope.active_category, acs_data.categories[$scope.active_category])
 
+    $scope.show_ctpp_data_pane_div = false;
+
+    $scope.clicked_ctpp_tab = function(bool) {
+        $scope.show_ctpp_data_pane_div = bool;
+    }
+
 };
 
 function processCensusData(name) {

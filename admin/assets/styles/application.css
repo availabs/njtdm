@@ -19608,3 +19608,8 @@ ol.text-list {
 .ma-toggle{
   border-left:2px solid blue;
 }
+
+#overview-data-pane {
+    max-height: 437px;
+    overflow-y: auto;
+}
