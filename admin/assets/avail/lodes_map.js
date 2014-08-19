@@ -80,6 +80,7 @@
 		svg.selectAll('path')
 			.data(MAtracts.features)
 			.enter().append('path')
+			.attr('id', function(d) { return 'tract-'+d.properties.geoid; })
 			.attr('class', 'ctpp-tract')
 			.attr('d', path)
 			.on('click', clicked);

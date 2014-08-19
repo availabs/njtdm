@@ -19615,3 +19615,8 @@ ol.text-list {
     margin-right:-10px;
 }
 .on {border:2px #e74c3c solid;}
+}
+
+.data-pane-active-category {
+    background-color: #f00;
+}
