@@ -201,11 +201,11 @@
         proj.scale(view.k)
             .translate([view.x, view.y]);
 
-        var temp = svg.append('path')
-        	.datum(d)
+        var temp = svg.selectAll('#temp-'+d.properties.geoid)
+        	.data([d]).enter().append('path')
         	.attr('id', 'temp-'+d.properties.geoid)
 			.attr('class', 'ctpp-tract')
-			.style('fill', function(d) { console.log(d3.select('#tract-'+d.properties.geoid).style('fill'));return d3.select('#tract-'+d.properties.geoid).style('fill'); })
+			.style('fill', function(d) { return d3.select('#tract-'+d.properties.geoid).style('fill'); })
 			.attr('d', path)
 
 		temp
