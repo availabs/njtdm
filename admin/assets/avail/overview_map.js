@@ -19,26 +19,45 @@
 		},
 		tractsAreas = {};
 
-	var currentCategory;
+	var currentGroup,
+		currentCategory;
 
-	var ACSdata;
+	var ACSdata,
+		ACSgroups,
+		categoryNames = {};
 
 	var dataDomain = {
 		byCount: true,
 		byDensity: false
 	}
 
+	var popup;
+
 	var colorScale = d3.scale.quantize()
 		.range(["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
 
 	overviewmap.init = function(svgID, input_tracts, acs_data, callback) {
 		tractsGeoIDs = input_tracts;
-		ACSdata = acs_data;
+
+		ACSdata = acs_data.acs;
+		ACSgroups = acs_data.categories;
+
+		for (var key in acs_data.census_vars) {
+			categoryNames[key] = acs_data.census_vars[key].name;
+		}
 
 		var temp = d3.select(svgID);
 
 		height = parseInt(temp.attr('height')) - margin.top;
 		width = parseInt(temp.attr('width'));
+
+		popup = d3.select('#map')
+			.append('div')
+			.attr('id', 'overview-popup')
+
+		popup.append('table')
+			.attr('class', 'table table-striped')
+			.append('tbody')
 
 		svg = temp.append('g')
 			.attr('transform', 'translate(0, '+margin.top+')');
@@ -61,8 +80,67 @@
 
 			callback();
         })
+	}
 
-		console.log('finished initializing overview map');
+	function showPopup(d) {
+		var rows = popup.select('table').select('tbody')
+			.selectAll('tr')
+			.data(ACSgroups[currentGroup])
+
+		rows.exit().remove();
+
+		rows.enter().append('tr');
+
+		rows.each(function(cat) {
+			var row = d3.select(this);
+
+			row.selectAll('*').remove();
+
+			row.append('td')
+				.text(categoryNames[cat])
+
+			row.append('td')
+				.text(ACSdata[d.properties.geoid][cat])
+		})
+
+		popup.style('display', 'block')
+	}
+
+	function movePopup() {
+		var centroid = d3.mouse(document.getElementById('map')),
+			x = centroid[0],
+			y = centroid[1];
+
+		var el = popup.node(),
+			wdth = el.offsetWidth,
+			hght = el.offsetHeight;
+
+		var position = {
+			right: 'auto',
+			left: 'auto',
+			top: 'auto',
+			bottom: 'auto'
+		}
+
+		if (x + wdth > width) {
+			position.left = (x-wdth-10)+'px';
+		}
+		else {
+			position.left = (x+10)+'px';
+		}
+
+		if (y + hght > height) {
+			position.top = (y-hght-10)+'px';
+		}
+		else {
+			position.top = (y+10)+'px';
+		}
+
+		popup.style(position)
+	}
+
+	function hidePopup() {
+		popup.style('display', 'none')
 	}
 
 	overviewmap.draw = function() {
@@ -72,7 +150,10 @@
 			.data(MAtracts.features)
 			.enter().append('path')
 			.attr('class', 'ma-tract')
-			.attr('d', path);
+			.attr('d', path)
+			.on('mouseover', showPopup)
+			.on('mousemove', movePopup)
+			.on('mouseout', hidePopup);
 
 		var buttonWidth = 75,
 			buttonHeight = 30;
@@ -84,13 +165,12 @@
 				g.append('rect')
 					.attr('id', 'acs-button-byCount')
 					.attr('class', 'acs-button')
-					.attr('x', 10)
 					.attr('y', 10)
 					.attr('width', buttonWidth)
 					.attr('height', buttonHeight);
 
 				g.append('text')
-					.attr('x', 10 + buttonWidth/2)
+					.attr('x', buttonWidth/2)
 					.attr('y', 10 + buttonHeight/2)
 					.text('By Count')
 					.style('fill', '#00')
@@ -104,13 +184,13 @@
 				g.append('rect')
 					.attr('id', 'acs-button-byDensity')
 					.attr('class', 'acs-button')
-					.attr('x', 10)
+					//.attr('x', 10)
 					.attr('y', 40)
 					.attr('width', buttonWidth)
 					.attr('height', buttonHeight);
 
 				g.append('text')
-					.attr('x', 10 + buttonWidth/2)
+					.attr('x', buttonWidth/2)
 					.attr('y', 10 + buttonHeight + buttonHeight/2)
 					.text('By Density')
 					.style('fill', '#00')
@@ -130,8 +210,9 @@
 		overviewmap.color(currentCategory);
 	}
 
-	overviewmap.color = function(category) {
+	overviewmap.color = function(category, group) {
 		currentCategory = category;
+		currentGroup = group;
 
 		var domain = [];
 
