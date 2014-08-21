@@ -107,13 +107,16 @@
 	}
 
 	function movePopup() {
-		var centroid = d3.mouse(document.getElementById('map')),
-			x = centroid[0],
-			y = centroid[1];
+		var //centroid = d3.event,
+			x = d3.event.x,//centroid[0],
+			y = d3.event.y;//centroid[1];
 
 		var el = popup.node(),
 			wdth = el.offsetWidth,
 			hght = el.offsetHeight;
+
+		var width = window.innerWidth,
+			height = window.innerHeight;
 
 		var position = {
 			right: 'auto',
