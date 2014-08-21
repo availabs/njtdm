@@ -56,7 +56,7 @@
 			.attr('id', 'overview-popup')
 
 		popup.append('table')
-			.attr('class', 'table table-striped')
+			.attr('class', 'table table-striped table-condensed')
 			.append('tbody')
 
 		svg = temp.append('g')
