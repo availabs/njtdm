@@ -207,7 +207,7 @@
 			d3.select('#acs-button-'+key).classed('acs-button-active', data[key]);
 		}
 
-		overviewmap.color(currentCategory);
+		overviewmap.color(currentCategory, currentGroup);
 	}
 
 	overviewmap.color = function(category, group) {
