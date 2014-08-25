@@ -36,7 +36,7 @@ I looked at it and I am not sure why it is running.
 Its init function runs but I don't use it afterwards.
 You should check and see if it is needed and just not use it if it isn't.
 */
-  	//njmap.init('#new-market-svg',$scope.marketarea);
+  	njmap.init('#new-market-svg',$scope.marketarea);
 
 
     $scope.active_category='Vehicles Available';
