@@ -83,6 +83,9 @@
 	}
 
 	function showPopup(d) {
+		var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[d.properties.geoid][cat]; }).reduce(function(p, c) { return p+c; }, 0),
+			format = d3.format('>,.1%');
+
 		var rows = popup.select('table').select('tbody')
 			.selectAll('tr')
 			.data(ACSgroups[currentGroup])
@@ -97,19 +100,21 @@
 			row.selectAll('*').remove();
 
 			row.append('td')
-				.text(categoryNames[cat])
+				.text(categoryNames[cat]);
 
 			row.append('td')
-				.text(ACSdata[d.properties.geoid][cat])
+				.text(format(ACSdata[d.properties.geoid][cat]/tractTotal));
+
+			row.append('td')
+				.text(ACSdata[d.properties.geoid][cat]);
 		})
 
 		popup.style('display', 'block')
 	}
 
 	function movePopup() {
-		var //centroid = d3.event,
-			x = d3.event.x,//centroid[0],
-			y = d3.event.y;//centroid[1];
+		var x = d3.event.x,
+			y = d3.event.y;
 
 		var el = popup.node(),
 			wdth = el.offsetWidth,
@@ -161,53 +166,43 @@
 		var buttonWidth = 75,
 			buttonHeight = 30;
 
-		svg.append('g')
-			.datum({ byCount: true, byDensity: false })
+		var data = [
+			{text: 'By Count', domain: { byCount: true, byDensity: false, byPercent: false }, id: 'byCount'},
+			{text: 'By Density', domain: { byCount: false, byDensity: true, byPercent: false }, id: 'byDensity'},
+			{text: 'By Percent', domain: { byCount: false, byDensity: false, byPercent: true }, id: 'byPercent'}
+		]
+
+		svg.selectAll('#acs-button-group')
+			.data(data)
+			.enter().append('g')
+			.attr('id', function(d) { return 'acs-button-group-'+d.id; })
 			.on('click', toggleDataDomain)
-			.call(function(g) {
+			.each(function(d, i) {
+				var g = d3.select(this);
+
 				g.append('rect')
-					.attr('id', 'acs-button-byCount')
+					.attr('id', function() { return 'acs-button-'+d.id; })
 					.attr('class', 'acs-button')
-					.attr('y', 10)
+					.attr('y', function() { return 10 + buttonHeight*i; })
 					.attr('width', buttonWidth)
 					.attr('height', buttonHeight);
 
 				g.append('text')
 					.attr('x', buttonWidth/2)
-					.attr('y', 10 + buttonHeight/2)
-					.text('By Count')
-					.style('fill', '#00')
+					.attr('y', function() { return 10 + buttonHeight*i + buttonHeight/2; })
+					.text(function() { return d.text; })
+					//.style('fill', '#000')
 					.style('text-anchor', 'middle');
 			})
 
-		svg.append('g')
-			.datum({ byCount: false, byDensity: true })
-			.on('click', toggleDataDomain)
-			.call(function(g) {
-				g.append('rect')
-					.attr('id', 'acs-button-byDensity')
-					.attr('class', 'acs-button')
-					//.attr('x', 10)
-					.attr('y', 40)
-					.attr('width', buttonWidth)
-					.attr('height', buttonHeight);
-
-				g.append('text')
-					.attr('x', buttonWidth/2)
-					.attr('y', 10 + buttonHeight + buttonHeight/2)
-					.text('By Density')
-					.style('fill', '#00')
-					.style('text-anchor', 'middle');
-			})
-
-		toggleDataDomain({ byCount: true, byDensity: false });
+		d3.select('#acs-button-group-byCount').each(toggleDataDomain);
 	}
 
 	function toggleDataDomain(data) {
-		dataDomain = data;
+		dataDomain = data.domain;
 
-		for (var key in data) {
-			d3.select('#acs-button-'+key).classed('acs-button-active', data[key]);
+		for (var key in dataDomain) {
+			d3.select('#acs-button-'+key).classed('acs-button-active', dataDomain[key]);
 		}
 
 		overviewmap.color(currentCategory, currentGroup);
@@ -217,7 +212,8 @@
 		currentCategory = category;
 		currentGroup = group;
 
-		var domain = [];
+		var domain = [],
+			domainMap = {};
 
 		tractsGeoIDs.forEach(function(geoid) {
 			var value = +ACSdata[geoid][category];
@@ -225,9 +221,23 @@
 			if (dataDomain.byDensity) {
 				value /= tractsAreas[geoid];
 			}
-			domain.push(value);
-		})
+			else if (dataDomain.byPercent) {
+				var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[geoid][cat]; }).reduce(function(p, c) { return p+c; }, 0);
 
+				if (tractTotal === 0) {
+					value = 0;
+				}
+				else {
+					value = (value/tractTotal)*100;
+				}
+			}
+
+			if (!(value in domainMap)) {
+				domain.push(value);
+			}
+
+			domainMap[value] = true;
+		})
 		domain.sort(function(a, b) { return a-b; });
 		colorScale.domain([domain[0], domain[domain.length-1]]);
 
@@ -236,6 +246,10 @@
 			.style('fill', function(d) {
 				if (dataDomain.byDensity) {
 					return colorScale(ACSdata[d.properties.geoid][category]/tractsAreas[d.properties.geoid]);
+				}
+				else if (dataDomain.byPercent) {
+					var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[d.properties.geoid][cat]; }).reduce(function(p, c) { return p+c; }, 0);
+					return colorScale(ACSdata[d.properties.geoid][category]/tractTotal*100);
 				}
 				return colorScale(ACSdata[d.properties.geoid][category]);
 			})
