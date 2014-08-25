@@ -31,7 +31,8 @@ function OverviewController ($scope) {
   	$scope.marketarea.routes = JSON.parse($scope.marketarea.routes);
   	$scope.marketarea.zones = JSON.parse($scope.marketarea.zones);
 
-/* for some reason it is the njmap in the marketarea_map.js module that is causing problems.
+/*
+For some reason it is the njmap in the marketarea_map.js module that is causing problems.
 I looked at it and I am not sure why it is running.
 Its init function runs but I don't use it afterwards.
 You should check and see if it is needed and just not use it if it isn't.
