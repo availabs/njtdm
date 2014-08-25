@@ -292,6 +292,7 @@
 	}
 
     function zoomToBounds(collection) {
+    	console.log('zoom to bounds now')
         var bounds = path.bounds(collection),
             wdth = bounds[1][0] - bounds[0][0],
             hght = bounds[1][1] - bounds[0][1],
