@@ -149,6 +149,10 @@
 
 <script type="text/javascript" src="/avail/overview_map.js"></script>
 <style>
+    #map {
+        position: relative;
+    }
+
     .ma-tract {
         fill: #080;
         fill-opacity: 0.5;
@@ -170,6 +174,15 @@
     }
     .acs-button-active {
         fill: #1a9850;
+    }
+
+    #overview-popup {
+        background: #fff;
+        position: fixed;
+        display: none;
+        border: 5px solid #080;
+        width: 250px;
+        z-index: 20;
     }
 </style>
 
