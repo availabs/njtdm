@@ -71,7 +71,11 @@
         console.log(marketarea.routes);
         d3.json('/marketarea/'+marketarea.origin_gtfs+'/routes_geo')
             .post(JSON.stringify({route:marketarea.routes}),function(error, routes){
-            //console.log('njmap route',data);
+            console.log('njmap route',routes);
+            routes.features.forEach(function(feature){
+                feature.geometry.type ="LineString";
+                feature.geometry.coordinates = feature.geometry.coordinates[0];
+            })
             draw(routes, 'routes12','route');
         })
 
@@ -167,7 +171,7 @@
 
         paths.exit().remove();
 
-        d3.selectAll('path').attr('d', path)
+        d3.selectAll('.'+type+' path').attr('d', path)
     }
 
     njmap.removeRoute = function(routeID) {

@@ -16,8 +16,13 @@ $handles = Array( 'sf1' =>Array('P0010001','P0030002','P0030003','P0030005'),
                 'acs5' => Array('B23025_001E','B23025_002E','B08006_001E','B08006_002E','B08006_003E','B08006_004E','B08006_008E'));
 
 $count = 0;
+pg_close($inscon);
+$conn_string = "host=".$argv[1]." port=".$argv[2]." dbname=".$argv[3]." user=".$argv[4]." password=".$argv[5];
+$inscon = pg_connect($conn_string);
+
 while($row = pg_fetch_array($rs)){
 
+    print "in row"; 
     $properties = array();
     $feature = array();
     $geometry = array();
@@ -49,7 +54,7 @@ while($row = pg_fetch_array($rs)){
 	    $source= 1;
 	    $vars = implode(",",$var_sets[$x]);
 	    $jURL = 'http://api.census.gov/data/2011/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
-	    //echo $jURL;
+	    //print $jURL;
       $cdata = curl_download($jURL);
 	    $foo =  utf8_encode($cdata); 
 	    $cdata = json_decode($foo, true);
@@ -64,13 +69,13 @@ while($row = pg_fetch_array($rs)){
   $columns = rtrim($columns, ",").")";
   $values = rtrim($values, ",").")";
   if($count == 0){
-    echo "$columns<br>";
+    print "$columns<br>";
   }
-  echo "$values<br>";
+  print "$values<br>";
 	
   $count++;
 }
-//echo json_encode($output);
+//print json_encode($output);
 
 
 function curl_download($Url){
@@ -88,6 +93,11 @@ function curl_download($Url){
 
     return $output;
 }
+
+function create_table($start,$sum,$variables){
+
+}
+
 
 
 ?>
