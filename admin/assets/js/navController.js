@@ -3,7 +3,7 @@ function headerController($scope) {
 	$scope.current_jobs =[];
 	io.socket.on('connect',function(){
 	    io.socket.get('/job',{"where": {"isFinished":false}},function(data){ 
-	        //console.log('Jobs :',data.length);
+	        console.log('Jobs :',data.length);
 	        $scope.current_jobs = data;
 	        $scope.$apply(); 
 	    });

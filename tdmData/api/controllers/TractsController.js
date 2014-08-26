@@ -295,11 +295,11 @@ generateTrips : function(req,res){
 								// regressionRiders += req.param('cenData')[tract.home_tract].information*-0.787;
 
 
-								regressionRiders =  req.param('cenData')[tract.home_tract].car_0* 0.5432931;
-								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.1331132;
-								regressionRiders += req.param('cenData')[tract.home_tract].information*-0.7130553;
-								regressionRiders += req.param('cenData')[tract.home_tract].employment_density*-.000000000085064;
-
+								regressionRiders =  req.param('cenData')[tract.home_tract].car_0* 0.5438445;
+								regressionRiders += req.param('cenData')[tract.home_tract].car_1*0.135101;
+								regressionRiders += req.param('cenData')[tract.home_tract].information*-0.7550878;
+								regressionRiders += req.param('cenData')[tract.home_tract].employment_density*0.01220453;
+								console.log('ac reg')
 								///console.log('rr',regressionRiders);
 							}else if(marketArea == 1){
 								regressionRiders = -0.04630396+req.param('cenData')[tract.home_tract].car_0* 0.2751065;
