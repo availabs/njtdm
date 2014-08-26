@@ -20,7 +20,7 @@
 		tractFeatures = {};
 
 	var colorRange = {
-		1: ["#ffffbf"].reverse(),
+		1: ["#ffffbf"],
 		2: ["#fc8d59","#91bfdb"].reverse(),
 		3: ["#fc8d59","#ffffbf","#91bfdb"].reverse(),
 		4: ["#d7191c","#fdae61","#abd9e9","#2c7bb6"].reverse(),

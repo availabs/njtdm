@@ -171,7 +171,7 @@ function maNewController($scope){
         d3.json(route, function(error, data) {
             // data = topojson.feature(data, data.objects.states);
 
-            console.log('get routes data',data);
+            //console.log('get routes data',data);
             findIntersectingMarketAreas(data, routeID);
 
             draw(data, 'route-'+routeID, 'route');
@@ -179,7 +179,7 @@ function maNewController($scope){
             var b = d3.geo.bounds(marketAreaTracts);
             var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
 
-            console.log('get route collisions',marketAreaTractsList);
+            //console.log('get route collisions',marketAreaTractsList);
 
             cb(marketAreaTractsList,center);
         })
