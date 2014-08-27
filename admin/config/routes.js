@@ -44,6 +44,7 @@ module.exports.routes = {
   '/marketarea/:id/ctpp_travel_data': 'MarketAreaController.getCTPPends',
   '/marketarea/:id/lodes_start_data': 'MarketAreaController.getLODESstarts',
   '/marketarea/:id/lodes_travel_data': 'MarketAreaController.getLODESends',
+  '/marketarea/:id/ma_route_data': 'MarketAreaController.getAllMARoutes',
 
   //---------------------------------
   // Users Guide Pages

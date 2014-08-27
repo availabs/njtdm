@@ -19,45 +19,46 @@ var shaper = require("mapshaper");
 //var queue = require("queue-async");
 module.exports = {
     
-  routes: function(req,res){
-
-	if (!req.param('routes') instanceof Array) {
-		res.send('Must post Array of 11 digit fips codes to tracts');
-	}
-	var routes_in = "(";
-	req.param('routes').forEach(function(tract){
-		routes_in += "'"+tract+"',";
-	});
-	routes_in = routes_in.slice(0, -1)+")";
-	var routesCollection = {};
-	routesCollection.type = "FeatureCollection";
-	routesCollection.features = [];
-	var sql = 'select ST_AsGeoJSON(geom) as route_shape,route_id,route_short_name,route_long_name,route_color from "njtransit_bus_07-12-2013".routes where route_short_name in '+routes_in;
-	Gtfs.query(sql,{},function(err,data){
-		if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
-      data.rows.forEach(function(route){
-      	 	
-			var routeFeature = {};
-			routeFeature.type="Feature";
-			routeFeature.geometry = JSON.parse(route.route_shape);
-			routeFeature.properties = {};
-			routeFeature.properties.route_id = route.route_id;
-			routeFeature.properties.route_short_name = route.route_short_name;
-			routeFeature.properties.route_long_name = route.route_long_name;
-			routeFeature.properties.route_color = route.route_color;
-			routesCollection.features.push(routeFeature);
+  	routes: function(req,res){
+		if (!req.param('routes') instanceof Array) {
+			res.send({code: 500, error: 'Must post Array of 11 digit fips codes to tracts'}, 500);
+			return;
+		}
+		var routes_in = "(";
+		req.param('routes').forEach(function(tract){
+			routes_in += "'"+tract+"',";
 		});
+		routes_in = routes_in.slice(0, -1)+")";
+		var routesCollection = {};
+		routesCollection.type = "FeatureCollection";
+		routesCollection.features = [];
+		var sql = 'SELECT ST_AsGeoJSON(geom) AS route_shape,route_id,route_short_name,route_long_name,route_color '+
+			      'FROM "njtransit_bus_07-12-2013".routes '+
+			      'WHERE route_short_name IN '+routes_in;
+		Gtfs.query(sql,{},function(err,data){
+			if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
+	      data.rows.forEach(function(route){
+	      	 	
+				var routeFeature = {};
+				routeFeature.type="Feature";
+				routeFeature.geometry = JSON.parse(route.route_shape);
+				routeFeature.properties = {};
+				routeFeature.properties.route_id = route.route_id;
+				routeFeature.properties.route_short_name = route.route_short_name;
+				routeFeature.properties.route_long_name = route.route_long_name;
+				routeFeature.properties.route_color = route.route_color;
+				routesCollection.features.push(routeFeature);
+			});
 
-		var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
-																	 "quantization": 1e6});
-		topology = topojson.simplify(topology, {"minimum-area":7e-6,
-												"coordinate-system":"cartesian"});
-		//var output = {};
-		//output.routes = topology;//topojson.simplify(topology,{"minimum-area": 2,"coordinate-system": "spherical"});
-		//console.log('old routes', topology);
-		res.send(topology);
-	});
-
+			var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
+																		 "quantization": 1e6});
+			topology = topojson.simplify(topology, {"minimum-area":7e-6,
+													"coordinate-system":"cartesian"});
+			//var output = {};
+			//output.routes = topology;//topojson.simplify(topology,{"minimum-area": 2,"coordinate-system": "spherical"});
+			//console.log('old routes', topology);
+			res.send(topology);
+		});
 	},
 	cached_routes: function(req,res){
 		console.log('ROUTES INIT');

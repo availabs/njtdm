@@ -4,6 +4,9 @@
  * @description :: Server-side logic for managing marketareas
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
+
+var topojson = require("topojson");
+
 function getNavData(cb){
   MarketArea.find().exec(function(err,ma){
     if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
@@ -85,7 +88,7 @@ module.exports = {
                   }else{
                     sql += "WHERE route_id = '" + route_id + "'";
                   }
-        //console.log('getRouteGeo SQL',sql);     
+
         MetaGtfs.query(sql,{},function(err,data){
             if (err) {
                 res.send('{status:"error",message:"'+err+'"}',500);
@@ -110,10 +113,67 @@ module.exports = {
             });
 
             res.send(routesCollection);
-            //console.log("??? ok route geo",routesCollection.features.length)
         });
     })
   },
+
+  getAllMARoutes: function(req,res) {
+      var gtfs_id = req.param('id'),
+          shortNames = req.param('routes');
+
+      var routes_in = "(";
+      shortNames.forEach(function(tract){
+          routes_in += "'"+tract+"',";
+      });
+      routes_in = routes_in.slice(0, -1)+")";
+
+      var routesCollection = {
+        type: "FeatureCollection",
+        features: []
+      };
+
+      MetaGtfs.findOne(gtfs_id).exec(function(err, mgtfs){
+
+          var sql = 'SELECT ST_AsGeoJSON(geom) AS route_shape,route_id,route_short_name '+
+                    'FROM '+mgtfs.tableName+'.routes '+
+                    'WHERE route_short_name IN '+routes_in;
+
+          MetaGtfs.query(sql,{},function(err,data){
+              if (err) {
+                  res.send({ status:500, error: err }, 500);
+                  return console.log(err);
+              }
+
+              data.rows.forEach(function(route){
+                  var routeFeature = {};
+                  routeFeature.type="Feature";
+                  routeFeature.geometry = JSON.parse(route.route_shape);
+
+                  routeFeature.geometry.type = 'LineString';
+                  routeFeature.geometry.coordinates = routeFeature.geometry.coordinates.reduce(function(a, b) { return a.length > b.lemgth ? a : b; }, []);
+
+                  routeFeature.properties = {};
+                  routeFeature.properties.route_id = route.route_id;
+                  routeFeature.properties.route_short_name = route.route_short_name;
+                  routeFeature.properties.route_long_name = route.route_long_name;
+                  routeFeature.properties.route_color = route.route_color;
+
+                  routesCollection.features.push(routeFeature);
+              });
+
+              var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
+                                             "quantization": 1e6});
+              topology = topojson.simplify(topology, {"minimum-area":7e-6,
+                                  "coordinate-system":"cartesian"});
+
+              res.send(topology);
+          });
+      })
+      function preserveProperties(p, k, v) {
+          p[k] = v;
+      }
+  },
+
   getCTPPstarts: function(req, res) {
       var sql = "SELECT from_tract, sum(est) as amount " +
                 "FROM ctpp_34_2010_tracts " +
@@ -215,6 +275,7 @@ module.exports = {
       })
   },
 /*****************/
+
   show:function(req,res){
     var cenData = 'acs5_34_2011_tracts';
     //Allow user to specify census table

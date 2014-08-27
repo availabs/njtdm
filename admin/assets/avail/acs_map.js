@@ -1,5 +1,5 @@
 (function() {
-	var overviewmap = {};
+	var acsmap = {};
 
 	var svg,
 		height,
@@ -36,7 +36,7 @@
 	var colorScale = d3.scale.quantize()
 		.range(["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
 
-	overviewmap.init = function(svgID, input_tracts, acs_data, callback) {
+	acsmap.init = function(svgID, input_tracts, acs_data, callback) {
 		tractsGeoIDs = input_tracts;
 
 		ACSdata = acs_data.acs;
@@ -151,7 +151,7 @@
 		popup.style('display', 'none')
 	}
 
-	overviewmap.draw = function() {
+	acsmap.draw = function() {
 		zoomToBounds(MAtracts);
 
 		svg.selectAll('path')
@@ -205,10 +205,10 @@
 			d3.select('#acs-button-'+key).classed('acs-button-active', dataDomain[key]);
 		}
 
-		overviewmap.color(currentCategory, currentGroup);
+		acsmap.color(currentCategory, currentGroup);
 	}
 
-	overviewmap.color = function(category, group) {
+	acsmap.color = function(category, group) {
 		currentCategory = category;
 		currentGroup = group;
 
@@ -309,5 +309,5 @@
                              translate[1] - centroid[1] + height / 2]);
     }
 
-	this.overviewmap = overviewmap;
+	this.acsmap = acsmap;
 })()

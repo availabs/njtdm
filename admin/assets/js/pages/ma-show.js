@@ -31,14 +31,7 @@ function OverviewController ($scope) {
   	$scope.marketarea.routes = JSON.parse($scope.marketarea.routes);
   	$scope.marketarea.zones = JSON.parse($scope.marketarea.zones);
 
-/*
-For some reason it is the njmap in the marketarea_map.js module that is causing problems.
-I looked at it and I am not sure why it is running.
-Its init function runs but I don't use it afterwards.
-You should check and see if it is needed and just not use it if it isn't.
-*/
-  	njmap.init('#new-market-svg',$scope.marketarea);
-
+  	editmap.init('#new-market-svg',$scope.marketarea);
 
     $scope.active_category='Vehicles Available';
     $scope.isActive = function(name){
@@ -48,17 +41,17 @@ You should check and see if it is needed and just not use it if it isn't.
       return false;
     }
 
-  	overviewmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data, function() { overviewmap.draw(); overviewmap.color('total_population', $scope.active_category); });
-  	ctppmap.init("#ctpp-svg", $scope.marketarea.zones)
-    lodesmap.init("#lodes-svg", $scope.marketarea.zones)
+  	acsmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data, function() { acsmap.draw(); acsmap.color(acs_data.categories[$scope.active_category][0], $scope.active_category); });
+  	ctppmap.init("#ctpp-svg", $scope.marketarea.zones);
+    lodesmap.init("#lodes-svg", $scope.marketarea.zones);
 
     $scope.colorMap = function(category) {
       $scope.current_map_variable = category;
-      overviewmap.color(category, $scope.active_category)
+      acsmap.color(category, $scope.active_category)
     }
 
 	$scope.drawGraph = function(name, vars) {
-      overviewmap.color(vars[0], name)
+      acsmap.color(vars[0], name)
 
   		$scope.active_category= name;
 
