@@ -26,6 +26,11 @@ module.exports.routes = {
   '/data/ctpp': 'HomeController.ctpp',
   '/data/lodes': 'HomeController.lodes',
   '/marketarea/new': 'HomeController.marketareaNew',
+  
+  //---------------------------------
+  // Jobs
+  //---------------------------------
+  '/jobs':'JobController.dash',
 
   //---------------------------------
   // Market Area Pages

@@ -7,9 +7,9 @@
                 </a>
             </li>
             <li class="dropdown">
-                <a href="#" title="{{current_jobs.length}} support tickets" class="dropdown-toggle" data-toggle="dropdown">
+                <a href="#" title="{{num_active}} Jobs" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-gears"></i>
-                    <span class="count">{{current_jobs.length}}</span>
+                    <span class="count">{{num_active}}</span>
                 </a>
                 <ul id="support-menu" class="dropdown-menu support" role="menu">
                     <li role="presentation" ng-repeat='job in current_jobs'>
@@ -18,12 +18,17 @@
                                 <span class="label label-info"><i class="fa fa-spinner"></i></span>
                             </div>
                             <div class="details">
-                                {{job.type}}
+                                {{job.type}} {{job.status}} {{job.progress}}
+                                <div class="progress" ng-show="job.progress > 0" style='margin-bottom:0px'>
+                                  <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="{{job.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%">
+                                    <span class="sr-only">{{job.progress}}% Complete</span>
+                                  </div>
+                                </div>
                             </div>
                         </a>
                     </li>        
                     <li role="presentation">
-                        <a href="#" class="text-align-center see-all">
+                        <a href="/jobs" class="text-align-center see-all">
                             See all Jobs <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>

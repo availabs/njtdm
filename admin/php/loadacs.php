@@ -1,8 +1,9 @@
 <?php 
 
+echo "status:Initializing";
 ini_set("memory_limit","1024M");
 ini_set('max_execution_time', 600);
-$conn_string = "host=".$argv[1]." port=".$argv[2]." dbname=geocensus user=".$argv[4]." password=".$argv[5];
+$conn_string = "host=lor.availabs.org port=5432 dbname=geocensus user=postgres password=transit";
 $inscon = pg_connect($conn_string);
 //$inscon = $test->connect();
 
@@ -10,26 +11,14 @@ $inscon = pg_connect($conn_string);
 $sql = 'SELECT geoid from "tl_2013_'.$argv[6].'_tract" as a';
 
 $rs = pg_query($sql) or die($sql." ".pg_error());
+$num_rows =  pg_num_rows ($rs);
+//echo "num rows:$num_rows";
 
 $sources = Array('sf1','acs5');
 $handles = Array( 'sf1' =>Array('P0010001','P0030002','P0030003','P0030005'), 
                 'acs5' => Array('B23025_001E','B23025_002E','B08006_001E','B08006_002E','B08006_003E','B08006_004E','B08006_008E'));
 
-$count = 0;
-pg_close($inscon);
-$conn_string = "host=".$argv[1]." port=".$argv[2]." dbname=".$argv[3]." user=".$argv[4]." password=".$argv[5];
-$inscon = pg_connect($conn_string);
-
-while($row = pg_fetch_array($rs)){
-
-    print "in row"; 
-    $properties = array();
-    $feature = array();
-    $geometry = array();
-    $columns = "(geoid,";
-    $values = "(".$row['geoid'].",";
-    
-    $var_sets =[
+$var_sets =[
         ['B01003_001E','B12006_001E','B12006_005E','B12006_010E','B12006_016E','B12006_021E','B12006_027E','B12006_032E','B12006_038E','B12006_043E','B12006_049E','B12006_054E','B12006_006E','B12006_011E','B12006_017E','B12006_022E','B12006_028E','B12006_033E','B12006_039E'],
         ['B12006_044E','B12006_050E','B12006_055E','B08301_001E','B08301_002E','B08301_010E','B08301_016E','B08301_017E','B08301_018E','B08301_019E','B08301_020E','B08301_021E','B08301_011E','B08301_013E','B08301_014E','B08126_001E','B08126_002E','B08126_003E','B08126_004E'],
         ['B08126_005E','B08126_006E','B08126_007E','B08126_008E','B08126_009E','B08126_010E','B08126_011E','B08126_012E','B08126_013E','B08126_014E','B08126_015E','B19001_005E','B19001_006E','B19001_007E','B19001_008E','B19001_009E','B19001_010E','B19001_011E','B19001_012E'],
@@ -47,15 +36,35 @@ while($row = pg_fetch_array($rs)){
         ['B08519_005E','B08519_006E','B08519_007E','B08519_008E','B08519_009E','B08519_028E','B08519_029E','B08519_030E','B08519_031E','B08519_032E','B08519_033E','B08519_034E','B08519_035E','B08519_036E']
     ];
 
+$count = 0;
+pg_close($inscon);
+$conn_string = "host=".$argv[1]." port=".$argv[2]." dbname=".$argv[3]." user=".$argv[4]." password=".$argv[5];
+$inscon = pg_connect($conn_string);
+
+$tableName = "acs".$argv[7]."_".$argv[6]."_20".$argv[8]."_tracts";
+echo "tableName:$tableName:";
+echo "status:Creating Table:";
+pg_query(createStatement($tableName,$var_sets)) or die($sql." ".pg_error());
+$values = "";
+
+echo "status:Downloading:";
+while($row = pg_fetch_array($rs)){
+    $properties = array();
+    $feature = array();
+    $geometry = array();
+    $columns = "(geoid,";
+    $values .= "(".$row['geoid'].",";
+    
+    
+
 	for($x = 0; $x < count($var_sets);$x++){
 	    $state = substr($row['geoid'],0,2);
 	    $county = substr($row['geoid'],2,3);
 	    $tract = substr($row['geoid'],5,6);
 	    $source= 1;
 	    $vars = implode(",",$var_sets[$x]);
-	    $jURL = 'http://api.census.gov/data/2011/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
-	    //print $jURL;
-      $cdata = curl_download($jURL);
+	    $jURL = 'http://api.census.gov/data/20".$argv[8]."/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
+	    $cdata = curl_download($jURL);
 	    $foo =  utf8_encode($cdata); 
 	    $cdata = json_decode($foo, true);
 
@@ -68,36 +77,43 @@ while($row = pg_fetch_array($rs)){
 	}
   $columns = rtrim($columns, ",").")";
   $values = rtrim($values, ",").")";
-  if($count == 0){
-    print "$columns<br>";
-  }
-  print "$values<br>";
-	
+  	
   $count++;
+  echo "progress:". intval($count/$num_rows*100).':';
 }
-//print json_encode($output);
+echo "status:Inserting Data:";
+$sql = "Insert into $tableName $columns VALUES $values";
+//echo $sql;
+//$rs = pg_query($sql) or die($sql." ".pg_error());
+echo "status:Complete:";
+
 
 
 function curl_download($Url){
  
-    // is cURL installed yet?
-    if (!function_exists('curl_init')){
-        die('Sorry cURL is not installed!');
-    }
+  if (!function_exists('curl_init')){
+      die('Sorry cURL is not installed!');
+  }
  
-    // OK cool - then let's create a new cURL resource handle
-     $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $Url);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   $output = curl_exec($ch);
-
-    return $output;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $Url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  $output = curl_exec($ch);
+  return $output;
 }
 
-function create_table($start,$sum,$variables){
-
+function createStatement($tableName,$variables){
+  
+  
+  $createStatement = "DROP TABLE IF EXISTS $tableName; CREATE TABLE $tableName ( geoid character varying(11) NOT NULL,";
+  for($x = 0; $x < count($variables);$x++){
+    for($i =0; $i < count($variables[$x]); $i++ ){
+      $createStatement .= $variables[$x][$i]." integer,";
+    }
+  }
+  $createStatement .= " CONSTRAINT ".$tableName."_pkey PRIMARY KEY (geoid)) WITH ( OIDS=FALSE ); ALTER TABLE $tableName OWNER TO postgres;";
+  return $createStatement;
 }
-
 
 
 ?>
