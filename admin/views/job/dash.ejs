@@ -1,0 +1,91 @@
+<%- partial('../partials/nav') %>
+    <div class="wrap">
+        <%- partial('../partials/header') %>
+		<div class="content container">
+		    <div class="row">
+		        <div class="col-md-12">
+		            <h2 class="page-title">Jobs <small>TDM Task Manager</small></h2>
+		        </div>
+		    </div>
+		    <div class="row" ng-controller="jobsController">
+			    <div class="col-md-8">
+			    	<section class="widget">
+			            <header>
+			                <h4>
+			                    Active Jobs
+			                    <small>
+			                        
+			                    </small>
+			                </h4>
+			            </header>
+			            <div class="body">
+			                <table class="table table-striped no-margin sources-table">
+			                    <thead>
+			                    <tr>
+			                        <th class="source-col-header">Type</th>
+			                        <th>Time Started</th>
+			                        <th>Status</th>
+			                        <th>Progress</th>
+
+			                        <th class="text-right"></th>
+			                    </tr>
+			                    </thead>
+			                    <tbody>
+			                   		<tr ng-repeat='job in current_jobs'>
+
+		                                <td>{{job.type}}</td> 
+		                                <td>{{job.start | date : ' M/d/yy h:mm a' }}</td>
+		                                <td>{{job.status}}</td>
+		                                <td> 
+			                                <div class="progress" ng-show="job.progress > 0" style='margin-bottom:0px'>
+			                                  <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="{{job.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%">
+			                                    <span class="sr-only">{{job.progress}}% Complete</span>
+			                                  </div>
+			                                </div>
+			                            </td>
+			                           	<td class="chart-cell hidden-xs">
+			                               <a class="btn btn-danger">Cancel Job</a>
+			                            </td>
+			                   		</tr>
+			                    </tbody>
+			                </table>
+			            </div>
+			        </section>
+
+			        <section class="widget">
+			            <header>
+			                <h4>
+			                    Finished Jobs
+			                    <small>
+			                        
+			                    </small>
+			                </h4>
+			            </header>
+			            <div class="body">
+			                <table class="table table-striped no-margin sources-table">
+			                    <thead>
+			                    <tr>
+			                        <th class="source-col-header">Type</th>
+			                        <th>Time Started</th>
+			                        <th>Status</th>
+			                        <th>Progress</th>
+
+			                        <th class="text-right"></th>
+			                    </tr>
+			                    </thead>
+			                    <tbody>
+			                   
+			                    </tbody>
+			                </table>
+			            </div>
+			        </section>
+			    </div>
+			    <div class="col-md-4">
+			        <%- partial('guide/jobs-guide') %>
+			    </div>
+			</div>
+		</div>
+<script>
+server_jobs = <%- JSON.stringify(jobs) %>
+</script>
+<script src="/js/pages/jobs-index.js"></script>

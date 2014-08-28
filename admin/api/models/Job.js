@@ -20,6 +20,11 @@ module.exports = {
   	info:{
   		type:'array'
   	},
+    status:'string',
+    progress:{
+      type:'integer',
+      defaultsTo:0
+    }
   }
 };
 
