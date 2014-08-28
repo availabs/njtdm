@@ -172,10 +172,10 @@
 			{text: 'By Percent', domain: { byCount: false, byDensity: false, byPercent: true }, id: 'byPercent'}
 		]
 
-		svg.selectAll('#acs-button-group')
+		svg.selectAll('.acs-button-group')
 			.data(data)
 			.enter().append('g')
-			.attr('id', function(d) { return 'acs-button-group-'+d.id; })
+			.attr('class', function(d) { return 'acs-button-group'; })
 			.on('click', toggleDataDomain)
 			.each(function(d, i) {
 				var g = d3.select(this);
@@ -195,7 +195,7 @@
 					.style('text-anchor', 'middle');
 			})
 
-		d3.select('#acs-button-group-byCount').each(toggleDataDomain);
+		d3.select('.acs-button-group').each(toggleDataDomain);
 	}
 
 	function toggleDataDomain(data) {
@@ -292,7 +292,6 @@
 	}
 
     function zoomToBounds(collection) {
-    	console.log('zoom to bounds now')
         var bounds = path.bounds(collection),
             wdth = bounds[1][0] - bounds[0][0],
             hght = bounds[1][1] - bounds[0][1],

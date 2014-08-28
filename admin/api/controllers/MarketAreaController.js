@@ -174,8 +174,8 @@ module.exports = {
       }
   },
 
-  getCTPPstarts: function(req, res) {
-      var sql = "SELECT from_tract, sum(est) as amount " +
+  getAllCTPPoutbound: function(req, res) {
+      var sql = "SELECT from_tract as tract, sum(est) as amount " +
                 "FROM ctpp_34_2010_tracts " +
                 "GROUP BY from_tract";
 
@@ -188,12 +188,12 @@ module.exports = {
 
           var response = {};
           data.rows.forEach(function(row) {
-              response[row.from_tract] = row.amount;
+              response[row.tract] = row.amount;
           })
           res.json(response);
       })
   },
-  getCTPPends: function(req, res) {
+  getCTPPoutbound: function(req, res) {
       var tractGeoID = req.param('id');
 
       if (!tractGeoID) {
@@ -215,6 +215,56 @@ module.exports = {
           data.rows.forEach(function(row) {
               var obj = {
                   geoid: row.to_tract,
+                  est: row.est,
+                  se: row.se
+              };
+
+              response.push(obj);
+          })
+          res.send(response);
+      })
+  },
+  getAllCTPPinbound: function(req, res) {
+      var sql = "SELECT to_tract as tract, sum(est) as amount " +
+                "FROM ctpp_34_2010_tracts " +
+                "GROUP BY to_tract";
+
+      MarketArea.query(sql, {}, function(error, data) {
+          if (error) {
+              console.log("error executing "+sql, error);
+              res.send({status: 500, message: 'internal error'}, 500);
+              return;
+          }
+
+          var response = {};
+          data.rows.forEach(function(row) {
+              response[row.tract] = row.amount;
+          })
+          res.json(response);
+      })
+  },
+  getCTPPinbound: function(req, res) {
+      var tractGeoID = req.param('id');
+
+      if (!tractGeoID) {
+          res.send({status: 500, message: 'you must supply a tract GeoID'}, 500);
+          return;
+      }
+
+      var sql = "SELECT from_tract, est, se " +
+                "FROM ctpp_34_2010_tracts " +
+                "WHERE to_tract = '" + tractGeoID + "'";
+
+      MarketArea.query(sql, {}, function(error, data) {
+          if (error) {
+              console.log("error executing "+sql, error);
+              res.send({status: 500, message: 'internal error'}, 500);
+              return;
+          }
+          var response = [];
+          data.rows.forEach(function(row) {
+              var obj = {
+                  geoid: row.from_tract,
                   est: row.est,
                   se: row.se
               };

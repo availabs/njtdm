@@ -35,6 +35,8 @@
 
 	var colorScale = d3.scale.quantize();
 
+	var trafficType;
+
 	ctppmap.init = function(svgID, input_tracts) {
 		tractsGeoIDs = input_tracts;
 
@@ -85,6 +87,56 @@
 			.attr('class', 'ctpp-tract')
 			.attr('d', path)
 			.on('click', clicked);
+
+		var buttonWidth = 75,
+			buttonHeight = 30;
+
+		var data = [
+			{text: 'Outbound', id: 'outbound'},
+			{text: 'Inbound', id: 'inbound'}
+		]
+
+		svg.selectAll('.ctpp-button-group')
+			.data(data)
+			.enter().append('g')
+			.attr('class', function(d) { return 'ctpp-button-group'; })
+			.on('click', toggleCTPPbuttons)
+			.each(function(d, i) {
+				var g = d3.select(this);
+
+				g.append('rect')
+					.attr('id', function() { return 'ctpp-button-'+d.id; })
+					.attr('class', 'acs-button')
+					.attr('y', function() { return 10 + buttonHeight*i; })
+					.attr('width', buttonWidth)
+					.attr('height', buttonHeight);
+
+				g.append('text')
+					.attr('x', buttonWidth/2)
+					.attr('y', function() { return 10 + buttonHeight*i + buttonHeight/2; })
+					.text(function() { return d.text; })
+					//.style('fill', '#000')
+					.style('text-anchor', 'middle');
+			})
+
+		d3.select('.ctpp-button-group').each(toggleCTPPbuttons);
+	}
+
+	function toggleCTPPbuttons(data) {
+		d3.selectAll('.ctpp-button-group')
+			.select('rect')
+			.classed('acs-button-active', function(d, i) {
+				return 'ctpp-button-'+data.id == d3.select(this).attr('id');
+			});
+
+		trafficType = data.id;
+
+		if (!clickedTract) {
+			reset();
+		}
+		else {
+			clicked(null);
+		}
 	}
 
 	function drawLegend() {
@@ -231,7 +283,7 @@
 	}
 
 	function reset() {
-		d3.json('/marketarea/2/ctpp_start_data', function(error, data) {
+		d3.json('/marketarea/'+trafficType+'/all_ctpp_data', function(error, data) {
 
 			var colorDomain = [];
 
@@ -257,27 +309,30 @@
 
 			clickedTract = null;
 		})
+		svg.selectAll('.temp-tract').remove();
 	}
 
 	var clickedTract = null;
 
 	function clicked(d) {
-		if (d.properties.numTrips === 0 || d === clickedTract) {
-			reset();
-			return;
+		if (d) {
+			if (d.properties.numTrips === 0 || d === clickedTract) {
+				reset();
+				return;
+			}
+			clickedTract = d;
 		}
-		clickedTract = d;
 
-		d3.selectAll('.temp-tract').remove();
+		svg.selectAll('.temp-tract').remove();
 
 		var tracts = svg.selectAll('path')
 			.style('fill', null)
 			.classed('ctpp-tract-active', false);
 
-		d3.select('#ctpp-tract-'+d.properties.geoid)
+		d3.select('#ctpp-tract-'+clickedTract.properties.geoid)
 			.classed('ctpp-tract-active', true);
 
-		d3.json('/marketarea/'+d.properties.geoid+'/ctpp_travel_data', function(error, data) {
+		d3.json('/marketarea/'+clickedTract.properties.geoid+'/'+trafficType+'/ctpp_travel_data', function(error, data) {
 			var toTracts = {},
 				colorDomain = [];
 

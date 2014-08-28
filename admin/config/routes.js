@@ -35,8 +35,13 @@ module.exports.routes = {
   '/marketarea/:id/models': 'MarketAreaController.models',
   '/marketarea/:id/:route/route_geo': 'MarketAreaController.getRouteGeo',
   '/marketarea/:id/routes_geo': 'MarketAreaController.getRouteGeo',
-  '/marketarea/:id/ctpp_start_data': 'MarketAreaController.getCTPPstarts',
-  '/marketarea/:id/ctpp_travel_data': 'MarketAreaController.getCTPPends',
+
+  '/marketarea/outbound/all_ctpp_data': 'MarketAreaController.getAllCTPPoutbound',
+  '/marketarea/:id/outbound/ctpp_travel_data': 'MarketAreaController.getCTPPoutbound',
+
+  '/marketarea/inbound/all_ctpp_data': 'MarketAreaController.getAllCTPPinbound',
+  '/marketarea/:id/inbound/ctpp_travel_data': 'MarketAreaController.getCTPPinbound',
+
   '/marketarea/:id/lodes_start_data': 'MarketAreaController.getLODESstarts',
   '/marketarea/:id/lodes_travel_data': 'MarketAreaController.getLODESends',
   '/marketarea/:id/ma_route_data': 'MarketAreaController.getAllMARoutes',
