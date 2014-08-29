@@ -275,7 +275,7 @@ module.exports = {
       })
   },
 /****************/
-  getLODESstarts: function(req, res) {
+  getAllLODEStowork: function(req, res) {
       var sql = "SELECT h_geocode, sum(s000) as amount " +
                 "FROM lodes_34_2010_tracts " +
                 "GROUP BY h_geocode";
@@ -294,7 +294,7 @@ module.exports = {
           res.json(response);
       })
   },
-  getLODESends: function(req, res) {
+  getLODEStowork: function(req, res) {
       var tractGeoID = req.param('id');
 
       if (!tractGeoID) {
@@ -316,6 +316,55 @@ module.exports = {
           data.rows.forEach(function(row) {
               var obj = {
                   geoid: row.w_geocode,
+                  amount: row.s000
+              };
+
+              response.push(obj);
+          })
+          res.send(response);
+      })
+  },
+  getAllLODEStohome: function(req, res) {
+      var sql = "SELECT w_geocode, sum(s000) as amount " +
+                "FROM lodes_34_2010_tracts " +
+                "GROUP BY w_geocode";
+
+      MarketArea.query(sql, {}, function(error, data) {
+          if (error) {
+              console.log("error executing "+sql, error);
+              res.send({status: 500, message: 'internal error'}, 500);
+              return;
+          }
+          
+          var response = {};
+          data.rows.forEach(function(row) {
+              response[row.w_geocode] = row.amount;
+          })
+          res.json(response);
+      })
+  },
+  getLODEStohome: function(req, res) {
+      var tractGeoID = req.param('id');
+
+      if (!tractGeoID) {
+          res.send({status: 500, message: 'you must supply a tract GeoID'}, 500);
+          return;
+      }
+
+      var sql = "SELECT h_geocode, s000 " +
+                "FROM lodes_34_2010_tracts " +
+                "WHERE w_geocode = '" + tractGeoID + "'";
+
+      MarketArea.query(sql, {}, function(error, data) {
+          if (error) {
+              console.log("error executing "+sql, error);
+              res.send({status: 500, message: 'internal error'}, 500);
+              return;
+          }
+          var response = [];
+          data.rows.forEach(function(row) {
+              var obj = {
+                  geoid: row.h_geocode,
                   amount: row.s000
               };
 

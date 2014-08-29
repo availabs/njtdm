@@ -73,8 +73,6 @@
 
 			reset();
         })
-
-		console.log('finished initializing ctpp map');
 	}
 
 	ctppmap.draw = function() {
@@ -99,7 +97,7 @@
 		svg.selectAll('.ctpp-button-group')
 			.data(data)
 			.enter().append('g')
-			.attr('class', function(d) { return 'ctpp-button-group'; })
+			.attr('class', 'ctpp-button-group')
 			.on('click', toggleCTPPbuttons)
 			.each(function(d, i) {
 				var g = d3.select(this);
@@ -208,7 +206,7 @@
         	row.append('td')
         		.text(map[d.properties.geoid] || 0);
         })
-        .on('click', function(d) { console.log(d); clicked(d); })
+        .on('click', clicked)
         .on('mouseover', highlightTract)
         .on('mouseout', unhighlightTract);
 	}

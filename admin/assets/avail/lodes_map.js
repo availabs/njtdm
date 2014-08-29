@@ -20,7 +20,7 @@
 		tractFeatures = {};
 
 	var colorRange = {
-		1: ["#ffffbf"].reverse(),
+		1: ["#ffffbf"],
 		2: ["#fc8d59","#91bfdb"].reverse(),
 		3: ["#fc8d59","#ffffbf","#91bfdb"].reverse(),
 		4: ["#d7191c","#fdae61","#abd9e9","#2c7bb6"].reverse(),
@@ -34,6 +34,8 @@
 	}
 
 	var colorScale = d3.scale.quantize();
+
+	var trafficType;
 
 	lodesmap.init = function(svgID, input_tracts) {
 		tractsGeoIDs = input_tracts;
@@ -71,8 +73,6 @@
 
 			reset();
         })
-
-		console.log('finished initializing ctpp map');
 	}
 
 	lodesmap.draw = function() {
@@ -85,6 +85,56 @@
 			.attr('class', 'ctpp-tract')
 			.attr('d', path)
 			.on('click', clicked);
+
+		var buttonWidth = 75,
+			buttonHeight = 30;
+
+		var data = [
+			{text: 'To Work', id: 'towork'},
+			{text: 'To Home', id: 'tohome'}
+		]
+
+		svg.selectAll('.lodes-button-group')
+			.data(data)
+			.enter().append('g')
+			.attr('class', 'lodes-button-group')
+			.on('click', toggleLODESbuttons)
+			.each(function(d, i) {
+				var g = d3.select(this);
+
+				g.append('rect')
+					.attr('id', function() { return 'lodes-button-'+d.id; })
+					.attr('class', 'acs-button')
+					.attr('y', function() { return 10 + buttonHeight*i; })
+					.attr('width', buttonWidth)
+					.attr('height', buttonHeight);
+
+				g.append('text')
+					.attr('x', buttonWidth/2)
+					.attr('y', function() { return 10 + buttonHeight*i + buttonHeight/2; })
+					.text(function() { return d.text; })
+					//.style('fill', '#000')
+					.style('text-anchor', 'middle');
+			})
+
+		d3.select('.lodes-button-group').each(toggleLODESbuttons);
+	}
+
+	function toggleLODESbuttons(data) {
+		d3.selectAll('.lodes-button-group')
+			.select('rect')
+			.classed('acs-button-active', function(d, i) {
+				return 'lodes-button-'+data.id == d3.select(this).attr('id');
+			});
+
+		trafficType = data.id;
+
+		if (!clickedTract) {
+			reset();
+		}
+		else {
+			clicked(null);
+		}
 	}
 
 	function drawLegend() {
@@ -231,7 +281,7 @@
 	}
 
 	function reset() {
-		d3.json('/marketarea/2/lodes_start_data', function(error, data) {
+		d3.json('/marketarea/'+trafficType+'/all_lodes_data', function(error, data) {
 
 			var colorDomain = [];
 
@@ -257,14 +307,18 @@
 
 			clickedTract = null;
 		})
+		svg.selectAll('.temp-tract').remove();
 	}
 
 	var clickedTract = null;
 
 	function clicked(d) {
-		if (d.properties.numTrips === 0 || d === clickedTract) {
-			reset();
-			return;
+		if (d) {
+			if (d.properties.numTrips === 0 || d === clickedTract) {
+				reset();
+				return;
+			}
+			clickedTract = d;
 		}
 		clickedTract = d;
 
@@ -277,7 +331,7 @@
 		d3.select('#tract-'+d.properties.geoid)
 			.classed('ctpp-tract-active', true);
 
-		d3.json('/marketarea/'+d.properties.geoid+'/lodes_travel_data', function(error, data) {
+		d3.json('/marketarea/'+clickedTract.properties.geoid+'/'+trafficType+'/lodes_travel_data', function(error, data) {
 			var toTracts = {},
 				colorDomain = [];
 

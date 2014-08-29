@@ -40,15 +40,22 @@ module.exports.routes = {
   '/marketarea/:id/models': 'MarketAreaController.models',
   '/marketarea/:id/:route/route_geo': 'MarketAreaController.getRouteGeo',
   '/marketarea/:id/routes_geo': 'MarketAreaController.getRouteGeo',
-
+  // CTPP routes
   '/marketarea/outbound/all_ctpp_data': 'MarketAreaController.getAllCTPPoutbound',
   '/marketarea/:id/outbound/ctpp_travel_data': 'MarketAreaController.getCTPPoutbound',
 
   '/marketarea/inbound/all_ctpp_data': 'MarketAreaController.getAllCTPPinbound',
   '/marketarea/:id/inbound/ctpp_travel_data': 'MarketAreaController.getCTPPinbound',
+  // LODES routes
+  '/marketarea/towork/all_lodes_data': 'MarketAreaController.getAllLODEStowork',
+  '/marketarea/:id/towork/lodes_travel_data': 'MarketAreaController.getLODEStowork',
 
-  '/marketarea/:id/lodes_start_data': 'MarketAreaController.getLODESstarts',
-  '/marketarea/:id/lodes_travel_data': 'MarketAreaController.getLODESends',
+  '/marketarea/tohome/all_lodes_data': 'MarketAreaController.getAllLODEStohome',
+  '/marketarea/:id/tohome/lodes_travel_data': 'MarketAreaController.getLODEStohome',
+
+  //'/marketarea/:id/lodes_start_data': 'MarketAreaController.getLODESstarts',
+  //'/marketarea/:id/lodes_travel_data': 'MarketAreaController.getLODESends',
+
   '/marketarea/:id/ma_route_data': 'MarketAreaController.getAllMARoutes',
 
   //---------------------------------
