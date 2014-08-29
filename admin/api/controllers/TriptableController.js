@@ -6,6 +6,10 @@
  */
 
 module.exports = {
+
+	calculateTripTable:function(req,res){
+
+	}
 	
 };
 

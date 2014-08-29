@@ -16,7 +16,7 @@
                         <a class="ma-toggle accordion-toggle <% if (marketarea.id != curr_ma.id) {%>collapsed<%}%>" data-toggle="collapse" data-parent="#menu-levels-collapse" href="#sub-menu-ma<%= index %>-collapse"><%= curr_ma.name %></a>
                         <ul id="sub-menu-ma<%= index %>-collapse" class="panel-collapse <% if (marketarea.id != curr_ma.id) {%>collapse<%}%>">
                             <li <% if(page == 'ma-overview' && marketarea.id == curr_ma.id) {%> class="active" <%}%>><a href="/marketarea/<%= curr_ma.id %>">Overview</a></li>
-                            <li <% if(page == 'ma-models' && marketarea.id == curr_ma.id) {%> class="active" <%}%>><a href="/marketarea/<%= curr_ma.id %>/models">Model Analysis</a></li>
+                            <li <% if(page == 'ma-models' && marketarea.id == curr_ma.id) {%> class="active" <%}%>><a href="/marketarea/<%= curr_ma.id %>/models">Modeling</a></li>
                             <li><a href="/map/" target="_blank">Map View</a></li>
                         </ul>
                     </li>
