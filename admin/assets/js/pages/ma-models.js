@@ -6,10 +6,73 @@ $(function(){
             $(this).select2($(this).data());
         });
         
+        // $(".iCheck").iCheck({
+        //     checkboxClass: 'icheckbox_square-grey',
+        //     radioClass: 'iradio_square-grey'
+        // });
+
+        
     }
     pageLoad();
     PjaxApp.onPageLoad(pageLoad);
 });
+function modelPageCtrl($scope){
+
+  $scope.marketarea = window.server_marketarea;
+  $scope.active_page ='run';
+
+  triptableMap.init('#triptable-svg',$scope.marketarea);
+  
+  $scope.setActivePage = function(val){ $scope.active_page=val; }
+
+  $scope.modelTypes = {
+    'lehd':"LODES+ACS",
+    'ctpp':"CTPP",
+    'regression':"Regression",
+    'survey':"Survey"
+  }
+  $scope.modelTimes = {
+    'am':'AM Peak',
+    'pm':'PM Peak',
+    'full':'Full Day'
+  }
+  $scope.modelODSources = {
+    'bus':'Bus Stops',
+    'survey':'Survey OD',
+    'parcel':'Parcels'
+  }
+  $scope.modelForecast = {
+    'current':'Current',
+    '5year':'Five Year Future Forecast'
+    
+  }
+
+  $scope.current_model_run = {
+    type:'regression',
+    time:'am',
+    od:'bus',
+    forecast:'current',
+    forecast_type:'mpo',
+    forecast_growth:5
+  };
+
+  $scope.forecast_selector = function(val){ if(val == $scope.current_model_run.forecast){ return true; }else{ return false; } };
+  $scope.od_selector = function(val){ if(val == $scope.current_model_run.od){ return true; }else{ return false; } };
+  $scope.type_selector = function(val){ if(val == $scope.current_model_run.type){ return true; }else{ return false; } };
+  $scope.time_selector = function(val){ if(val == $scope.current_model_run.time){ return true; }else{ return false; } };
+  $scope.forecast = function(){ if($scope.current_model_run.forecast == '5year'){ return true; }else{return false} };
+
+
+
+}
+
+function newModelCtrl($scope){
+  
+ 
+  
+  
+}
+
 
 function ReportCtrl( $scope,$http,$filter) {
   

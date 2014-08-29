@@ -4,6 +4,24 @@
         New Model
     </h4>
 </header>
-<div class="body">
-   
+<div class="body" ng-controller="newModelCtrl">
+	<ul class="nav nav-tabs dem-tabs" id="myDataTab">
+        <li class='active' >
+            <a  href="#map" data-toggle="tab">Map</a>
+        </li>
+        <li>
+            <a  href="#table" data-toggle="tab" >Table</a>
+        </li>
+    </ul>
+    <div id="myDataTabContent" class="tab-content">
+        <div  id="map" class="tab-pane active clearfix body">
+        	<svg id="triptable-svg" width="80%"></svg>
+        </div>
+        <div  id="table" class="tab-pane active clearfix body">
+        </div>
 </div>
+<style>
+.dem-tabs li.active a{
+        background-color: #ccc!important;
+    }
+</style>

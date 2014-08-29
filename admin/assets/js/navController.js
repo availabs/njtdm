@@ -4,7 +4,7 @@ function headerController($scope) {
 	$scope.num_active = 0;
 	io.socket.on('connect',function(){
 	    io.socket.get('/job',{"where": {"isFinished":false}},function(data){ 
-	        console.log('Jobs :',data.length,data);
+	        //console.log('Jobs :',data.length,data);
 	        $scope.current_jobs = {};
 	        if(data.length > 0){{}}
 	        data.forEach(function(job){

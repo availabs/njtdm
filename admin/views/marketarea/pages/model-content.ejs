@@ -1,29 +1,195 @@
-<div class="row">
+<div class="row" ng-controller="modelPageCtrl">
     <div class="col-md-8">
         <section class="widget widget-tabs">
             <header>
                 <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a href="#overview" data-toggle="tab">Model Analysis</a>
+                    <li >
+                        <a href="#overview" ng-click="setActivePage('analysis')" data-toggle="tab">Model Analysis</a>
                     </li>
-                    <!-- <li>
-                        <a href="#routes" data-toggle="tab">New Model</a>
-                    </li> -->
+                    <li class="active">
+                        <a href="#routes" data-toggle="tab" ng-click="setActivePage('run')">New Model</a>
+                    </li>
                 </ul>
             </header>
             <div class="body tab-content" style="overflow:hidden;">
-                <div id="overview" class="tab-pane active clearfix" ng-controller="ReportCtrl">
+                <div id="overview" class="tab-pane clearfix" ng-controller="ReportCtrl">
                    <%- partial('model-tabs/analysis') %>
                 </div>
-                <div id="routes" class="tab-pane">
+                <div id="routes" class="tab-pane active">
                    <%- partial('model-tabs/new-model') %>
                 </div>
-               
-                
             </div>
         </section>
     </div>
     <div class="col-md-4">
-        <%- partial('../guide/models-guide') %>  
+        <section class="widget" ng-show="active_page == 'run'">
+            <header>
+                <h5>
+                    <i class="fa fa-tasks"></i>
+                    New Model Options
+                </h5>
+                <div class="widget-controls">
+                    <a title="Options" href="#"><i class="glyphicon glyphicon-cog"></i></a>
+                    <a data-widgster="expand" title="Expand" href="#" style="display: none;"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-minus"></i></a>
+                    <a data-widgster="close" title="Close" href="#"><i class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </header>
+            <div class="body">
+                <form class="form-horizontal form-condensed ng-pristine ng-valid" action="" method="POST">
+                    <fieldset>
+                        <div class="control-group">
+                            <label for="gtfs-select" class="control-label">Model Time</label>
+
+                            <div class="controls form-group">
+                                <select id="time-select" ng-model="current_model_run.time" data-placeholder="Choose a model timeframe..." class=" form-control" tabindex="-1">
+                                    <option  value=""></option>
+                                    <option ng-repeat="(id,name) in modelTimes" value="{{id}}" ng-selected="time_selector(id)">{{name}}</option>
+                                    
+                                </select>
+                            
+                                <span class="help-block pull-left">AM Peak, PM Peak or Full Day.</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="gtfs-select" class="control-label">Model Type</label>
+
+                            <div class="controls form-group">
+                                <select id="type-select" ng-model="current_model_run.type" data-placeholder="Choose a Model Type..." class=" form-control" tabindex="-1">
+                                    <option ng-repeat="(id,name) in modelTypes" value="{{id}}" ng-selected="type_selector(id)">{{name}}</option>
+                                </select>
+                                
+                                <span class="help-block pull-left">Choose trip table generation algorithm</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="gtfs-select" class="control-label">Model OD Source</label>
+
+                            <div class="controls form-group">
+                                <select id="od-select" ng-model="current_model_run.od" data-placeholder="Choose a Model Type..." class=" form-control" tabindex="-1">
+                                    <option  value=""></option>
+                                    <option ng-repeat="(id,name) in modelODSources" value="{{id}}" ng-selected="od_selector(id)">{{name}}</option>
+                                </select>
+                                
+                                <span class="help-block pull-left">Choose Origin - Destination points source.</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="gtfs-select" class="control-label">Model Forecast</label>
+                            <div class="controls form-group">
+                                <select id="forecast-select" ng-model="current_model_run.forecast" data-placeholder="Choose a Model Forecast..." class=" form-control" tabindex="-1" >
+                                    <option  value=""></option>
+                                    <option ng-repeat="(id,name) in modelForecast" value="{{id}}" ng-selected="forecast_selector(id)">{{name}}</option>
+                                </select>
+                                <span class="help-block pull-left">Choose forecasting mode.</span>
+                                {{current_model_run.fore}}
+                            </div>
+                        </div>
+                        <div class="control-group" ng-show="forecast()">
+                            <label class="control-label">Radio Buttons</label>
+                            <div class="controls form-group">
+                                <label class="radio">
+                                    <input type="radio" id="radio-4" class="iCheck" ng-model='current_model_run.forecast_type' value="mpo">
+                                    MPO Data</label>
+                                <label class="radio">
+                                    <input type="radio" name="can" class="iCheck" id="radio-5" ng-model='current_model_run.forecast_type' value="growth"><input type="number" class="form-control md-col-6" value="5" min="-20" max="20" step=".1" ng-model="current_model_run.forecast_growth" ng-disabled="current_model_run.forecast_type != 'growth'" value="5">
+                                    Growth % </label>
+
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Generate Trip Table</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+
+        <section class="widget" ng-show="active_page == 'run'">
+            <header>
+                <h5>
+                    <i class="fa fa-tasks"></i>
+                    Model Data Sources
+                </h5>
+                <div class="widget-controls">
+                    <a title="Options" href="#"><i class="glyphicon glyphicon-cog"></i></a>
+                    <a data-widgster="expand" title="Expand" href="#" style="display: none;"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-minus"></i></a>
+                    <a data-widgster="close" title="Close" href="#"><i class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </header>
+            <div class="body">
+                <form class="form-horizontal form-condensed ng-pristine ng-valid" action="" method="POST">
+                    <fieldset>
+                        <div class="control-group">
+                            <label for="gtfs-select" class="control-label">GTFS</label>
+
+                            <div class="controls form-group">
+                                <select id="gtfs-select" ng-model="current_model_run.gtfs_source" data-placeholder="Choose a model timeframe..." class=" form-control" tabindex="-1">
+                                    <option  value=""></option>
+                                    <!-- <option ng-repeat="(id,name) in modelTimes" value="{{id}}" ng-selected="time_selector(id)">{{name}}</option> -->
+                                    
+                                </select>
+                            
+                                <span class="help-block pull-left">Choose GTFS feed for this market model run.</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="gtfs-select" class="control-label">ACS</label>
+
+                            <div class="controls form-group">
+                                <select id="acs-select" ng-model="current_model_run.acs_source" data-placeholder="Choose a Model Type..." class=" form-control" tabindex="-1">
+                                    
+                                </select>
+                                
+                                <span class="help-block pull-left">Choose the American Community Survey source for this model run.</span>
+                            </div>
+                        </div>
+                        <div class="control-group" ng-show="current_model.type=='lehd'">
+                            <label for="gtfs-select" class="control-label">LODES</label>
+
+                            <div class="controls form-group">
+                                <select id="lodes-select" ng-model="current_model_run.lodes_source" data-placeholder="Choose a Model Type..." class=" form-control" tabindex="-1">
+                                    <option  value=""></option>
+                                    
+                                </select>
+                                
+                                <span class="help-block pull-left">Choose the LEHD Origin Destination feed for this model run.</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="gtfs-select" class="control-label">CTPP</label>
+                            <div class="controls form-group">
+                                <select id="ctpp-select" ng-model="current_model_run.ctpp_source" data-placeholder="Choose a Model Forecast..." class=" form-control" tabindex="-1" >
+                                    <option  value=""></option>
+                                    
+                                </select>
+                                <span class="help-block pull-left">Choose the CTPP data setmodel run.</span>
+                                {{current_model_run.fore}}
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+        <section class="widget" ng-show="active_page == 'analysis'">
+            <header>
+                <h5>
+                    <i class="fa fa-tasks"></i>
+                    Model Analysis Overview
+                </h5>
+                <div class="widget-controls">
+                    <a title="Options" href="#"><i class="glyphicon glyphicon-cog"></i></a>
+                    <a data-widgster="expand" title="Expand" href="#" style="display: none;"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-minus"></i></a>
+                    <a data-widgster="close" title="Close" href="#"><i class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </header>
+            <div class="body">
+                
+            </div>
+        </section>
+        <%- partial('../guide/models-guide') %>
+
     </div>
 </div>

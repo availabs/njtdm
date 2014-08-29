@@ -84,7 +84,7 @@ while($row = pg_fetch_array($rs)){
 echo "status:Inserting Data:";
 $sql = "Insert into $tableName $columns VALUES $values";
 //echo $sql;
-//$rs = pg_query($sql) or die($sql." ".pg_error());
+$rs = pg_query($sql) or die($sql." ".pg_error());
 echo "status:Complete:";
 
 
