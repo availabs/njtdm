@@ -301,7 +301,9 @@
 
         projection.scale(scale);
 
-        var centroid = path.centroid(collection),
+        bounds = path.bounds(collection);
+
+        var centroid = [(bounds[1][0]+bounds[0][0])/2, (bounds[1][1]+bounds[0][1])/2],//path.centroid(collection),
             translate = projection.translate();
 
         projection.translate([translate[0] - centroid[0] + width / 2,

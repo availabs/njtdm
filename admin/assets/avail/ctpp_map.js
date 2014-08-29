@@ -209,6 +209,15 @@
         .on('click', clicked)
         .on('mouseover', highlightTract)
         .on('mouseout', unhighlightTract);
+
+        if (clickedTract) {
+        	var header = d3.select("#ctpp-table").select('tbody').insert('tr', ":first-child");
+        	
+	        header.append('td')
+	        	.text('Selected Tract geoID:')
+	        header.append('td')
+	        	.text(clickedTract.properties.geoid)
+	    }
 	}
 
 	function highlightTract(d) {
@@ -290,6 +299,8 @@
                 pushUnique(colorDomain, data[d.properties.geoid] || 0);
             })
 
+			clickedTract = null;
+
             populateCTPPtable(MAtracts.features, data);
 
             setColorScale(colorDomain)
@@ -304,8 +315,6 @@
 				})
 
 			drawLegend();
-
-			clickedTract = null;
 		})
 		svg.selectAll('.temp-tract').remove();
 	}
@@ -377,7 +386,9 @@
 
         projection.scale(scale);
 
-        var centroid = path.centroid(collection),
+        bounds = path.bounds(collection);
+
+        var centroid = [(bounds[1][0]+bounds[0][0])/2, (bounds[1][1]+bounds[0][1])/2],//path.centroid(collection),
             translate = projection.translate();
 
         projection.translate([translate[0] - centroid[0] + width / 2,
