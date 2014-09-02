@@ -32,7 +32,7 @@ $var_sets =[
         ['B08133_012E','B08133_013E','B08133_014E','B08133_015E','B08122_001E','B08122_002E','B08122_003E','B08122_004E','B08122_005E','B08122_006E','B08122_007E','B08122_008E','B08122_009E','B08122_010E','B08122_011E','B08122_012E','B08122_013E','B08122_014E','B08122_015E'],
         ['B08122_016E','B08122_017E','B08122_018E','B08122_019E','B08122_020E','B08122_021E','B08122_022E','B08122_023E','B08122_024E','B08122_025E','B08122_026E','B08122_027E','B08122_028E','B08136_001E','B08136_002E','B08136_003E','B08136_004E','B08136_005E','B08136_006E'],
         ['B08136_007E','B08136_008E','B08136_009E','B08136_010E','B08136_011E','B08136_012E','B19001_001E','B19001_002E','B19001_003E','B19001_004E','B08126_046E','B08126_047E','B08126_048E','B08126_049E','B08126_050E','B08126_051E','B08126_052E','B08126_053E','B08126_054E'],
-        ['B08126_055E','B08126_056E','B08126_057E','B08126_058E','B08126_059E','B08126_060E','B08519_001E','B08519_002E','B08519_003E','B08519_004E'],
+        ['B08126_055E','B08126_056E','B08126_057E','B08126_058E','B08126_059E','B08126_060E','B08519_001E','B08519_002E','B08519_003E','B08519_004E','B00002_001E '],
         ['B08519_005E','B08519_006E','B08519_007E','B08519_008E','B08519_009E','B08519_028E','B08519_029E','B08519_030E','B08519_031E','B08519_032E','B08519_033E','B08519_034E','B08519_035E','B08519_036E']
     ];
 
@@ -41,7 +41,7 @@ pg_close($inscon);
 $conn_string = "host=".$argv[1]." port=".$argv[2]." dbname=".$argv[3]." user=".$argv[4]." password=".$argv[5];
 $inscon = pg_connect($conn_string);
 
-$tableName = "acs".$argv[7]."_".$argv[6]."_20".$argv[8]."_tracts";
+$tableName = "acs".$argv[7]."_".$argv[6]."_".$argv[8]."_tracts";
 echo "tableName:$tableName:";
 echo "status:Creating Table:";
 pg_query(createStatement($tableName,$var_sets)) or die($sql." ".pg_error());
@@ -63,11 +63,10 @@ while($row = pg_fetch_array($rs)){
 	    $tract = substr($row['geoid'],5,6);
 	    $source= 1;
 	    $vars = implode(",",$var_sets[$x]);
-	    $jURL = 'http://api.census.gov/data/20".$argv[8]."/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
+	    $jURL = 'http://api.census.gov/data/'.$argv[8].'/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
 	    $cdata = curl_download($jURL);
 	    $foo =  utf8_encode($cdata); 
 	    $cdata = json_decode($foo, true);
-
       
 	    for($i =0; $i < count($var_sets[$x]); $i++ ){
 	        $columns .= $var_sets[$x][$i].",";
@@ -76,11 +75,12 @@ while($row = pg_fetch_array($rs)){
      
 	}
   $columns = rtrim($columns, ",").")";
-  $values = rtrim($values, ",").")";
+  $values = rtrim($values, ",")."),";
   	
   $count++;
   echo "progress:". intval($count/$num_rows*100).':';
 }
+$values = rtrim($values, ",");
 echo "status:Inserting Data:";
 $sql = "Insert into $tableName $columns VALUES $values";
 //echo $sql;

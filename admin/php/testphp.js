@@ -29,7 +29,7 @@ terminal.on('exit', function (code) {
 
 setTimeout(function() {
     console.log('Sending stdin to terminal');
-    terminal.stdin.write('php -f loadacs.php lor.availabs.org 5432 njtdmData postgres transit 34 5 10\n');
+    terminal.stdin.write('php -f loadacs.php lor.availabs.org 5432 njtdmData postgres transit 34 5 2010\n');
     
     //console.log('Ending terminal session');
     terminal.stdin.end();

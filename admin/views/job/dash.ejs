@@ -66,15 +66,30 @@
 			                    <thead>
 			                    <tr>
 			                        <th class="source-col-header">Type</th>
-			                        <th>Time Started</th>
+			                        <th>Time Finished</th>
 			                        <th>Status</th>
-			                        <th>Progress</th>
+			                        <th>Message</th>
 
 			                        <th class="text-right"></th>
 			                    </tr>
 			                    </thead>
 			                    <tbody>
-			                   
+			                   		<tr ng-repeat='job in finished_jobs'>
+
+		                                <td>{{job.type}}</td> 
+		                                <td>{{job.start | date : ' M/d/yy h:mm a' }}</td>
+		                                <td>{{job.status}}</td>
+		                                <td> 
+			                                <div class="progress" ng-show="job.progress > 0" style='margin-bottom:0px'>
+			                                  <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="{{job.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%">
+			                                    <span class="sr-only">{{job.progress}}% Complete</span>
+			                                  </div>
+			                                </div>
+			                            </td>
+			                           	<td class="chart-cell hidden-xs">
+			                               
+			                            </td>
+			                   		</tr>
 			                    </tbody>
 			                </table>
 			            </div>

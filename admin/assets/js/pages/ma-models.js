@@ -53,7 +53,12 @@ function modelPageCtrl($scope){
     od:'bus',
     forecast:'current',
     forecast_type:'mpo',
-    forecast_growth:5
+    forecast_growth:5,
+    datasources:{
+      acs_source:1,
+      lodes_source:3
+
+    }
   };
 
   $scope.forecast_selector = function(val){ if(val == $scope.current_model_run.forecast){ return true; }else{ return false; } };
@@ -62,7 +67,14 @@ function modelPageCtrl($scope){
   $scope.time_selector = function(val){ if(val == $scope.current_model_run.time){ return true; }else{ return false; } };
   $scope.forecast = function(){ if($scope.current_model_run.forecast == '5year'){ return true; }else{return false} };
 
-
+  $scope.getTripTable = function(){
+    d3.json('/triptable')
+    .post({triptable_settings:$scope.current_model_run},
+    function(err,res){
+      if(err){ console.log(err); }
+      console.log(res);    
+    });
+  }
 
 }
 

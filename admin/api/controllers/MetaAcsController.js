@@ -72,7 +72,7 @@ function spawnJob(job){
 	});
 
 	setTimeout(function() {
-	    terminal.stdin.write('php -f php/loadacs.php lor.availabs.org 5432 njtdmData postgres transit'
+	    terminal.stdin.write('php -f php/loadacs.php lor.availabs.org 5432 njtdmData postgres transit '
 	    	+' '+job.info[0].state
 	    	+' '+job.info[0].dataSource
 	    	+' '+job.info[0].year

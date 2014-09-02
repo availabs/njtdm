@@ -28,7 +28,12 @@ module.exports.routes = {
   '/marketarea/new': 'HomeController.marketareaNew',
   
   //---------------------------------
-  // Jobs
+  // Triptable
+  //---------------------------------
+  '/triptable':'TriptableController.calculateTripTable',
+
+  //---------------------------------
+  // Job
   //---------------------------------
   '/jobs':'JobController.dash',
 
