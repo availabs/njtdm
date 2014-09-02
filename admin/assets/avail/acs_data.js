@@ -8,7 +8,17 @@ acs_data = {
   "travel_to_work_total":{"name":"Total","vars":['b08301_001e'],"value":0},
   "car_to_work":{"name":"Car, truck, or van","vars":['b08301_002e'],"value":0},
   "public_transportation_to_work":{"name":"Public transportation","vars":['b08301_010e'],"value":0},
+  "taxi_to_work":{"name":"Taxi","vars":['b08301_016e'],"value":0},
+  "motorcycle_to_work":{"name":"Motorcyle","vars":['b08301_017e'],"value":0},
+  "bicycle_to_work":{"name":"Bicyle","vars":['b08301_018e'],"value":0},
+  "walk_to_work":{"name":"Walked","vars":['b08301_019e'],"value":0},
+  "other_to_work":{"name":"Other Means","vars":['b08301_020e'],"value":0},
+  "worked_at_home":{"name":"Worked at Home","vars":['b08301_021e'],"value":0},
   "bus_to_work":{"name":"Bus","vars":['b08301_011e'],"value":0},
+  "streetcar_to_work":{"name":"Street Car or Trolley","vars":['b08301_012e'],"value":0},
+  "subway_to_work":{"name":"Subway","vars":['b08301_013e'],"value":0},
+  "train_to_work":{"name":"Train","vars":['b08301_014e'],"value":0},
+  "ferry_to_work":{"name":"Ferry","vars":['b08301_015e'],"value":0},
   "total":{"value":0,"vars":['b08126_001e'], "name":"Total:"},
   "agriculture":{"value":0,"vars":['b08126_002e'], "name":"Agriculture, forestry, fishing and hunting, and mining"},
   "construction":{"value":0,"vars":['b08126_003e'], "name":"Construction"},
@@ -40,6 +50,7 @@ acs_data = {
   "125000_149999":{"value":0,"vars":['b19001_015e'], "name":"$125,000 to $149,999"},
   "150000_199999":{"value":0,"vars":['b19001_016e'], "name":"$150,000 to $199,999"},
   "200000+":{"value":0,"vars":['b19001_017e'], "name":"$200,000 or more"},
+  "median_income":{"value":0,"vars":['b19013_001e'], "name":"Median Income"},
   "poverty_status":{"value":0,"vars":['b17001_002e'], "name":"Income in the past 12 months below poverty level:"},
   "public_school":{"value":0,"vars":['b14003_003e','b14003_031e'], "name":"Public School Enrollment"},
   "private_school":{"value":0,"vars":['b14003_012e','b14003_040e'], "name":"Private School Enrollment"},
@@ -53,7 +64,7 @@ acs_data = {
   "other_language":{"value":0,"vars":['b06007_008e'], "name":"Other Language Speaking"},
   "male_pop":{"value":0,"vars":['b01001_002e'], "name":"Male"},
   "female_pop":{"value":0,"vars":['b01001_026e'], "name":"Female"},
-  "age_under_5":{"value":0,"vars":['b01001_003e','b01001_027e'], "name":"5 to 9 years"},
+  "age_under_5":{"value":0,"vars":['b01001_003e','b01001_027e'], "name":"under_5"},
   "age5_9":{"value":0,"vars":['b01001_004e','b01001_028e'], "name":"5 to 9 years"},
   "age10_14":{"value":0,"vars":['b01001_005e','b01001_029e'], "name":"10 to 14 years"},
   "age15_17":{"value":0,"vars":['b01001_006e','b01001_030e'], "name":"15 to 17 years"},
@@ -137,9 +148,11 @@ acs_data = {
 categories : {
   "Population":["total_population"],
   "Employment":["employment","unemployment"],
-  "Journey To Work":["car_to_work","bus_to_work","public_transportation_to_work"],
+  "Journey To Work":["car_to_work","public_transportation_to_work","taxi_to_work","motorcycle_to_work","bicycle_to_work","walk_to_work","other_to_work","worked_at_home"],
+  "Journey To Work - Public Transportation":['bus_to_work','streetcar_to_work','subway_to_work','train_to_work','ferry_to_work'],
   "Industry":["agriculture","construction","manufacturing","wholesale","retail","transportation","information","finance","professional","educational","arts","other","public_administration","armed_forces"],
   "Income Categories":["10000_14999","15000_19999","20000_24999","25000_29999","30000_34999","35000_39999","40000_44999","45000_45999","50000_59999","60000_74999","75000_99999","100000_124999","125000_149999","150000_199999","200000+"],
+  "Median Income":['median_income'],
   "Poverty Status":["poverty_status"],
   "School Enrollment":["public_school","private_school"],
   "Educational Attainment":["no_high_school","high_school","some_college","bachelors","graduate"],
@@ -156,7 +169,7 @@ categories : {
   "Journey TW by Time Public Trans.":['12_00ampt','5_00ampt','5_30ampt','6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt','11_00ampt','12_00pmpt','4_00pmpt']
 },
 
-  update_data:function(tracts){
+update_data:function(tracts){
     for (var census_var in acs_data.census_vars){
       acs_data.census_vars[census_var].value = 0;
     }

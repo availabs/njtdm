@@ -9,6 +9,8 @@ module.exports = {
 
 	calculateTripTable:function(req,res){
 
+		console.log('settings:',req.param('triptable_settings'))
+		
 	}
 	
 };
