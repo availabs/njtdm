@@ -420,23 +420,22 @@ function getProjection(width,height,json){
   var projection = d3.geo.albers(),
       path = d3.geo.path().projection(projection);
 
-    // new projection
-        var bounds = path.bounds(json),
-            wdth = bounds[1][0] - bounds[0][0],
-            hght = bounds[1][1] - bounds[0][1],
+  var bounds = path.bounds(json),
+      wdth = bounds[1][0] - bounds[0][0],
+      hght = bounds[1][1] - bounds[0][1],
 
-            k = Math.min(width/wdth, height/hght),
-            scale = projection.scale()*k;
+      k = Math.min(width/wdth, height/hght),
+      scale = projection.scale()*k;
 
-        projection.scale(scale);
+  projection.scale(scale);
 
-        bounds = path.bounds(json);
+  bounds = path.bounds(json);
 
-        var centroid = [(bounds[1][0]+bounds[0][0])/2, (bounds[1][1]+bounds[0][1])/2],//path.centroid(json),
-            translate = projection.translate();
+  var centroid = [(bounds[1][0]+bounds[0][0])/2, (bounds[1][1]+bounds[0][1])/2],//path.centroid(json),
+      translate = projection.translate();
 
-        projection.translate([translate[0] - centroid[0] + width / 2,
-                             translate[1] - centroid[1] + height / 2]);
+  projection.translate([translate[0] - centroid[0] + width / 2,
+                       translate[1] - centroid[1] + height / 2]);
     // return d3.geo.mercator().center(center).scale(scale).translate(offset);
-    return projection;
+  return projection;
 }

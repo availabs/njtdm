@@ -119,6 +119,8 @@ function ReportCtrl( $scope,$http,$filter) {
     if($scope.time === id){ return 'active'; }
     return '';
   };
+// declare route map
+  var modelAnalysisRouteMap = routemap();
   
   $scope.loadModelData = function(){
   	console.log('loading',$('#model_run_select').val())
@@ -139,19 +141,26 @@ function ReportCtrl( $scope,$http,$filter) {
         $scope.newData(data,$scope.loadedModels[$scope.loadedModels.length-1].name);
       });
     }
+
+// initialize route map
+    modelAnalysisRouteMap('#model-analysis-routemap-svg');
   };
+
   $scope.filterRoute = function(route){
     reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){if(d.substring(0,3) == route){ return d;}});
     reportAnalyst.modelTripCountChart      
       .group(reportAnalyst.modelRouteStartGroup)
       
     dc.renderAll();
+
+// draw a route on route map
+    modelAnalysisRouteMap.drawRoute(route);
   }
 
   $scope.newData = function(data,name){
     var marketAreas = [7,11,9]; //Market Area template ids in tdmData.scenario
  
-    
+console.log($scope.api+'tracts/scenario/'+marketAreas[$scope.activeMarket])    
     d3.json($scope.api+'tracts/scenario/'+marketAreas[$scope.activeMarket],function(err,geoData){
      
       reportAnalyst.geoData = geoData;
