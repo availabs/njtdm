@@ -1,8 +1,11 @@
 <header>
+    <button type="submit" class="btn btn-danger pull-right" ng-click="runModel()" style="margin-top: -10px;margin-left:5px;">Run Model</button>
+    <button type="submit" class="btn btn-primary pull-right" ng-click="getTripTable()" style="margin-top: -10px;">Generate Trip Table</button>
     <h4>
         <i class="fa fa-align-left"></i>
-        New Model
+        New Model <small>Trips Planned: {{triptable.tt.length | number}} | Trips Unrouteable: {{triptable.failed.length | number}}</small>
     </h4>
+
 </header>
 <div class="body" ng-controller="newModelCtrl">
 	<ul class="nav nav-tabs dem-tabs" id="myDataTab">
