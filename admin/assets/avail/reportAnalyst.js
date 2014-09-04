@@ -418,24 +418,22 @@ function getProjection(width,height,json){
   //   offset  = [width - (bounds[0][0] + bounds[1][0])/2, height - (bounds[0][1] + bounds[1][1])/2];
 
   var projection = d3.geo.albers(),
-      path = d3.geo.path().projection(projection);
+      path = d3.geo.path()
+          .projection(projection);
 
-  var bounds = path.bounds(json),
-      wdth = bounds[1][0] - bounds[0][0],
-      hght = bounds[1][1] - bounds[0][1],
+    var bounds = path.bounds(json),
+        wdth = bounds[1][0] - bounds[0][0],
+        hght = bounds[1][1] - bounds[0][1],
 
-      k = Math.min(width/wdth, height/hght),
-      scale = projection.scale()*k;
+        k = Math.min(width/wdth, height/hght)*.95,
+        scale = projection.scale()*k;
 
-  projection.scale(scale);
+    var centroid = [(bounds[1][0]+bounds[0][0])/2, (bounds[1][1]+bounds[0][1])/2]//,
+        translate = projection.translate();
 
-  bounds = path.bounds(json);
-
-  var centroid = [(bounds[1][0]+bounds[0][0])/2, (bounds[1][1]+bounds[0][1])/2],//path.centroid(json),
-      translate = projection.translate();
-
-  projection.translate([translate[0] - centroid[0] + width / 2,
-                       translate[1] - centroid[1] + height / 2]);
+    projection.scale(scale)
+      .translate([translate[0]*k - centroid[0]*k + width / 2,
+                    translate[1]*k - centroid[1]*k + height / 2]);
     // return d3.geo.mercator().center(center).scale(scale).translate(offset);
   return projection;
 }

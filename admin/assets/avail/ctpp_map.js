@@ -381,18 +381,15 @@
             wdth = bounds[1][0] - bounds[0][0],
             hght = bounds[1][1] - bounds[0][1],
 
-            k = Math.min(width/wdth, height/hght),
-            scale = projection.scale()*k*0.95;
+            k = Math.min(width/wdth, height/hght)*.95,
+            scale = projection.scale()*k;
 
-        projection.scale(scale);
-
-        bounds = path.bounds(collection);
-
-        var centroid = [(bounds[1][0]+bounds[0][0])/2, (bounds[1][1]+bounds[0][1])/2],//path.centroid(collection),
+        var centroid = [(bounds[1][0]+bounds[0][0])/2, (bounds[1][1]+bounds[0][1])/2]//,
             translate = projection.translate();
 
-        projection.translate([translate[0] - centroid[0] + width / 2,
-                             translate[1] - centroid[1] + height / 2]);
+        projection.scale(scale)
+        	.translate([translate[0]*k - centroid[0]*k + width / 2,
+                        translate[1]*k - centroid[1]*k + height / 2]);
     }
 
 	this.ctppmap = ctppmap;

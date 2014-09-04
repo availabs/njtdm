@@ -131,9 +131,19 @@ function ReportCtrl( $scope,$http,$filter) {
     if($scope.time === id){ return 'active'; }
     return '';
   };
-// declare route map
-  var modelAnalysisRouteMap = routemap();
+
+// declare and initialize route map
+  var modelAnalysisRouteMap = avlminimap.Map()
+      .width(750)
+      .height(500);
+
+  d3.select('#model-analysis-routemap-svg')
+      .call(modelAnalysisRouteMap);
   
+  var routeLayer = avlminimap.Layer();
+
+  modelAnalysisRouteMap.append(routeLayer);
+
   $scope.loadModelData = function(){
   	console.log('loading',$('#model_run_select').val())
     var index = $('#model_run_select').val();
@@ -153,20 +163,32 @@ function ReportCtrl( $scope,$http,$filter) {
         $scope.newData(data,$scope.loadedModels[$scope.loadedModels.length-1].name);
       });
     }
-
-// initialize route map
-    modelAnalysisRouteMap('#model-analysis-routemap-svg');
   };
 
   $scope.filterRoute = function(route){
-    reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){if(d.substring(0,3) == route){ return d;}});
-    reportAnalyst.modelTripCountChart      
-      .group(reportAnalyst.modelRouteStartGroup)
-      
-    dc.renderAll();
+      reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){if(d.substring(0,3) == route){ return d;}});
+      reportAnalyst.modelTripCountChart      
+          .group(reportAnalyst.modelRouteStartGroup)
+          
+          dc.renderAll();
 
-// draw a route on route map
-    modelAnalysisRouteMap.drawRoute(route);
+  // draw a route on route map
+
+      var url = '/marketarea/'+$scope.marketarea.origin_gtfs+'/routes_geo';
+      d3.xhr(url)
+          .response(function(request) {
+              return JSON.parse(request.responseText);
+          })
+          .post(JSON.stringify({route: [route]}), function(error, data) {
+              if (error) {              
+                  console.log(error);
+                  return;
+              }
+
+              modelAnalysisRouteMap.zoomToBounds(data);
+              
+              routeLayer.data([data])();
+          })
   }
 
   $scope.newData = function(data,name){

@@ -19620,3 +19620,13 @@ ol.text-list {
 .data-pane-active-category {
     background-color: #f00;
 }
+
+.avl-minimap-map {
+  display: block;
+}
+
+.avl-minimap-path {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1px;
+}
