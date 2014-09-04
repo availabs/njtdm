@@ -15,7 +15,10 @@ module.exports = {
   	finish:{
   		type:'datetime'
   	},
-  	isFinished:'boolean',
+  	isFinished:{
+      type: 'boolean',
+      defaultsTo: false
+    },
   	type:'STRING',
   	info:{
   		type:'array'

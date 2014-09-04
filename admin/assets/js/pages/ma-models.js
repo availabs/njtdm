@@ -20,8 +20,9 @@ function modelPageCtrl($scope){
 
   $scope.marketarea = window.server_marketarea;
   $scope.datasources = window.server_datasources;
-  console.log($scope.datasources);
   $scope.active_page ='run';
+  $scope.model = {}
+  $scope.model.name = '';
   $scope.triptable = {};
 
   $scope.current_model_run = {
@@ -89,22 +90,26 @@ function modelPageCtrl($scope){
     .post(JSON.stringify({triptable_settings:$scope.current_model_run}),
     function(err,res){
       if(err){ console.log(err); }
-      console.log(res);
+      console.log('new trip table',res);
       triptableMap.updateData(res.tt);
       $scope.triptable = res;
       $scope.$apply();
     });
+  };
+
+  $scope.runModel = function(){
+    $scope.model.trips = $scope.triptable.tt;
+    $scope.model.info = JSON.stringify($scope.current_model_run);
+    $scope.model.marketareaId = $scope.marketarea.id;
+    
+    $('#runModal').modal('hide');
+    io.socket.post('/triptable/run',{model:$scope.model},function(err,data){
+      
+      if(err){console.log('ma models 105:error',err);}
+      console.log('run model',data);
+    })
   }
-
 }
-
-function newModelCtrl($scope){
-  
- 
-  
-  
-}
-
 
 function ReportCtrl( $scope,$http,$filter) {
   
@@ -198,7 +203,7 @@ function ReportCtrl( $scope,$http,$filter) {
   };
 
   //$scope.isActiveZone = funtion()  
-  $http.get($scope.api+'triptable/finished',{}).success(function(data){
+  io.socket.get('/triptable/finished',{}).success(function(data){
   	//console.log('hola finished',data)
     $scope.finished_models = data;
     $scope.finished_models.push({id: 'acam', marketArea: 0,name:"AC AM Farebox",ampm:'am'});

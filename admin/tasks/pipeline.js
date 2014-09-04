@@ -65,6 +65,7 @@ var jsFilesToInject = [
     "lib/bootstrap/button.js",
     "lib/bootstrap/tab.js",
     "lib/bootstrap/dropdown.js",
+    "lib/bootstrap/modal.js",
     "lib/messenger-1.4.1/messenger.js",
     "lib/messenger-1.4.1/messenger-theme-flat.js",
 

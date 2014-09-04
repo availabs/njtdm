@@ -5,13 +5,113 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-module.exports = {
+function spawnModelRun(job,triptable_id){
+	var terminal = require('child_process').spawn('bash');
+	var current_progress = 0;
+	
+	terminal.stdout.on('data', function (data) {
+	    data = data+'';
+	    if(data.indexOf('status') !== -1){
+	    	//console.log('status',data.split(":")[1]);
+	    	Job.update({id:job.id},{status:data.split(":")[1],progress:0})
+    		.exec(function(err,updated_job){
+    			if(err){ console.log('job update error',error); }
+    			sails.sockets.blast('job_updated',updated_job);		
+    		});
+	    	current_progress =0;
+	    }
+	    else if(data.indexOf('progress') !== -1){
 
+	    	if(data.split(":")[1] !== current_progress){
+	    		current_progress = data.split(":")[1]
+	    		//console.log(current_progress);
+	    		Job.update({id:job.id},{progress:current_progress})
+    			.exec(function(err,updated_job){
+    				if(err){ console.log('job update error',error); }
+    				sails.sockets.blast('job_updated',updated_job);		
+    			});
+	    	}
+	    }
+	    else{
+	    	console.log('error probably',data)
+	    }
+	});
+
+	terminal.on('exit', function (code) {
+		code = code*1;
+	    console.log('child process exited with code ' + code);
+	    if(code == 0){
+	    	
+	    	if(err){ console.log('Model Run error',error);}
+				
+		    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Sucess'})
+			.exec(function(err,updated_job){
+				if(err){ console.log('job update error',error); }
+				sails.sockets.blast('job_updated',updated_job);		
+			});
+		
+					
+		}else{
+			Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Failure'})
+			.exec(function(err,updated_job){
+				if(err){ console.log('job update error',error); }
+				sails.sockets.blast('job_updated',updated_job);		
+			});
+		}
+	});
+
+	setTimeout(function() {
+	    terminal.stdin.write('php -f php/runModel.php lor.availabs.org 5432 njtdmData postgres transit '
+	    	+triptable_id
+	    	+'\n');
+
+	    terminal.stdin.end();
+	}, 1000);
+}
+
+module.exports = {
+	
+	runModel:function(req,res){
+		var model=req.param('model');
+
+		//console.log('TriptableController.runModel',model);
+		
+		Triptable.create(model).exec(function(err,tt){
+			if(err){console.log('tt create error',err)
+					
+					res.json({message:'Create tt Errer',error:err});
+					return;
+				}
+
+			Job.create({
+				isFinished:false,
+				type:'Model Run',
+				info:[{'name':model.name,'numTrips':model.trips.length}],
+				status:'Started'
+			})
+			.exec(function(err,job){
+				if(err){console.log('create job error',err)
+					
+					res.json({message:'Create Job Errer',error:err});
+					return;
+				}
+				sails.sockets.blast('job_created',job);
+
+			
+				spawnModelRun(job,tt.id);
+
+				res.json({message:'model run started',ttId:tt.id});
+				return;
+				
+			})
+		})
+
+	},
 	calculateTripTable:function(req,res){
 		var triptable = req.param('triptable_settings');
 		var tracts = triptable.marketarea.zones.replace(/\"/g,"'").replace("[","(").replace("]",")");
 		var output = {tt:[],failed:[]};
-		console.log('settings:',req.param('triptable_settings'));
+		//console.log('settings:',req.param('triptable_settings'));
 		getCensusData(tracts,triptable.datasources.acs_source,function(acs_tracts){
 			acs_data.update_data(acs_tracts);
 
@@ -22,7 +122,7 @@ module.exports = {
 						getODPoints(triptable.od,triptable.datasources.gtfs_source,tracts,function(ODPoints){
 							tractTrips.forEach(function(tractPair){
 								if(typeof acs_data.acs[tractPair.home_tract] == 'undefined'){
-									console.log(tractPair.home_tract)
+									//console.log(tractPair.home_tract)
 								}else{
 									var time = getTimeMatrix(tractPair);
 									if(triptable.time == 'fullday'){
@@ -37,7 +137,7 @@ module.exports = {
 										}
 									}else{
 										var numTrips = parseInt(getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
-										console.log('regression num trips',numTrips);
+										//console.log('regression num trips',numTrips);
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,triptable.time,output)
 										}
@@ -71,7 +171,7 @@ module.exports = {
 									}else{
 										var numTrips = parseInt(Math.round(tractPair.bus_total*(time.intime['am']/acs_data.acs[tractPair.home_tract].bus_to_work))) || 0;
 										//console.log(tractPair.home_tract,numTrips,output.tt.length);
-										console.log('ctppp num trips',numTrips);
+										//console.log('ctppp num trips',numTrips);
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,triptable.time,output)
 										}
