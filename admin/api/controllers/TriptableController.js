@@ -73,7 +73,7 @@ module.exports = {
 	finishedModels: function(req,res){
 		var marketareaId = req.param('marketarea');
 		var sql = 'SELECT id,name,info FROM triptable where  "isFinished" = true and "marketareaId" = '+marketareaId;
-		console.log('finished models',sql);
+		///console.log('finished models',sql);
 		Triptable.query(sql,{},function(err,data){
 			if(err){
 				console.log('tt query',sql,err);
@@ -88,15 +88,18 @@ module.exports = {
 		if(typeof req.param('id') == 'undefined'){
 			console.log('model Data no id passed');
 			res.json({responseText:'Must pass model run ID'},500)
-
 		}
+		
+		//farebox data is cached
 		var farebox_sets = ['acam','acammin','acammax','princeam','princeammin','princeammax','princepm','princepmmin','princepmmax','princefull','princefullmin','princefullmax','acpm','acpmmin','acpmmax'];
 		var id = req.param('id');
 		if(farebox_sets.indexOf(id) !== -1){
 			res.json(farebox[id]);
 			return;
 		}
-		console.log('loading model run data')
+
+		//console.log('loading model run data')
+		//get data from Model RUn
 		var sql = 'SELECT name,info FROM triptable where "id" = '+id;
 		console.log('finished models',sql);
 		Triptable.query(sql,{},function(err,data){
@@ -122,7 +125,7 @@ module.exports = {
 			 		+" where a.run_id = "+req.param('id')
 			 		+"  and mode = 'BUS'and g.fare_zone like 'P%' ";
 			 		sql+="  and a.route in "+routes;
-				console.log(sql);
+				//console.log(sql);
 				Triptable.query(sql,{},function(err,output){
 					if (err) {
 						res.send('{sql:"'+sql+'",status:"error",message:"'+err+'"}',500);
@@ -181,6 +184,7 @@ module.exports = {
 			switch(triptable.type) {
 				case 'regression':
 					//regression model
+					console.log('regression')
 					getCTTPTracts(triptable.datasources.ctpp_source,tracts,function(tractTrips){
 						getODPoints(triptable.od,triptable.datasources.gtfs_source,tracts,function(ODPoints){
 							tractTrips.forEach(function(tractPair){
@@ -188,63 +192,120 @@ module.exports = {
 									//console.log(tractPair.home_tract)
 								}else{
 									var time = getTimeMatrix(tractPair);
-									if(triptable.time == 'fullday'){
+									if(triptable.time == 'full'){
 
-										var numTrips = getRegressionTrips(tractPair,time,'am',triptable.marketarea.id);
+										//am riderrs
+										var numTrips = parseInt(getRegressionTrips(tractPair,time,'am',triptable.marketarea.id)) || 0;
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
 										}
-										numTrips = getRegressionTrips(tractPair,time,'pm',triptable.marketarea.id);
+										//plus pm return trip riders
+										numTrips = parseInt(getRegressionTrips(tractPair,time,'pm',triptable.marketarea.id)) || 0;
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'pm',output)
 										}
-									}else{
+										//plus pm to work riders
+										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										for(var i = 0; i < numTrips;i++){
+											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
+										}
+										//plus off peak riders
+										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										for(var i = 0; i < numTrips;i++){
+											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
+										}
+
+									}else if(triptable.time =='am'){
+										
+										//am riders
 										var numTrips = parseInt(getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
-										//console.log('regression num trips',numTrips);
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,triptable.time,output)
+										}
+									
+									}
+									else if(triptable.time =='pm'){
+										
+										//pm return trip riders
+										var numTrips = parseInt(getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										for(var i = 0; i < numTrips;i++){
+											planTrip(tractPair,time.timeMatrix,ODPoints,'pm',output)
+										}
+										//pm to work riders
+										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										for(var i = 0; i < numTrips;i++){
+											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
 										}
 									}
 								}
 								//done send output
 									
 							});
-							//console.log('tt done',output);
+							console.log('regression done',output.tt.length);
 							res.json(output);
 						})
 					});
 					break;
 				case 'ctpp':
+					console.log('ctpp');
 					getCTTPTracts(triptable.datasources.ctpp_source,tracts,function(tractTrips){
 						getODPoints(triptable.od,triptable.datasources.gtfs_source,tracts,function(ODPoints){
 							tractTrips.forEach(function(tractPair){
+								triptable.marketarea.id = -1
 								if(typeof acs_data.acs[tractPair.home_tract] == 'undefined'){
 									//console.log(tractPair.home_tract)
 								}else{
 									var time = getTimeMatrix(tractPair);
-									if(triptable.time == 'fullday'){
+									if(triptable.time == 'full'){
 
-										var numTrips = tractPair.bus_total;
+										//am riderrs
+										var numTrips = parseInt(getRegressionTrips(tractPair,time,'am',triptable.marketarea.id)) || 0;
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
 										}
+										//plus pm return trip riders
+										numTrips = parseInt(getRegressionTrips(tractPair,time,'pm',triptable.marketarea.id)) || 0;
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'pm',output)
 										}
-									}else{
-										var numTrips = parseInt(Math.round(tractPair.bus_total*(time.intime['am']/acs_data.acs[tractPair.home_tract].bus_to_work))) || 0;
-										//console.log(tractPair.home_tract,numTrips,output.tt.length);
-										//console.log('ctppp num trips',numTrips);
+										//plus pm to work riders
+										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										for(var i = 0; i < numTrips;i++){
+											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
+										}
+										//plus off peak riders
+										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										for(var i = 0; i < numTrips;i++){
+											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
+										}
+
+									}else if(triptable.time =='am'){
+										
+										//am riders
+										var numTrips = parseInt(getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,triptable.time,output)
 										}
+									
+									}
+									else if(triptable.time =='pm'){
+										
+										//pm return trip riders
+										var numTrips = parseInt(getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										for(var i = 0; i < numTrips;i++){
+											planTrip(tractPair,time.timeMatrix,ODPoints,'pm',output)
+										}
+										//pm to work riders
+										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										for(var i = 0; i < numTrips;i++){
+											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
+										}
 									}
 								}
-								//done send output
 								
-								
+								//done send output					
 							});
-							//console.log('tt done',output);
+							console.log('ctpp output',output.tt.length);
 							res.json(output);
 						})
 					});
@@ -311,17 +372,17 @@ function getRegressionTrips(tractPair,time,timeOfDay,marketarea){
 			regressionRiders =  acs_data.acs[tractPair.home_tract].car_0* 0.5438445;
 			regressionRiders += acs_data.acs[tractPair.home_tract].car_1*0.135101;
 			regressionRiders += acs_data.acs[tractPair.home_tract].information*-0.7550878;
-			regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.01220453;
+			//regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.01220453;
 		break;
 		case 6:
 		default:
 			regressionRiders = acs_data.acs[tractPair.home_tract].bus_to_work;
 	}
+
 	var regRatio = 1;
-	regRation= Math.round(regressionRiders) / acs_data.acs[tractPair.home_tract].bus_to_work;
+	regRatio= Math.round(regressionRiders) / acs_data.acs[tractPair.home_tract].bus_to_work;
 	
-	var output = tractPair.bus_total*(time.intime['am']/acs_data.acs[tractPair.home_tract].bus_to_work)*Math.abs(regRatio);
-	//console.log(output,)
+	var output = tractPair.bus_total*(time.intime['am']/acs_data.acs[tractPair.home_tract].public_transportation_to_work)*Math.abs(regRatio);
 	return Math.round(output*1);
 }
 
@@ -346,7 +407,7 @@ function getTimeMatrix(tractPair){
 		output.intime['off'] += acs_data.acs[tractPair.home_tract][timeVar]*1;
 	})
 
-	output.intime['fullday'] = output.intime['am']+output.intime['pm']+output.intime['off'];
+	output.intime['full'] = output.intime['am']+output.intime['pm']+output.intime['off'];
 
 
 	output.amPercent = output.intime['am']/acs_data.acs[tractPair.home_tract].bus_to_work;
