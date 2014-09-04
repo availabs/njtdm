@@ -142,7 +142,19 @@ function ReportCtrl( $scope,$http,$filter) {
     if($scope.time === id){ return 'active'; }
     return '';
   };
+
+// declare and initialize route map
+  var modelAnalysisRouteMap = avlminimap.Map()
+      .width(750)
+      .height(500);
+
+  d3.select('#model-analysis-routemap-svg')
+      .call(modelAnalysisRouteMap);
   
+  var routeLayer = avlminimap.Layer();
+
+  modelAnalysisRouteMap.append(routeLayer);
+
   $scope.loadModelData = function(){
   	console.log('loading',$('#model_run_select').val())
     var index = $('#model_run_select').val();
@@ -163,17 +175,37 @@ function ReportCtrl( $scope,$http,$filter) {
       });
     }
   };
+
   $scope.filterRoute = function(route){
-    reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){if(d.substring(0,3) == route){ return d;}});
-    reportAnalyst.modelTripCountChart      
-      .group(reportAnalyst.modelRouteStartGroup)
-      
-    dc.renderAll();
+      reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){if(d.substring(0,3) == route){ return d;}});
+      reportAnalyst.modelTripCountChart      
+          .group(reportAnalyst.modelRouteStartGroup)
+          
+          dc.renderAll();
+
+  // draw a route on route map
+
+      var url = '/marketarea/'+$scope.marketarea.origin_gtfs+'/routes_geo';
+      d3.xhr(url)
+          .response(function(request) {
+              return JSON.parse(request.responseText);
+          })
+          .post(JSON.stringify({route: [route]}), function(error, data) {
+              if (error) {              
+                  console.log(error);
+                  return;
+              }
+
+              modelAnalysisRouteMap.zoomToBounds(data);
+              
+              routeLayer.data([data])();
+          })
   }
 
   $scope.newData = function(data,name){
     var marketAreas = [7,11,9]; //Market Area template ids in tdmData.scenario
  
+<<<<<<< HEAD
     
      d3.json('/data/tracts.json', function(error, geo) {
       tracts = geo;
@@ -186,6 +218,11 @@ function ReportCtrl( $scope,$http,$filter) {
              geoData.features.push(feat);
           }
       });
+=======
+console.log($scope.api+'tracts/scenario/'+marketAreas[$scope.activeMarket])    
+    d3.json($scope.api+'tracts/scenario/'+marketAreas[$scope.activeMarket],function(err,geoData){
+     
+>>>>>>> 5de0457ae6c053b19607b58f68a03d6722f40475
       reportAnalyst.geoData = geoData;
       reportAnalyst.update_data(data,name);
       $scope.routes = []

@@ -61,9 +61,6 @@ module.exports.routes = {
   '/marketarea/tohome/all_lodes_data': 'MarketAreaController.getAllLODEStohome',
   '/marketarea/:id/tohome/lodes_travel_data': 'MarketAreaController.getLODEStohome',
 
-  //'/marketarea/:id/lodes_start_data': 'MarketAreaController.getLODESstarts',
-  //'/marketarea/:id/lodes_travel_data': 'MarketAreaController.getLODESends',
-
   '/marketarea/:id/ma_route_data': 'MarketAreaController.getAllMARoutes',
 
   //---------------------------------
