@@ -205,7 +205,7 @@ function ReportCtrl( $scope,$http,$filter) {
   $scope.newData = function(data,name){
     var marketAreas = [7,11,9]; //Market Area template ids in tdmData.scenario
  
-<<<<<<< HEAD
+
     
      d3.json('/data/tracts.json', function(error, geo) {
       tracts = geo;
@@ -218,11 +218,6 @@ function ReportCtrl( $scope,$http,$filter) {
              geoData.features.push(feat);
           }
       });
-=======
-console.log($scope.api+'tracts/scenario/'+marketAreas[$scope.activeMarket])    
-    d3.json($scope.api+'tracts/scenario/'+marketAreas[$scope.activeMarket],function(err,geoData){
-     
->>>>>>> 5de0457ae6c053b19607b58f68a03d6722f40475
       reportAnalyst.geoData = geoData;
       reportAnalyst.update_data(data,name);
       $scope.routes = []

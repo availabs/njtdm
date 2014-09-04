@@ -121,11 +121,6 @@ module.exports = {
 					+" join \""+gtfs_table+"\".stop_times d ON d.stop_sequence = 1 and a.gtfs_trip_id = d.trip_id "
 			 		+" where a.run_id = "+req.param('id')
 			 		+"  and mode = 'BUS'and g.fare_zone like 'P%' ";
-			 		// if(ampm == 'am'){
-			 		// 	sql += "  and (d.arrival_time like '06%' or  d.arrival_time like '07%' or d.arrival_time like '08%' or d.arrival_time like '09%') "
-			 		// }else if(ampm =='pm'){
-			 		// 	sql += "  and (d.arrival_time like '13%' or d.arrival_time like '14%' or  d.arrival_time like '15%' or d.arrival_time like '16%' or d.arrival_time like '17%' or d.arrival_time like '18%') "	 			
-			 		// }
 			 		sql+="  and a.route in "+routes;
 				console.log(sql);
 				Triptable.query(sql,{},function(err,output){
