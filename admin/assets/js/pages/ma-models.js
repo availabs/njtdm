@@ -116,22 +116,16 @@ function ReportCtrl( $scope,$http,$filter) {
   //-------------------------------------------------------
   // Scope Setup
   ///------------------------------------------------------
-  $scope.api = 'http://lor.availabs.org:1338/';
+  $scope.marketarea = window.server_marketarea;
   //$scope.api = 'http://localhost:1337/';
   $scope.colors = colorbrewer.Set1[5];
 
-  $scope.marketAreas = [
-    {name:'Atlantic City', id:0},
-    {name:'Princeton / Trenton', id:1},
-    {name:'Paterson', id:2}
-  ];
   $scope.routes = [];
   $scope.time = 'am';
   $scope.times = ['am','pm','full day'];
 
   $scope.loadedData = {0:[],1:[],2:[]};
 
-  $scope.activeMarket = 0;
   
   $scope.loadedModels = [];
   $scope.loading = false;
@@ -139,15 +133,7 @@ function ReportCtrl( $scope,$http,$filter) {
   //-------------------------------------------------------
   // Interface functions
   //-------------------------------------------------------
-  $scope.setActiveMarket = function(id){
-    $scope.activeMarket = id;
-  };
-  
-  $scope.isActiveMarket = function(id){
-    if($scope.activeMarket === id){ return 'active'; }
-    return '';
-  };
-
+ 
   $scope.setActiveTime = function(id){
     $scope.time = id;
   };
@@ -167,9 +153,9 @@ function ReportCtrl( $scope,$http,$filter) {
     });
     if(v !== -1){
       console.log('loading this model',$scope.finished_models[v].ampm);
-      $http.post($scope.api+'triptable/'+index+'/modeldata',{'ampm':$scope.finished_models[v].ampm})
-      .success(function(data){
-       
+      d3.json('/triptable/'+index+'/modeldata',
+        function(err,data){
+        console.log('loadModelData',data);
         $scope.loadedModels.push($scope.finished_models[v]);
         $scope.finished_models.splice(v,1);
         $scope.loading=false;
@@ -189,8 +175,17 @@ function ReportCtrl( $scope,$http,$filter) {
     var marketAreas = [7,11,9]; //Market Area template ids in tdmData.scenario
  
     
-    d3.json($scope.api+'tracts/scenario/'+marketAreas[$scope.activeMarket],function(err,geoData){
-     
+     d3.json('/data/tracts.json', function(error, geo) {
+      tracts = geo;
+      var geoData = {
+        type: "FeatureCollection",
+        features: []
+      };
+      tracts.features.forEach(function(feat){
+          if($scope.marketarea.zones.indexOf(feat.properties.geoid) !== -1){
+             geoData.features.push(feat);
+          }
+      });
       reportAnalyst.geoData = geoData;
       reportAnalyst.update_data(data,name);
       $scope.routes = []
@@ -203,9 +198,11 @@ function ReportCtrl( $scope,$http,$filter) {
   };
 
   //$scope.isActiveZone = funtion()  
-  io.socket.get('/triptable/finished',{}).success(function(data){
+
+  d3.json('/triptable/finished/'+$scope.marketarea.id,function(data){
   	//console.log('hola finished',data)
     $scope.finished_models = data;
+    console.log('trip tables',data);
     $scope.finished_models.push({id: 'acam', marketArea: 0,name:"AC AM Farebox",ampm:'am'});
     $scope.finished_models.push({id: 'acammin', marketArea: 0,name:"AC AM Farebox Min",ampm:'am'});
     $scope.finished_models.push({id: 'acammax', marketArea: 0,name:"AC AM Farebox Max",ampm:'am'});

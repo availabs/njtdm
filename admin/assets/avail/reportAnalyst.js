@@ -27,7 +27,7 @@ reportAnalyst = {
     if(reportAnalyst.modelRuns.indexOf(name) == -1){
       reportAnalyst.modelRuns.push(name);
     }
-    //console.log(data);
+    console.log('report analysty data',data);
     var timeFormat = d3.time.format("%Y-%m-%dT%H:%M:%S.000Z");
     data.forEach(function(d){
       if(typeof(d.start_time) != 'undefined'){

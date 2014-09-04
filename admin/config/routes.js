@@ -32,6 +32,8 @@ module.exports.routes = {
   //---------------------------------
   '/triptable':'TriptableController.calculateTripTable',
   '/triptable/run':'TriptableController.runModel',
+  '/triptable/finished/:marketarea':'TriptableController.finishedModels',
+  '/triptable/:id/modeldata':'TriptableController.modelData',
 
   //---------------------------------
   // Job

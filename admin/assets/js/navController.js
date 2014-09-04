@@ -17,12 +17,12 @@ function headerController($scope) {
 	    io.socket.on('job', function(message){console.log('nav message',message)});
 	    
 	    io.socket.on('job_created', function(data) {
-	      console.log('jc',data);
+	      //console.log('jc',data);
 	      $scope.current_job[data.id] = data;
 	    });
 
 	    io.socket.on('job_updated', function(data) {
-	      console.log('job updated',data,data[0].id,data[0])
+	      //console.log('job updated',data,data[0].id,data[0])
 	      $scope.current_jobs[data[0].id] = data[0];
 	      $scope.$apply();
 	    });
