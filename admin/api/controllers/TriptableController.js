@@ -372,9 +372,19 @@ function getRegressionTrips(tractPair,time,timeOfDay,marketarea){
 			regressionRiders =  acs_data.acs[tractPair.home_tract].car_0* 0.5438445;
 			regressionRiders += acs_data.acs[tractPair.home_tract].car_1*0.135101;
 			regressionRiders += acs_data.acs[tractPair.home_tract].information*-0.7550878;
-			//regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.01220453;
+			regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.00020453;
+		break;
+		case 7:
+			regressionRiders =  acs_data.acs[tractPair.home_tract].car_0* 0.3400127;
+			regressionRiders += acs_data.acs[tractPair.home_tract].race_black*0.02379176;
+			regressionRiders += acs_data.acs[tractPair.home_tract].age25_29*0.07151607;
 		break;
 		case 6:
+			regressionRiders = 44.0737;  
+			regressionRiders +=acs_data.acs[tractPair.home_tract].car_0* 0.226559;
+			regressionRiders += acs_data.acs[tractPair.home_tract].car_1*0.09415446;
+			//regressionRiders += acs_data.acs[tractPair.home_tract].employment*7.;
+		break;
 		default:
 			regressionRiders = acs_data.acs[tractPair.home_tract].bus_to_work;
 	}
