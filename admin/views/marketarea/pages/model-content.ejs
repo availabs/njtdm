@@ -9,6 +9,7 @@
                     <li class="active">
                         <a href="#routes" data-toggle="tab" ng-click="setActivePage('run')">New Model</a>
                     </li>
+                   
                 </ul>
             </header>
             <div class="body tab-content" style="overflow:hidden;">
@@ -97,9 +98,6 @@
 
                             </div>
                         </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Generate Trip Table</button>
-                        </div>
                     </fieldset>
                 </form>
             </div>
@@ -125,9 +123,8 @@
                             <label for="gtfs-select" class="control-label">GTFS</label>
 
                             <div class="controls form-group">
-                                <select id="gtfs-select" ng-model="current_model_run.gtfs_source" data-placeholder="Choose a model timeframe..." class=" form-control" tabindex="-1">
-                                    <option  value=""></option>
-                                    <!-- <option ng-repeat="(id,name) in modelTimes" value="{{id}}" ng-selected="time_selector(id)">{{name}}</option> -->
+                                <select id="gtfs-select" ng-model="current_model_run.datasources.gtfs_source" data-placeholder="Choose a model timeframe..." class=" form-control" tabindex="-1">
+                                    <option ng-repeat="gtfs in datasources.gtfs" value="{{gtfs.tableName}}" ng-selected="time_selector(id)">{{gtfs.agency+" "+gtfs.startDate}}</option>
                                     
                                 </select>
                             
@@ -138,8 +135,9 @@
                             <label for="gtfs-select" class="control-label">ACS</label>
 
                             <div class="controls form-group">
-                                <select id="acs-select" ng-model="current_model_run.acs_source" data-placeholder="Choose a Model Type..." class=" form-control" tabindex="-1">
+                                <select id="acs-select" ng-model="current_model_run.datasources.acs_source" data-placeholder="Choose a Model Type..." class=" form-control" tabindex="-1">
                                     
+                                    <option ng-repeat="acs in datasources.acs" value="{{acs.tableName}}" ng-selected="time_selector(id)">{{acs.year+" "+acs.dataSource+" Year Summary"}}</option>
                                 </select>
                                 
                                 <span class="help-block pull-left">Choose the American Community Survey source for this model run.</span>
@@ -149,9 +147,9 @@
                             <label for="gtfs-select" class="control-label">LODES</label>
 
                             <div class="controls form-group">
-                                <select id="lodes-select" ng-model="current_model_run.lodes_source" data-placeholder="Choose a Model Type..." class=" form-control" tabindex="-1">
+                                <select id="lodes-select" ng-model="current_model_run.datasources.lodes_source" data-placeholder="Choose a Model Type..." class=" form-control" tabindex="-1">
                                     <option  value=""></option>
-                                    
+                                    <option ng-repeat="lodes in datasources.lodes" value="{{lodes.tableName}}" ng-selected="time_selector(id)">{{lodes.dataSource}}</option>
                                 </select>
                                 
                                 <span class="help-block pull-left">Choose the LEHD Origin Destination feed for this model run.</span>
@@ -160,9 +158,9 @@
                         <div class="control-group">
                             <label for="gtfs-select" class="control-label">CTPP</label>
                             <div class="controls form-group">
-                                <select id="ctpp-select" ng-model="current_model_run.ctpp_source" data-placeholder="Choose a Model Forecast..." class=" form-control" tabindex="-1" >
-                                    <option  value=""></option>
+                                <select id="ctpp-select" ng-model="current_model_run.datasources.ctpp_source" class=" form-control" tabindex="-1" >
                                     
+                                    <option ng-repeat="ctpp in datasources.ctpp" value="{{ctpp.tableName}}">{{ctpp.tableName}}</option>
                                 </select>
                                 <span class="help-block pull-left">Choose the CTPP data setmodel run.</span>
                                 {{current_model_run.fore}}

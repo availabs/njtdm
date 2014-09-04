@@ -7,6 +7,27 @@
 
 var topojson = require("topojson");
 
+function getDatasources(cb){
+  var datasources = {} 
+  MetaGtfs.find().exec(function(err,mgtfs){
+    if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+    datasources.gtfs = mgtfs;
+    MetaAcs.find().exec(function(err,macs){
+      if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+      datasources.acs = macs;
+      MetaLodes.find().exec(function(err,mlodes){
+        if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+        datasources.lodes = mlodes;
+        MetaCtpp.find().exec(function(err,mctpp){
+          if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+          datasources.ctpp = mctpp;
+          cb(datasources);
+        });
+      });
+    });
+  });
+}
+
 function getNavData(cb){
   MarketArea.find().exec(function(err,ma){
     if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
@@ -43,7 +64,6 @@ function getCensusData(marketarea,table,cb){
       if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
       return cb(data.rows);
     });
-
 }
 
 function getRoutes(marketarea,cb){
@@ -393,12 +413,15 @@ module.exports = {
     })
   },
   models:function(req,res){
+    var datasources = {}
     getNavData(function(navData){
       MarketArea.findOne(req.param('id')).exec(function(err,ma){
         if (err) {res.send('{status:"error",message:"'+err+'"}',500);return console.log(err);}
-        res.view({page:'ma-models',panel:'marketarea',nav:navData,marketarea:ma})
-      });
-    })
+        getDatasources(function(datasources){
+          res.view({page:'ma-models',panel:'marketarea',nav:navData,marketarea:ma,ds:datasources})
+        });
+      })
+    });
   },
 };
 

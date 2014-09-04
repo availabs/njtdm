@@ -19,17 +19,47 @@ $(function(){
 function modelPageCtrl($scope){
 
   $scope.marketarea = window.server_marketarea;
+  $scope.datasources = window.server_datasources;
   $scope.active_page ='run';
+  $scope.model = {}
+  $scope.model.name = '';
+  $scope.triptable = {};
+
+  $scope.current_model_run = {
+    marketarea:$scope.marketarea,
+    type:'regression',
+    time:'am',
+    od:'bus',
+    forecast:'current',
+    forecast_type:'mpo',
+    forecast_growth:5,
+    datasources:{
+      acs_source:$scope.datasources.acs[0].tableName,
+      lodes_source:$scope.datasources.lodes[0].tableName,
+      gtfs_source:$scope.datasources.gtfs[0].tableName,
+      ctpp_source:$scope.datasources.ctpp[0].tableName
+    }
+  };
 
   triptableMap.init('#triptable-svg',$scope.marketarea);
-  
+  d3.json('/triptable')
+  .post(JSON.stringify({triptable_settings:$scope.current_model_run}),
+  function(err,res){
+    if(err){ console.log(err); }
+    //console.log(res);
+    $scope.triptable = res;
+    console.log($scope.triptable)
+    triptableMap.updateData(res.tt);
+    $scope.$apply();
+  });
+
   $scope.setActivePage = function(val){ $scope.active_page=val; }
 
   $scope.modelTypes = {
-    'lehd':"LODES+ACS",
+    ///'lehd':"LODES+ACS",
     'ctpp':"CTPP",
     'regression':"Regression",
-    'survey':"Survey"
+    //'survey':"Survey"
   }
   $scope.modelTimes = {
     'am':'AM Peak',
@@ -47,19 +77,7 @@ function modelPageCtrl($scope){
     
   }
 
-  $scope.current_model_run = {
-    type:'regression',
-    time:'am',
-    od:'bus',
-    forecast:'current',
-    forecast_type:'mpo',
-    forecast_growth:5,
-    datasources:{
-      acs_source:1,
-      lodes_source:3
-
-    }
-  };
+  
 
   $scope.forecast_selector = function(val){ if(val == $scope.current_model_run.forecast){ return true; }else{ return false; } };
   $scope.od_selector = function(val){ if(val == $scope.current_model_run.od){ return true; }else{ return false; } };
@@ -69,22 +87,29 @@ function modelPageCtrl($scope){
 
   $scope.getTripTable = function(){
     d3.json('/triptable')
-    .post({triptable_settings:$scope.current_model_run},
+    .post(JSON.stringify({triptable_settings:$scope.current_model_run}),
     function(err,res){
       if(err){ console.log(err); }
-      console.log(res);    
+      console.log('new trip table',res);
+      triptableMap.updateData(res.tt);
+      $scope.triptable = res;
+      $scope.$apply();
     });
+  };
+
+  $scope.runModel = function(){
+    $scope.model.trips = $scope.triptable.tt;
+    $scope.model.info = JSON.stringify($scope.current_model_run);
+    $scope.model.marketareaId = $scope.marketarea.id;
+    
+    $('#runModal').modal('hide');
+    io.socket.post('/triptable/run',{model:$scope.model},function(err,data){
+      
+      if(err){console.log('ma models 105:error',err);}
+      console.log('run model',data);
+    })
   }
-
 }
-
-function newModelCtrl($scope){
-  
- 
-  
-  
-}
-
 
 function ReportCtrl( $scope,$http,$filter) {
   
@@ -209,7 +234,7 @@ console.log($scope.api+'tracts/scenario/'+marketAreas[$scope.activeMarket])
   };
 
   //$scope.isActiveZone = funtion()  
-  $http.get($scope.api+'triptable/finished',{}).success(function(data){
+  io.socket.get('/triptable/finished',{}).success(function(data){
   	//console.log('hola finished',data)
     $scope.finished_models = data;
     $scope.finished_models.push({id: 'acam', marketArea: 0,name:"AC AM Farebox",ampm:'am'});

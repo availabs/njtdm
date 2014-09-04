@@ -8,7 +8,15 @@
 module.exports = {
 
   attributes: {
-
+  	name:'string',
+  	info:'string',
+  	trips:'array',
+  	isFinished:{
+      type: 'boolean',
+      defaultsTo: false
+    },
+  	marketareaId:'integer',
   }
+
 };
 

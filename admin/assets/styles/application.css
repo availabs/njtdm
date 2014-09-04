@@ -19630,3 +19630,21 @@ ol.text-list {
   stroke: #000;
   stroke-width: 1px;
 }
+
+.acs-button {
+        fill: #fff;
+        stroke-width: 1px;
+        stroke: #666;
+}
+.acs-button-active {
+    fill: #ccc;
+}
+.ctpp-tract {
+    fill: #999;
+    stroke: #000;
+    stroke-width: 1;
+}
+.ctpp-tract-active {
+    fill: #090;
+    stroke-width: 5px;
+}

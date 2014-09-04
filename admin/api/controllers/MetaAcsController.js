@@ -92,7 +92,7 @@ module.exports = {
 		
 		Job.create({
 			isFinished:false,
-			type:'load-acs',
+			type:'load ACS',
 			info:[{'state':state,'dataSource':dataSource,'year':year,'sumlevel':sumlevel}],
 			status:'Started'
 		})

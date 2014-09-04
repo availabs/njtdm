@@ -1,10 +1,13 @@
 <header>
+    <button type="submit" class="btn btn-danger pull-right" data-toggle="modal" data-target="#runModal" data-backdrop="false" style="margin-top: -10px;margin-left:5px;">Run Model</button>
+    <button type="submit" class="btn btn-primary pull-right" ng-click="getTripTable()" style="margin-top: -10px;">Generate Trip Table</button>
     <h4>
         <i class="fa fa-align-left"></i>
-        New Model
+        New Model <small>Trips Planned: {{triptable.tt.length | number}} | Trips Unrouteable: {{triptable.failed.length | number}}</small>
     </h4>
+
 </header>
-<div class="body" ng-controller="newModelCtrl">
+<div class="body">
 	<ul class="nav nav-tabs dem-tabs" id="myDataTab">
         <li class='active' >
             <a  href="#map" data-toggle="tab">Map</a>
@@ -20,6 +23,46 @@
         <div  id="table" class="tab-pane active clearfix body">
         </div>
 </div>
+<div id="runModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div class="modal-dialog">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel2">Run Model</h4>
+        </div>
+        <div class="modal-body">
+            <h4>Model Info</h4>
+            <table class="table table-hover">
+               
+                <tr>
+                    <td>Model Type</td>
+                    <td>{{current_model_run.type}}</td>
+                </tr>
+                <tr>
+                    <td>Model Time</td>
+                    <td>{{current_model_run.time}}</td>
+                </tr>
+                <tr>
+                    <td>Forcast</td>
+                    <td>{{current_model_run.forecast}}</td>
+                </tr>
+                 <tr>
+                    <td>Number of Trips</td>
+                    <td>{{triptable.tt.length | number}}</td>
+                </tr>
+            </table>
+
+        </div>
+        <div class="modal-footer">
+            <input type="text" class="form-control md-col-4" ng-model='model.name' placeholder="Enter Model Name"><br>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-info" ng-disabled="model.name.length < 5" ng-click="runModel()">Run Model</button>
+        </div>
+
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
 <style>
 .dem-tabs li.active a{
         background-color: #ccc!important;
