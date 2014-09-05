@@ -248,4 +248,9 @@ function ReportCtrl( $scope,$http,$filter) {
     $scope.finished_models.push({id: 'princepmmin', marketArea: 1,name:"Princeton/Trenton PM Farebox Min",ampm:'pm'});
     $scope.finished_models.push({id: 'princepmmax', marketArea: 1,name:"Princeton/Trenton PM Farebox Max",ampm:'pm'});
   });
+
+
+  $scope.removeModel = function(model) {
+      console.log(model);
+  }
 }
