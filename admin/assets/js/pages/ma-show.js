@@ -50,7 +50,15 @@ function OverviewController ($scope) {
       acsmap.color(category, $scope.active_category)
     }
 
-	$scope.drawGraph = function(name, vars) {
+	$scope.removeRoute = function(route){
+    editmap.removeRoute(route);
+  }
+  $scope.saveChanges = function(){
+    editmap.saveChanges(function(data){
+      console.log('Changes Saved');
+    });
+  }
+  $scope.drawGraph = function(name, vars) {
       acsmap.color(vars[0], name)
 
   		$scope.active_category= name;

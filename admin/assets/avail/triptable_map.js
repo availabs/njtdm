@@ -19,7 +19,11 @@
             type: "FeatureCollection",
             features: []
         },
-        marketAreaTractsList = [];
+        marketAreaTractsList = [],
+        marketAreaCounties= {
+            type: "FeatureCollection",
+            features: []
+        };
 
     var clickedTract = null;
 
@@ -84,26 +88,29 @@
             .attr('fill', '#fff')
             .on('click',reset)
 
-    
-        d3.json('/data/tracts.json', function(error, data) {
-            tracts = data;
-            tracts.features.forEach(function(feat){
-                if(marketarea.zones.indexOf(feat.properties.geoid) !== -1){
-                   marketAreaTractsList.push(feat.properties.geoid);
-                   marketAreaTracts.features.push(feat);
-                }
-            });
-            draw(marketAreaTracts, 'ma12','market');
-            //zoomToFullExtent(marketAreaTracts);
 
-        });
-
+            d3.json('/data/tracts.json', function(error, data) {
+                tracts = data;
+                tracts.features.forEach(function(feat){
+                    if(marketarea.counties.indexOf(feat.properties.geoid.substring(0, 5)) !== -1){
+                        
+                    }
+                    if(marketarea.zones.indexOf(feat.properties.geoid) !== -1){
+                        marketAreaTractsList.push(feat.properties.geoid);
+                        marketAreaTracts.features.push(feat);
+                        
+                    }
+                });
+                draw(marketAreaTracts, 'ma12','market');
+            });   
+            
+        
         var buttonWidth = 75,
             buttonHeight = 30;
 
         var data = [
-            {text: 'Outbound', id: 'outbound'},
-            {text: 'Inbound', id: 'inbound'}
+            {text: 'Outbound', id: 'outbound'}, 
+           {text: 'Inbound', id: 'inbound'}
         ]
 
         svg.selectAll('.ctpp-button-group')
@@ -198,9 +205,25 @@
             .data(data.features)
 
         paths.enter().append('path')
-            .attr('class', type)
             .attr('id', function(d) { return 'ctpp-tract-'+d.properties.geoid; })
+        
+        if(type == 'market'){
+            paths
+            .attr('class', function(d){
+                if(marketAreaTractsList.indexOf(d.properties.geoid) != -1){
+                    return 'market';
+                }
+                return 'nonMarket'
+            })
             .on('click', clicked);
+        }
+
+        if(type == 'county'){
+            paths
+                .attr('stroke-dasharray',"20,10,5,5,5,10")
+                .attr('class', type)
+            
+        }
 
         paths.exit().remove();
 
@@ -261,6 +284,7 @@
                 clickedTract = d;
             }
 
+            console.log(d.properties);
             svg.selectAll('.temp-tract').remove();
 
             var tracts = svg.selectAll('path')
@@ -358,7 +382,7 @@
 
     function setColorScale(colorDomain) {
 
-        colorDomain.sort(function(a, b) { return a-b; })
+        colorDomain.sort(function(a, b) { return a-b; });
 
         colorScale.domain([colorDomain[0], colorDomain[colorDomain.length-1]]);
 

@@ -15,7 +15,12 @@
             type: "FeatureCollection",
             features: []
         },
-        marketAreaTractsList = [];
+        marketAreaCounties= {
+            type: "FeatureCollection",
+            features: []
+        },
+        marketarea ={};
+
 
     function zoomed() {
         projection.scale(zoom.scale())
@@ -24,7 +29,8 @@
         svg.selectAll('path').attr('d', path);
     }
 
-    editmap.init = function(svgID,marketarea) {
+    editmap.init = function(svgID,market_in) {
+        marketarea = market_in;        
         width = $('.tab-content').width()-15;
         height =  width;
 
@@ -55,15 +61,23 @@
             .attr('height', height)
             .attr('fill', '#fff')
 
-        d3.json('/data/tracts.json', function(error, data) {
-            tracts = data;
-            tracts.features.forEach(function(feat){
-                if(marketarea.zones.indexOf(feat.properties.geoid) !== -1){
-                   marketAreaTractsList.push(feat.properties.geoid);
-                   marketAreaTracts.features.push(feat);
+        d3.json ('/data/counties.json',function(err,counties){
+            topojson.feature(counties, counties.objects.tracts)
+            .features.forEach(function(county){
+                if(marketarea.counties.indexOf(county.properties.geoid) !== -1){
+                    marketAreaCounties.features.push(county);
                 }
+            }); 
+            draw(marketAreaCounties, 'counties','county');
+            d3.json('/data/tracts.json', function(error, data) {
+                tracts = data;
+                tracts.features.forEach(function(feat){
+                    if(marketarea.counties.indexOf(feat.properties.geoid.substring(0, 5)) !== -1){
+                        marketAreaTracts.features.push(feat);
+                    }
+                });
+                draw(marketAreaTracts, 'ma12','market');
             });
-            draw(marketAreaTracts, 'ma12','market');
         });
 
         d3.xhr('/marketarea/'+marketarea.origin_gtfs+'/ma_route_data')
@@ -90,7 +104,7 @@
             var b = d3.geo.bounds(marketAreaTracts);
             var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
 
-            cb(marketAreaTractsList, center);
+            cb(marketarea.zones, center);
         })
     }
 
@@ -114,8 +128,8 @@
         })
 
         collection.features.forEach(function(feat){
-            if(marketAreaTractsList.indexOf(feat.properties.geoid) === -1){
-               marketAreaTractsList.push(feat.properties.geoid);
+            if(marketarea.zones.indexOf(feat.properties.geoid) === -1){
+               marketarea.zones.push(feat.properties.geoid);
                marketAreaTracts.features.push(feat);     
             }
         });
@@ -160,7 +174,33 @@
             .data(data.features)
 
         paths.enter().append('path')
-            .attr('class', type)
+            
+
+        if(type == 'market'){
+            
+            paths
+            .attr('class', function(d){
+                if(marketarea.zones.indexOf(d.properties.geoid) != -1){
+                    return 'market';
+                }
+                return 'nonMarket'
+            })
+            .on('click',function(d){
+                if (d3.event.ctrlKey) {
+                    var tract = d3.select(this);
+                    if(marketarea.zones.indexOf(d.properties.geoid) === -1){
+                       marketarea.zones.push(d.properties.geoid);
+                       tract.attr("class", 'market');
+                    }else{
+                        marketarea.zones.splice(marketarea.zones.indexOf(d.properties.geoid),1);
+                        tract.attr("class", 'nonMarket');
+                    }
+                }
+            })
+
+        }else{
+            paths.attr('class', type)
+        }
 
         paths.exit().remove();
 
@@ -170,14 +210,23 @@
     editmap.removeRoute = function(routeID) {
         d3.selectAll('#route-'+routeID)
             .each(function(data) {
-                findIntersectingMarketAreas(data, -1);
+                //findIntersectingMarketAreas(data, -1);
             })
             .remove();
+
+        marketarea.routes.splice(marketarea.routes.indexOf(routeID),1)
             
         var b = d3.geo.bounds(marketAreaTracts);
         var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
 
-        cb(marketAreaTractsList,center);
+    }
+    
+    editmap.saveChanges = function(cb){
+        d3.json('/marketarea/update/'+marketarea.id)
+        .post(JSON.stringify({zones:marketarea.zones,routes:marketarea.routes}),function(err,data){
+            if(err){ console.log('err',err);}
+            cb(data);
+        })
     }
 
     this.editmap = editmap;

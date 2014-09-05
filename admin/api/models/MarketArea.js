@@ -11,6 +11,7 @@ module.exports = {
   	name:'STRING',
   	geounit: 'STRING',
   	zones : 'ARRAY',
+	counties : 'ARRAY',
 	routes : 'ARRAY',
 	center : 'ARRAY',
 	origin_gtfs:'INTEGER'
