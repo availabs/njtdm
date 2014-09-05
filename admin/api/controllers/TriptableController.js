@@ -182,6 +182,8 @@ module.exports = {
 			acs_data.update_data(acs_tracts);
 
 			switch(triptable.type) {
+				case 'ctpp':
+					triptable.marketarea.id = -1
 				case 'regression':
 					//regression model
 					console.log('regression')
@@ -246,70 +248,7 @@ module.exports = {
 						})
 					});
 					break;
-				case 'ctpp':
-					console.log('ctpp');
-					getCTTPTracts(triptable.datasources.ctpp_source,tracts,function(tractTrips){
-						getODPoints(triptable.od,triptable.datasources.gtfs_source,tracts,function(ODPoints){
-							tractTrips.forEach(function(tractPair){
-								triptable.marketarea.id = -1
-								if(typeof acs_data.acs[tractPair.home_tract] == 'undefined'){
-									//console.log(tractPair.home_tract)
-								}else{
-									var time = getTimeMatrix(tractPair);
-									if(triptable.time == 'full'){
-
-										//am riderrs
-										var numTrips = parseInt(getRegressionTrips(tractPair,time,'am',triptable.marketarea.id)) || 0;
-										for(var i = 0; i < numTrips;i++){
-											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
-										}
-										//plus pm return trip riders
-										numTrips = parseInt(getRegressionTrips(tractPair,time,'pm',triptable.marketarea.id)) || 0;
-										for(var i = 0; i < numTrips;i++){
-											planTrip(tractPair,time.timeMatrix,ODPoints,'pm',output)
-										}
-										//plus pm to work riders
-										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
-										for(var i = 0; i < numTrips;i++){
-											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
-										}
-										//plus off peak riders
-										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
-										for(var i = 0; i < numTrips;i++){
-											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
-										}
-
-									}else if(triptable.time =='am'){
-										
-										//am riders
-										var numTrips = parseInt(getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
-										for(var i = 0; i < numTrips;i++){
-											planTrip(tractPair,time.timeMatrix,ODPoints,triptable.time,output)
-										}
-									
-									}
-									else if(triptable.time =='pm'){
-										
-										//pm return trip riders
-										var numTrips = parseInt(getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
-										for(var i = 0; i < numTrips;i++){
-											planTrip(tractPair,time.timeMatrix,ODPoints,'pm',output)
-										}
-										//pm to work riders
-										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
-										for(var i = 0; i < numTrips;i++){
-											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
-										}
-									}
-								}
-								
-								//done send output					
-							});
-							console.log('ctpp output',output.tt.length);
-							res.json(output);
-						})
-					});
-					break;
+				
 				case 'lehd':
 					//code block
 					break;
