@@ -48,7 +48,7 @@ function modelPageCtrl($scope){
     if(err){ console.log(err); }
     //console.log(res);
     $scope.triptable = res;
-    console.log($scope.triptable)
+    //console.log('triptable',$scope.triptable)
     triptableMap.updateData(res.tt);
     $scope.$apply();
   });
@@ -156,8 +156,7 @@ function ReportCtrl( $scope,$http,$filter) {
   modelAnalysisRouteMap.append(routeLayer);
 
   $scope.loadModelData = function(){
-  	console.log('loading',$('#model_run_select').val())
-    var index = $('#model_run_select').val();
+  	var index = $('#model_run_select').val();
     $scope.loading = true;
     var v = -1;
     $scope.finished_models.forEach(function(model,i){
@@ -168,10 +167,12 @@ function ReportCtrl( $scope,$http,$filter) {
       d3.json('/triptable/'+index+'/modeldata',
         function(err,data){
         console.log('loadModelData',data);
+        $scope.finished_models[v].info = JSON.parse($scope.finished_models[v].info);
         $scope.loadedModels.push($scope.finished_models[v]);
         $scope.finished_models.splice(v,1);
         $scope.loading=false;
         $scope.newData(data,$scope.loadedModels[$scope.loadedModels.length-1].name);
+        console.log('loaded models',$scope.loadedModels);
       });
     }
   };
