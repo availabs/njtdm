@@ -147,7 +147,7 @@ acs_data = {
 },
 categories : {
   "Population":["total_population"],
-  "Employment":["employment","unemployment"],
+  "Labor Force":["employment","unemployment"],
   "Journey To Work":["car_to_work","public_transportation_to_work","taxi_to_work","motorcycle_to_work","bicycle_to_work","walk_to_work","other_to_work","worked_at_home"],
   "Journey To Work - Public Transportation":['bus_to_work','streetcar_to_work','subway_to_work','train_to_work','ferry_to_work'],
   "Industry":["agriculture","construction","manufacturing","wholesale","retail","transportation","information","finance","professional","educational","arts","other","public_administration","armed_forces"],
