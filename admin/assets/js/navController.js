@@ -8,6 +8,8 @@ function headerController($scope) {
 	        $scope.current_jobs = {};
 	        if(data.length > 0){{}}
 	        data.forEach(function(job){
+	        	//console.log(job.info);
+	        	//job.info = JSON.parse(job.info);
 	        	$scope.current_jobs[job.id] = job;
 	        	$scope.num_active++;
 	        })

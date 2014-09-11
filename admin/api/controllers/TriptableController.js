@@ -12,7 +12,6 @@ function spawnModelRun(job,triptable_id){
 	terminal.stdout.on('data', function (data) {
 	    data = data+'';
 	    if(data.indexOf('status') !== -1){
-	    	//console.log('status',data.split(":")[1]);
 	    	Job.update({id:job.id},{status:data.split(":")[1],progress:0})
     		.exec(function(err,updated_job){
     			if(err){ console.log('job update error',error); }
@@ -23,8 +22,7 @@ function spawnModelRun(job,triptable_id){
 	    else if(data.indexOf('progress') !== -1){
 
 	    	if(data.split(":")[1] !== current_progress){
-	    		current_progress = data.split(":")[1]
-	    		//console.log(current_progress);
+	    		current_progress = data.split(":")[1];
 	    		Job.update({id:job.id},{progress:current_progress})
     			.exec(function(err,updated_job){
     				if(err){ console.log('job update error',error); }
@@ -41,9 +39,7 @@ function spawnModelRun(job,triptable_id){
 		code = code*1;
 	    console.log('child process exited with code ' + code);
 	    if(code == 0){
-	    	
-	    	if(err){ console.log('Model Run error',error);}
-				
+	    		
 		    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Sucess'})
 			.exec(function(err,updated_job){
 				if(err){ console.log('job update error',error); }

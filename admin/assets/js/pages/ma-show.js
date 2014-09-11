@@ -24,6 +24,7 @@ function OverviewController ($scope) {
     $scope.current_map_variable = '';
   	$scope.marketarea = window.server_marketarea;
   	$scope.routes = [];
+    $scope.colors = d3.scale.category20().range();
   	window.server_routes.forEach(function(route){
   		$scope.routes[route.route_id] = route.route_short_name;
   	});
@@ -39,7 +40,7 @@ function OverviewController ($scope) {
         return true;
       }
       return false;
-    }
+    };
 
   	acsmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data, function() { acsmap.draw(); acsmap.color(acs_data.categories[$scope.active_category][0], $scope.active_category); });
   	ctppmap.init("#ctpp-svg", $scope.marketarea.zones);
@@ -50,32 +51,32 @@ function OverviewController ($scope) {
       acsmap.color(category, $scope.active_category)
     }
 
-	$scope.removeRoute = function(route){
-    editmap.removeRoute(route);
-  }
-  $scope.saveChanges = function(){
-    editmap.saveChanges(function(data){
-      console.log('Changes Saved');
-    });
-  }
-  $('#add-route-btn').on('click',function(){
-    $('#new-market-error-div').hide();
-    console.log('rotue added');
+  	$scope.removeRoute = function(route){
+      editmap.removeRoute(route);
+    }
+    $scope.saveChanges = function(){
+      editmap.saveChanges(function(data){
+        console.log('Changes Saved');
+      });
+    }
+    $('#add-route-btn').on('click',function(){
+      $('#new-market-error-div').hide();
+      console.log('rotue added');
 
-    if($scope.marketarea.routes.indexOf($('#routes-select').val()) === -1){
-        editmap.getRouteData($('#gtfs-select').val(), $('#routes-select').val(),function(tracts,center){
-            console.log('route returned');
-           // $scope.marketarea.zones = tracts;
-            //$scope.marketarea.center = center;
-            $scope.$apply();
-        });
-        
-        $scope.marketarea.routes.push($('#routes-select').val());
-        $scope.$apply();
-    }    
-  })
+      if($scope.marketarea.routes.indexOf($('#routes-select').val()) === -1){
+          editmap.getRouteData($('#gtfs-select').val(), $('#routes-select').val(),function(tracts,center){
+              console.log('route returned');
+             // $scope.marketarea.zones = tracts;
+              //$scope.marketarea.center = center;
+              $scope.$apply();
+          });
+          
+          $scope.marketarea.routes.push($('#routes-select').val());
+          $scope.$apply();
+      }    
+    })
 
-  $scope.drawGraph = function(name, vars) {
+    $scope.drawGraph = function(name, vars) {
       acsmap.color(vars[0], name)
 
   		$scope.active_category= name;
@@ -116,9 +117,10 @@ function OverviewController ($scope) {
   	  	
   		  	nv.utils.windowResize(chart.update);
   		})
-	}
+	 }  
 
 	$scope.active_category='Vehicles Available';
+  
   $scope.isActiveVar = function(invar){
     if(invar === $scope.current_map_variable){
       return 'on';
@@ -136,18 +138,19 @@ function OverviewController ($scope) {
 
   $scope.downloadData = function(id){
 
-    console.log($('#'+id).table2CSV({delivery:'value'}));
+    //console.log($('#'+id).table2CSV({delivery:'value'}));
     var data = $('#'+id).table2CSV({delivery:'value'});
     var name = $scope.marketarea.name+"_"+$scope.active_category+".csv"
     downloadCSV(data,name)
+  
   };
 
 
-    $scope.current_overview_tab = 'ACS';
+  $scope.current_overview_tab = 'ACS';
+  $scope.setActiveOverviewTab = function(tab) {
+      return tab === $scope.current_overview_tab;
+  }
 
-    $scope.setActiveOverviewTab = function(tab) {
-        return tab === $scope.current_overview_tab;
-    }
 };
 
 function downloadCSV(output,filename){

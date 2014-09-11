@@ -48,7 +48,7 @@ function modelPageCtrl($scope){
     if(err){ console.log(err); }
     //console.log(res);
     $scope.triptable = res;
-    console.log('triptable initial load',$scope.triptable)
+    //console.log('triptable initial load',$scope.triptable)
     triptableMap.updateData(res.tt);
     $scope.$apply();
   });
@@ -83,14 +83,13 @@ function modelPageCtrl($scope){
   $scope.od_selector = function(val){ if(val == $scope.current_model_run.od){ return true; }else{ return false; } };
   $scope.type_selector = function(val){ if(val == $scope.current_model_run.type){ return true; }else{ return false; } };
   $scope.time_selector = function(val){ if(val == $scope.current_model_run.time){ return true; }else{ return false; } };
-  $scope.forecast = function(){ if($scope.current_model_run.forecast == '5year'){ return true; }else{return false} };
+  $scope.forecast = function(){ if($scope.current_model_run.forecast == '5year'){ return true; }else{ return false; } };
 
   $scope.getTripTable = function(){
     d3.json('/triptable')
     .post(JSON.stringify({triptable_settings:$scope.current_model_run}),
     function(err,res){
       if(err){ console.log(err); }
-      console.log('new trip table',res);
       triptableMap.updateData(res.tt);
       $scope.triptable = res;
       $scope.$apply();
@@ -163,11 +162,11 @@ function ReportCtrl( $scope,$http,$filter) {
         if(model.id == index){ v = i;}
     });
     if(v !== -1){
-      console.log('loading this model',$scope.finished_models[v].ampm);
+      console.log('loading this model',$scope.finished_models[v].ampm,index);
       d3.json('/triptable/'+index+'/modeldata',
         function(err,data){
         console.log('loadModelData',data);
-        $scope.finished_models[v].info = JSON.parse($scope.finished_models[v].info);
+        //$scope.finished_models[v].info = JSON.parse($scope.finished_models[v].info);
         $scope.loadedModels.push($scope.finished_models[v]);
         $scope.finished_models.splice(v,1);
         $scope.loading=false;
@@ -237,19 +236,19 @@ function ReportCtrl( $scope,$http,$filter) {
     $scope.finished_models = data;
     //console.log('trip tables',data);
     if($scope.marketarea.id == 1){
-      $scope.finished_models.push({id: 'acam', marketArea: 1,name:"AC AM Farebox",ampm:'am'});
-      $scope.finished_models.push({id: 'acammin', marketArea: 1,name:"AC AM Farebox Min",ampm:'am'});
-      $scope.finished_models.push({id: 'acammax', marketArea: 1,name:"AC AM Farebox Max",ampm:'am'});
-      $scope.finished_models.push({id: 'acpm', marketArea: 1,name:"AC PM Farebox",ampm:'pm'});
-      $scope.finished_models.push({id: 'acpmmin', marketArea: 1,name:"AC PM Farebox Min",ampm:'pm'});
-      $scope.finished_models.push({id: 'acpmmax', marketArea: 1,name:"AC PM Farebox Max",ampm:'pm'});
+      $scope.finished_models.push({id: 'acam', marketArea: 1,name:"AC AM Farebox",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'acammin', marketArea: 1,name:"AC AM Farebox Min",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'acammax', marketArea: 1,name:"AC AM Farebox Max",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'acpm', marketArea: 1,name:"AC PM Farebox",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'acpmmin', marketArea: 1,name:"AC PM Farebox Min",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'acpmmax', marketArea: 1,name:"AC PM Farebox Max",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
     }else if($scope.marketarea.id == 2){
-      $scope.finished_models.push({id: 'princeam', marketArea: 2,name:"Princeton/Trenton AM Farebox",ampm:'am'});
-      $scope.finished_models.push({id: 'princeammin', marketArea: 2,name:"Princeton/Trenton AM Farebox Min",ampm:'am'});
-      $scope.finished_models.push({id: 'princeammax', marketArea: 2,name:"Princeton/Trenton AM Farebox Max",ampm:'am'});
-      $scope.finished_models.push({id: 'princepm', marketArea: 2,name:"Princeton/Trenton PM Farebox",ampm:'pm'});
-      $scope.finished_models.push({id: 'princepmmin', marketArea: 2,name:"Princeton/Trenton PM Farebox Min",ampm:'pm'});
-      $scope.finished_models.push({id: 'princepmmax', marketArea: 2,name:"Princeton/Trenton PM Farebox Max",ampm:'pm'});
+      $scope.finished_models.push({id: 'princeam', marketArea: 2,name:"Princeton/Trenton AM Farebox",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'princeammin', marketArea: 2,name:"Princeton/Trenton AM Farebox Min",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'princeammax', marketArea: 2,name:"Princeton/Trenton AM Farebox Max",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'princepm', marketArea: 2,name:"Princeton/Trenton PM Farebox",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'princepmmin', marketArea: 2,name:"Princeton/Trenton PM Farebox Min",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'princepmmax', marketArea: 2,name:"Princeton/Trenton PM Farebox Max",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
     }
   });
 
