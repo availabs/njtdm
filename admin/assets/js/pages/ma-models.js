@@ -25,6 +25,7 @@ function modelPageCtrl($scope){
   $scope.model.name = '';
   $scope.triptable = {};
 
+
   $scope.current_model_run = {
     marketarea:$scope.marketarea,
     type:'regression',
@@ -48,10 +49,11 @@ function modelPageCtrl($scope){
     if(err){ console.log(err); }
     //console.log(res);
     $scope.triptable = res;
-    //console.log('triptable initial load',$scope.triptable)
+    console.log('triptable initial load',$scope.triptable)
     triptableMap.updateData(res.tt);
     $scope.$apply();
   });
+
 
   $scope.setActivePage = function(val){ $scope.active_page=val; }
 
