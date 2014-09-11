@@ -48,7 +48,7 @@ function modelPageCtrl($scope){
     if(err){ console.log(err); }
     //console.log(res);
     $scope.triptable = res;
-    //console.log('triptable',$scope.triptable)
+    console.log('triptable initial load',$scope.triptable)
     triptableMap.updateData(res.tt);
     $scope.$apply();
   });
@@ -235,21 +235,21 @@ function ReportCtrl( $scope,$http,$filter) {
   d3.json('/triptable/finished/'+$scope.marketarea.id,function(data){
   	//console.log('hola finished',data)
     $scope.finished_models = data;
-    console.log('trip tables',data);
+    //console.log('trip tables',data);
     if($scope.marketarea.id == 1){
-      $scope.finished_models.push({id: 'acam', marketArea: 0,name:"AC AM Farebox",ampm:'am'});
-      $scope.finished_models.push({id: 'acammin', marketArea: 0,name:"AC AM Farebox Min",ampm:'am'});
-      $scope.finished_models.push({id: 'acammax', marketArea: 0,name:"AC AM Farebox Max",ampm:'am'});
-      $scope.finished_models.push({id: 'acpm', marketArea: 0,name:"AC PM Farebox",ampm:'pm'});
-      $scope.finished_models.push({id: 'acpmmin', marketArea: 0,name:"AC PM Farebox Min",ampm:'pm'});
-      $scope.finished_models.push({id: 'acpmmax', marketArea: 0,name:"AC PM Farebox Max",ampm:'pm'});
+      $scope.finished_models.push({id: 'acam', marketArea: 1,name:"AC AM Farebox",ampm:'am'});
+      $scope.finished_models.push({id: 'acammin', marketArea: 1,name:"AC AM Farebox Min",ampm:'am'});
+      $scope.finished_models.push({id: 'acammax', marketArea: 1,name:"AC AM Farebox Max",ampm:'am'});
+      $scope.finished_models.push({id: 'acpm', marketArea: 1,name:"AC PM Farebox",ampm:'pm'});
+      $scope.finished_models.push({id: 'acpmmin', marketArea: 1,name:"AC PM Farebox Min",ampm:'pm'});
+      $scope.finished_models.push({id: 'acpmmax', marketArea: 1,name:"AC PM Farebox Max",ampm:'pm'});
     }else if($scope.marketarea.id == 2){
-      $scope.finished_models.push({id: 'princeam', marketArea: 1,name:"Princeton/Trenton AM Farebox",ampm:'am'});
-      $scope.finished_models.push({id: 'princeammin', marketArea: 1,name:"Princeton/Trenton AM Farebox Min",ampm:'am'});
-      $scope.finished_models.push({id: 'princeammax', marketArea: 1,name:"Princeton/Trenton AM Farebox Max",ampm:'am'});
-      $scope.finished_models.push({id: 'princepm', marketArea: 1,name:"Princeton/Trenton PM Farebox",ampm:'pm'});
-      $scope.finished_models.push({id: 'princepmmin', marketArea: 1,name:"Princeton/Trenton PM Farebox Min",ampm:'pm'});
-      $scope.finished_models.push({id: 'princepmmax', marketArea: 1,name:"Princeton/Trenton PM Farebox Max",ampm:'pm'});
+      $scope.finished_models.push({id: 'princeam', marketArea: 2,name:"Princeton/Trenton AM Farebox",ampm:'am'});
+      $scope.finished_models.push({id: 'princeammin', marketArea: 2,name:"Princeton/Trenton AM Farebox Min",ampm:'am'});
+      $scope.finished_models.push({id: 'princeammax', marketArea: 2,name:"Princeton/Trenton AM Farebox Max",ampm:'am'});
+      $scope.finished_models.push({id: 'princepm', marketArea: 2,name:"Princeton/Trenton PM Farebox",ampm:'pm'});
+      $scope.finished_models.push({id: 'princepmmin', marketArea: 2,name:"Princeton/Trenton PM Farebox Min",ampm:'pm'});
+      $scope.finished_models.push({id: 'princepmmax', marketArea: 2,name:"Princeton/Trenton PM Farebox Max",ampm:'pm'});
     }
   });
 
