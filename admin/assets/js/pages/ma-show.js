@@ -136,7 +136,10 @@ function OverviewController ($scope) {
 
   $scope.downloadData = function(id){
 
-    console.log($('#'+id).table2CSV({delivery:'value'}));;
+    console.log($('#'+id).table2CSV({delivery:'value'}));
+    var data = $('#'+id).table2CSV({delivery:'value'});
+    var name = $scope.marketarea.name+"_"+$scope.active_category+".csv"
+    downloadCSV(data,name)
   };
 
 
@@ -146,6 +149,28 @@ function OverviewController ($scope) {
         return tab === $scope.current_overview_tab;
     }
 };
+
+function downloadCSV(output,filename){
+    var csvContent = "data:text/csv;charset=utf-8,"+output;
+    
+    if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1 ){
+      var encodedUri = encodeURI(csvContent);
+      var link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", filename);
+      link.setAttribute('target', '_blank');
+      link.click();
+    }else{
+      var encodedUri = encodeURI(csvContent);
+      //window.open(encodedUri);
+       $(container)
+            .attr({
+            'download': filename,
+            'href': encodedUri,
+            'target': '_blank'
+        });
+    }
+  };
 
 function processCensusData(name) {
 	var output = [];
