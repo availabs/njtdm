@@ -380,7 +380,7 @@
 
     function setColorScale(colorDomain) {
 
-        if(typeof colorDomain != 'undefined'){
+        if(colorDomain.length > 0){
             console.log('setColorScale',colorDomain)
             colorDomain.sort(function(a, b) { return a-b; });
 
