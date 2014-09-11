@@ -21,9 +21,40 @@
         	<svg id="triptable-svg" width="80%"></svg>
         </div>
         <div  id="table" class="tab-pane active clearfix body">
+            <div>
+            <button class="btn btn-info" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                Previous
+            </button>
+            {{currentPage+1}}/{{numberOfPages()}}
+            <button class="btn btn-info pull-right"ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                Next
+            </button>
+            </div>
             <table class="table table-hover">
-               
+                <thead>
+                <tr>
+                    <th> Depart Time</th>
+                    <th> From Tract</th>
+                    <th> From Coords</th>
+                    <th>To Tract</th>
+                    <th>To Coords</th>
+                </tr>
+                </thead>
+               <tr ng-repeat="trip in triptable.tt | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:parseInt(trip.time)">
+                <td>{{trip.time}}</td> 
+                <td>{{trip.from_geoid}}</td>
+                <td>{{trip.from_coords[0]+","+trip.from_coords[1]}}</td>
+                <td>{{trip.to_geoid}}</td>
+                <td>{{trip.to_coords[0]+","+trip.to_coords[1]}}</td>
+               </tr>
             </table>
+            <button class="btn btn-info" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                Previous
+            </button>
+            {{currentPage+1}}/{{numberOfPages()}}
+            <button class="btn btn-info pull-right"ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                Next
+            </button>
         </div>
 </div>
 <div id="runModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">

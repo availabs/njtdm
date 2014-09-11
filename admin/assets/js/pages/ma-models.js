@@ -41,7 +41,8 @@ function modelPageCtrl($scope){
       ctpp_source:$scope.datasources.ctpp[0].tableName
     }
   };
-
+  $scope.currentPage = 1;
+  $scope.pageSize = 30;
   triptableMap.init('#triptable-svg',$scope.marketarea);
   d3.json('/triptable')
   .post(JSON.stringify({triptable_settings:$scope.current_model_run}),
@@ -53,7 +54,11 @@ function modelPageCtrl($scope){
     triptableMap.updateData(res.tt);
     $scope.$apply();
   });
-
+ $scope.numberOfPages=function(){
+      if(typeof $scope.triptable.tt != 'undefined'){
+        return Math.ceil($scope.triptable.tt.length/$scope.pageSize);
+      } else {return 0}          
+  }
 
   $scope.setActivePage = function(val){ $scope.active_page=val; }
 

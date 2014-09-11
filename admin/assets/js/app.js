@@ -1,3 +1,13 @@
+var ngApp = angular.module('njtdm', []);
+ngApp.filter('startFrom', function() {
+    return function(input, start) {
+        if(typeof input != 'undefined'){
+            start = +start; //parse to int
+            return input.slice(start);
+        }
+    }
+});
+
 window.PJAX_ENABLED = false;
 window.DEBUG        = true;
 
