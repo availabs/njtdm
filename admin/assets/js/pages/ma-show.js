@@ -58,6 +58,23 @@ function OverviewController ($scope) {
       console.log('Changes Saved');
     });
   }
+  $('#add-route-btn').on('click',function(){
+    $('#new-market-error-div').hide();
+    console.log('rotue added');
+
+    if($scope.marketarea.routes.indexOf($('#routes-select').val()) === -1){
+        editmap.getRouteData($('#gtfs-select').val(), $('#routes-select').val(),function(tracts,center){
+            console.log('route returned');
+           // $scope.marketarea.zones = tracts;
+            //$scope.marketarea.center = center;
+            $scope.$apply();
+        });
+        
+        $scope.marketarea.routes.push($('#routes-select').val());
+        $scope.$apply();
+    }    
+  })
+
   $scope.drawGraph = function(name, vars) {
       acsmap.color(vars[0], name)
 

@@ -243,7 +243,7 @@ function ReportCtrl( $scope,$http,$filter) {
       $scope.finished_models.push({id: 'acpm', marketArea: 0,name:"AC PM Farebox",ampm:'pm'});
       $scope.finished_models.push({id: 'acpmmin', marketArea: 0,name:"AC PM Farebox Min",ampm:'pm'});
       $scope.finished_models.push({id: 'acpmmax', marketArea: 0,name:"AC PM Farebox Max",ampm:'pm'});
-    }else if($scope.marketarea.id == 7){
+    }else if($scope.marketarea.id == 2){
       $scope.finished_models.push({id: 'princeam', marketArea: 1,name:"Princeton/Trenton AM Farebox",ampm:'am'});
       $scope.finished_models.push({id: 'princeammin', marketArea: 1,name:"Princeton/Trenton AM Farebox Min",ampm:'am'});
       $scope.finished_models.push({id: 'princeammax', marketArea: 1,name:"Princeton/Trenton AM Farebox Max",ampm:'am'});
