@@ -61,14 +61,18 @@
             .attr('height', height)
             .attr('fill', '#fff')
 
+        marketarea.counties = JSON.parse(marketarea.counties);
+        console.log(marketarea);
         d3.json ('/data/counties.json',function(err,counties){
             topojson.feature(counties, counties.objects.tracts)
             .features.forEach(function(county){
-                if(marketarea.counties.indexOf(county.properties.geoid) !== -1){
+                if(marketarea.counties.indexOf(''+county.properties.geoid) !== -1){
                     marketAreaCounties.features.push(county);
                 }
             }); 
-            draw(marketAreaCounties, 'counties','county');
+            if(marketAreaCounties.features.length > 0){
+                draw(marketAreaCounties, 'counties','county');
+            }
             d3.json('/data/tracts.json', function(error, data) {
                 tracts = data;
                 tracts.features.forEach(function(feat){
@@ -85,9 +89,9 @@
                 return JSON.parse(request.responseText);
             })
             .post(JSON.stringify({ routes: marketarea.routes }), function(error, routes) {
-
-                routes = topojson.feature(routes, routes.objects.routes);
-
+                //console.log('routes topo',routes);
+                //routes = topojson.feature(routes, routes.objects.routes);
+                console.log('routes geo',routes);
                 draw(routes, 'routes12','route');
             })
     }
@@ -201,6 +205,13 @@
         }else{
             paths.attr('class', type)
         }
+        if(type == 'route'){
+            paths
+            .attr('id',function(d){
+                //console.log(d);
+                return 'route-'+d.properties.route_short_name;
+            })
+        }
 
         paths.exit().remove();
 
@@ -215,7 +226,8 @@
             .remove();
 
         marketarea.routes.splice(marketarea.routes.indexOf(routeID),1)
-            
+        
+
         var b = d3.geo.bounds(marketAreaTracts);
         var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
 

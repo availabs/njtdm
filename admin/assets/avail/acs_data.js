@@ -3,6 +3,7 @@ acs_data = {
   variables:{},
   census_vars:{
   "total_population":{"name":"Total Population","vars":['b01003_001e'],"value":0},
+  "total_households":{"name":"Total Households","vars":['b25001_001e'],"value":0},
   "employment":{"name":"Employed","vars":['b12006_005e','b12006_010e','b12006_016e','b12006_021e','b12006_027e','b12006_032e','b12006_038e','b12006_043e','b12006_049e','b12006_054e'],"value":0},
   "unemployment":{"name":"Unemployed","vars":['b12006_006e','b12006_011e','b12006_017e','b12006_022e','b12006_028e','b12006_033e','b12006_039e','b12006_044e','b12006_050e','b12006_055e'],"value":0},
   "travel_to_work_total":{"name":"Total","vars":['b08301_001e'],"value":0},
@@ -147,7 +148,7 @@ acs_data = {
 },
 categories : {
   "Population":["total_population"],
-  "Employment":["employment","unemployment"],
+  "Labor Force":["employment","unemployment"],
   "Journey To Work":["car_to_work","public_transportation_to_work","taxi_to_work","motorcycle_to_work","bicycle_to_work","walk_to_work","other_to_work","worked_at_home"],
   "Journey To Work - Public Transportation":['bus_to_work','streetcar_to_work','subway_to_work','train_to_work','ferry_to_work'],
   "Industry":["agriculture","construction","manufacturing","wholesale","retail","transportation","information","finance","professional","educational","arts","other","public_administration","armed_forces"],

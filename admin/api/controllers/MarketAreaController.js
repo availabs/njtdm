@@ -181,17 +181,19 @@ module.exports = {
                   routesCollection.features.push(routeFeature);
               });
 
-              var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
-                                             "quantization": 1e6});
-              topology = topojson.simplify(topology, {"minimum-area":7e-6,
-                                  "coordinate-system":"cartesian"});
+              // var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
+              //                                "quantization": 1e6});
+              // topology = topojson.simplify(topology, {"minimum-area":7e-6,
+              //                     "coordinate-system":"cartesian"});
 
-              res.send(topology);
+              //res.send(topology);
+              res.send(routesCollection);
           });
       })
-      function preserveProperties(p, k, v) {
-          p[k] = v;
-      }
+      var preserveProperties = function(properties, key, value) {
+        properties[key] = value;
+        return true;
+      };
   },
 
   getAllCTPPoutbound: function(req, res) {
@@ -396,7 +398,7 @@ module.exports = {
 /*****************/
 
   show:function(req,res){
-    var cenData = 'acs5_34_2011_tracts';
+    var cenData = 'acs5_34_2010_tracts';
     //Allow user to specify census table
     if(typeof req.param('census') !== 'undefined'){  cenData = req.param('census'); }
 

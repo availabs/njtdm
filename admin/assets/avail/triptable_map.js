@@ -92,9 +92,9 @@
             d3.json('/data/tracts.json', function(error, data) {
                 tracts = data;
                 tracts.features.forEach(function(feat){
-                    if(marketarea.counties.indexOf(feat.properties.geoid.substring(0, 5)) !== -1){
+                    // if(marketarea.counties.indexOf(feat.properties.geoid.substring(0, 5)) !== -1){
                         
-                    }
+                    // }
                     if(marketarea.zones.indexOf(feat.properties.geoid) !== -1){
                         marketAreaTractsList.push(feat.properties.geoid);
                         marketAreaTracts.features.push(feat);
@@ -284,7 +284,6 @@
                 clickedTract = d;
             }
 
-            console.log(d.properties);
             svg.selectAll('.temp-tract').remove();
 
             var tracts = svg.selectAll('path')
@@ -313,8 +312,7 @@
                 }
             })
 
-            console.log(data);
-
+ 
             var toTracts = {},
                 colorDomain = [];
 
@@ -382,12 +380,13 @@
 
     function setColorScale(colorDomain) {
 
-        colorDomain.sort(function(a, b) { return a-b; });
+        if(colorDomain.length > 0){
+            colorDomain.sort(function(a, b) { return a-b; });
 
-        colorScale.domain([colorDomain[0], colorDomain[colorDomain.length-1]]);
+            colorScale.domain([colorDomain[0], colorDomain[colorDomain.length-1]]);
 
-        colorScale.range(colorRange[Math.min(11, colorDomain.length)]);
-
+            colorScale.range(colorRange[Math.min(11, colorDomain.length)]);
+        }
     }
 
     function pushUnique(array, value) {

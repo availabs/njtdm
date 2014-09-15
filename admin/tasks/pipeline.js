@@ -73,7 +73,7 @@ var jsFilesToInject = [
     // <!-- basic application js-->
     "js/app.js",
     "js/navController.js",
-    "js/settings.js",
+    //"js/settings.js",
 
 ];
 

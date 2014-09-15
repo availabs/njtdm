@@ -18,10 +18,11 @@
                                 <span class="label label-info"><i class="fa fa-spinner"></i></span>
                             </div>
                             <div class="details">
-                                {{job.type}} {{job.status}} {{job.progress}}
+                                <div ng-show="job.type == 'Model Run'">{{job.info[0].name}}</div> {{job.status}}
+                                
                                 <div class="progress" ng-show="job.progress > 0" style='margin-bottom:0px'>
                                   <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="{{job.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%">
-                                    <span class="sr-only">{{job.progress}}% Complete</span>
+                                    {{job.progress}}%
                                   </div>
                                 </div>
                             </div>

@@ -28,6 +28,16 @@
     <div class="col-md-2 col-sm-4 col-xs-6">
         <div class="box">
             <h3>
+                {{census_vars['occupied_housing'].value | number}}
+            </h3>
+            <div class="description">
+                Households
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6">
+        <div class="box">
+            <h3>
                 {{census_vars['employment'].value | number}}
             </h3>
             <div class="description">
@@ -58,7 +68,7 @@
         </div>
     </div>
 
-    <div class="col-md-2 col-sm-4 col-xs-6">
+    <!-- <div class="col-md-2 col-sm-4 col-xs-6">
         <div class="box">
             <h3>
                 {{census_vars['car_0'].value | number}}
@@ -68,7 +78,7 @@
                 0 Vehicle Households
             </div>
         </div>
-    </div>
+    </div> -->
     
 </div>
 <header>
