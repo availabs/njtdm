@@ -48,7 +48,7 @@ function modelPageCtrl($scope){
     if(err){ console.log(err); }
     //console.log(res);
     $scope.triptable = res;
-    console.log($scope.triptable)
+//console.log($scope.triptable)
     triptableMap.updateData(res.tt);
     $scope.$apply();
   });
@@ -160,18 +160,18 @@ function ReportCtrl( $scope,$http,$filter) {
     var index = $('#model_run_select').val();
     $scope.loading = true;
     var v = -1;
+console.log($scope.finished_models)
     $scope.finished_models.forEach(function(model,i){
         if(model.id == index){ v = i;}
     });
     if(v !== -1){
       console.log('loading this model',$scope.finished_models[v].ampm);
-      d3.json('/triptable/'+index+'/modeldata',
-        function(err,data){
-        console.log('loadModelData',data);
-        $scope.loadedModels.push($scope.finished_models[v]);
-        $scope.finished_models.splice(v,1);
-        $scope.loading=false;
-        $scope.newData(data,$scope.loadedModels[$scope.loadedModels.length-1].name);
+      d3.json('/triptable/'+index+'/modeldata', function(err,data){
+//console.log('loadModelData',data);
+            $scope.loadedModels.push($scope.finished_models[v]);
+            $scope.finished_models.splice(v,1);
+            $scope.loading=false;
+            $scope.newData(data,$scope.loadedModels[$scope.loadedModels.length-1].name);
       });
     }
   };
@@ -219,7 +219,7 @@ function ReportCtrl( $scope,$http,$filter) {
           }
       });
       reportAnalyst.geoData = geoData;
-      reportAnalyst.update_data(data,name);
+      reportAnalyst.add_data(data,name);
       $scope.routes = []
       reportAnalyst.modelRoutesGroup.all().reduce(function(one,two){$scope.routes.push(two.key)});
       console.log($scope.routes);
