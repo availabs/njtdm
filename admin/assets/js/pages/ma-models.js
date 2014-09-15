@@ -164,6 +164,7 @@ function ReportCtrl( $scope,$http,$filter) {
   modelAnalysisRouteMap.append(routeLayer);
 
   $scope.loadModelData = function(){
+    d3.select('#s2id_model_run_select').selectAll('span').text(null)
   	var index = $('#model_run_select').val();
     $scope.loading = true;
     var v = -1;
@@ -218,24 +219,24 @@ console.log($scope.finished_models)
 
     
      d3.json('/data/tracts.json', function(error, geo) {
-      tracts = geo;
-      var geoData = {
-        type: "FeatureCollection",
-        features: []
-      };
-      tracts.features.forEach(function(feat){
-          if($scope.marketarea.zones.indexOf(feat.properties.geoid) !== -1){
-             geoData.features.push(feat);
-          }
-      });
-      reportAnalyst.geoData = geoData;
-      reportAnalyst.add_data(data,name);
-      $scope.routes = []
-      reportAnalyst.modelRoutesGroup.all().reduce(function(one,two){$scope.routes.push(two.key)});
-      console.log($scope.routes);
-      $scope.$apply();
-      reportAnalyst.clearGraphs();
-      reportAnalyst.renderGraphs();
+          tracts = geo;
+          var geoData = {
+            type: "FeatureCollection",
+            features: []
+          };
+          tracts.features.forEach(function(feat){
+              if($scope.marketarea.zones.indexOf(feat.properties.geoid) !== -1){
+                 geoData.features.push(feat);
+              }
+          });
+          reportAnalyst.geoData = geoData;
+          reportAnalyst.add_data(data,name);
+          $scope.routes = []
+          reportAnalyst.modelRoutesGroup.all().reduce(function(one,two){$scope.routes.push(two.key)});
+          console.log($scope.routes);
+          $scope.$apply();
+          reportAnalyst.clearGraphs();
+          reportAnalyst.renderGraphs();
     });
   };
 
@@ -264,6 +265,28 @@ console.log($scope.finished_models)
 
 
   $scope.removeModel = function(model) {
-      console.log(model);
+      console.log($scope.loadedModels, model);
+
+      var index;
+      for(index = 0; index < $scope.loadedModels.length; index++) {
+          if ($scope.loadedModels[index].$$hashKey == model.$$hashKey) {
+              break;
+          }
+      }
+
+      var removed = $scope.loadedModels.splice(index, 1);
+
+      $scope.finished_models.push(removed.pop());
+
+      reportAnalyst.remove_data(model.name);
+
+      $scope.routes = []
+      if (reportAnalyst.modelRoutesGroup.size()) {
+          reportAnalyst.modelRoutesGroup.all().reduce(function(one,two){$scope.routes.push(two.key)});
+      }
+
+      if (!$scope.routes.length) {
+        routeLayer.data([])();
+      }
   }
 }
