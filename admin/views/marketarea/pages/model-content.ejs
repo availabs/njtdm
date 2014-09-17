@@ -87,14 +87,34 @@
                             </div>
                         </div>
                         <div class="control-group" ng-show="forecast()">
-                            <label class="control-label">Radio Buttons</label>
+                            <label class="control-label">Forecast Type</label>
                             <div class="controls form-group">
                                 <label class="radio">
                                     <input type="radio" id="radio-4" class="iCheck" ng-model='current_model_run.forecast_type' value="mpo">
-                                    MPO Data</label>
-                                <label class="radio">
-                                    <input type="radio" name="can" class="iCheck" id="radio-5" ng-model='current_model_run.forecast_type' value="growth"><input type="number" class="form-control md-col-6" value="5" min="-20" max="20" step=".1" ng-model="current_model_run.forecast_growth" ng-disabled="current_model_run.forecast_type != 'growth'" value="5">
-                                    Growth % </label>
+                                    2020 MPO Forcast</label>
+                                <label class="radio">Custom Forecast
+                                    <input type="radio" name="can" class="iCheck" id="radio-5" ng-model='current_model_run.forecast_type' value="growth">
+                                    <div>
+                                    <label>
+                                    Population Growth % 
+                                    <input type="number" class="form-control" value="2.0" min="-20" max="20" step=".1" ng-model="current_model_run.forecast_pop_growth" ng-disabled="current_model_run.forecast_type != 'growth'" >
+                                    </label> 
+                                    <label>Employment Growth % 
+                                    <input type="number" class="form-control" value="2.0" min="-20" max="20" step=".1" ng-model="current_model_run.forecast_emp_growth" ng-disabled="current_model_run.forecast_type != 'growth'" >
+                                   </label>
+
+                                   <strong>Selected Tract Forecast: {{selectedTract.properties.geoid}}</strong>
+                                   <div  ng-show="selectedTract.properties.geoid" >
+                                       <label>    
+                                       Population Growth %
+                                        <input type="number" class="form-control" value="2.0" min="-20" max="20" step=".1" ng-model="selectedTract.properties.pop2020_growth">
+                                        </label> 
+                                        <label>Employment Growth %
+                                        <input type="number" class="form-control" value="2.0" min="-20" max="20" step=".1" ng-model="selectedTract.properties.emp2020_growth" ng-show="selectedTract.properties.geoid" >
+                                       </label>
+                                    </div>
+                                   
+                             </div>
 
                             </div>
                         </div>
@@ -129,7 +149,7 @@
                                 </select>
                             
                                 <span class="help-block pull-left">Choose GTFS feed for this market model run.</span>
-                            </div>
+                            </div> 
                         </div>
                         <div class="control-group">
                             <label for="gtfs-select" class="control-label">ACS</label>

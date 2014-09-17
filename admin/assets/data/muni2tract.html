@@ -1,0 +1,49 @@
+<script src="/lib/nvd3/lib/d3.v3.min.js"></script>
+<script src="turf.min.js"></script>
+<script>
+
+var output_tracts = {
+  "type": "FeatureCollection",
+  "features": []
+}
+
+d3.json('forecast_munis.json',function(munis){
+	d3.json('tracts.json',function(tracts){
+		tracts.features.forEach(function(tract,i2){
+			tract.properties.pop2020_growth = 0
+			tract.properties.emp2020_growth = 0
+		});
+
+		console.log(munis,tracts);
+		munis.features.forEach(function(muni,i){
+			
+			if(i < 1000){//limiter
+				var mun_polys = [turf.polygon(muni.geometry.coordinates)];
+				console.log(muni.properties.NAME);
+				if(muni.geometry.type == 'MultiPolygon'){
+					mun_polys = [];
+					muni.geometry.coordinates.forEach(function(mul){
+						mun_polys.push(turf.polygon(mul));
+					})
+				}
+
+				tracts.features.forEach(function(tract,i2){
+					var centroid = turf.centroid(tract.geometry);
+					var cen = turf.point(centroid.geometry.coordinates[0],centroid.geometry.coordinates[1]);
+					mun_polys.forEach(function(mun_poly){
+						if(turf.inside(cen,mun_poly)){
+							console.log('hit',tract.properties.geoid)
+							tract.properties.pop2020_growth = muni.properties.pop2020_growth*1;
+							tract.properties.emp2020_growth = muni.properties.emp2020_growth*1;
+							///output_tracts.features.push(tract);
+						}
+					})
+				})
+			}
+		});
+		console.log(JSON.stringify(tracts));
+	})
+});
+</script>
+<body>
+</body>

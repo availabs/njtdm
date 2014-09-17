@@ -6,12 +6,6 @@ $(function(){
             $(this).select2($(this).data());
         });
         
-        // $(".iCheck").iCheck({
-        //     checkboxClass: 'icheckbox_square-grey',
-        //     radioClass: 'iradio_square-grey'
-        // });
-
-        
     }
     pageLoad();
     PjaxApp.onPageLoad(pageLoad);
@@ -24,7 +18,7 @@ function modelPageCtrl($scope){
   $scope.model = {}
   $scope.model.name = '';
   $scope.triptable = {};
-
+  $scope.temp_forecast = {};
 
   $scope.current_model_run = {
     marketarea:$scope.marketarea,
@@ -33,7 +27,8 @@ function modelPageCtrl($scope){
     od:'bus',
     forecast:'current',
     forecast_type:'mpo',
-    forecast_growth:5,
+    forecast_emp_growth:0.0,
+    forecast_pop_growth:0.0,
     datasources:{
       acs_source:$scope.datasources.acs[0].tableName,
       lodes_source:$scope.datasources.lodes[0].tableName,
@@ -43,7 +38,10 @@ function modelPageCtrl($scope){
   };
   $scope.currentPage = 1;
   $scope.pageSize = 30;
-  triptableMap.init('#triptable-svg',$scope.marketarea);
+  triptableMap.init('#triptable-svg',$scope.marketarea,$scope);
+  
+  $scope.selectedTract = triptableMap.selectedTract;
+
   d3.json('/triptable')
   .post(JSON.stringify({triptable_settings:$scope.current_model_run}),
   function(err,res){
@@ -80,9 +78,45 @@ function modelPageCtrl($scope){
   }
   $scope.modelForecast = {
     'current':'Current',
-    '5year':'Five Year Future Forecast'
+    '5year':'Future Forecast'
     
   }
+
+  $scope.$watch('current_model_run.forecast_type',function(){
+    
+    if($scope.current_model_run.forecast_type == 'mpo'){
+      
+      if(typeof $scope.mpo_forecast != 'undefined' ){
+        triptableMap.setForecastTracts($scope.mpo_forecast);
+      }
+    
+    }else{
+    
+      $scope.mpo_forecast = triptableMap.getForecastTracts();
+      if(typeof $scope.mpo_forecast != 'undefined' ){
+        $scope.flat_forecast = {employment:{},population:{}};
+        
+        for(key in $scope.mpo_forecast.employment){
+        
+          $scope.flat_forecast.employment[key] = $scope.current_model_run.forecast_emp_growth;
+          $scope.flat_forecast.population[key] = $scope.current_model_run.forecast_pop_growth;
+        
+        }
+      }
+      console.log('flat forecast',$scope.flat_forecast)
+      triptableMap.setForecastTracts($scope.flat_forecast);
+    }
+
+  });
+
+  $scope.$watch('current_model_run.forecast',function(){
+    console.log('forecast changed');
+    if($scope.current_model_run.forecast == 'current'){
+      $('.forecast-button-group').hide();
+    }else{
+      $('.forecast-button-group').show();
+    }
+  })
 
   
 
@@ -93,6 +127,10 @@ function modelPageCtrl($scope){
   $scope.forecast = function(){ if($scope.current_model_run.forecast == '5year'){ return true; }else{ return false; } };
 
   $scope.getTripTable = function(){
+    if($scope.current_model_run.forecast != 'current'){
+      $scope.current_model_run.tract_forecasts = triptableMap.getForecastTracts();
+      //console.log($scope.current_model_run.tract_forecasts);
+    }
     d3.json('/triptable')
     .post(JSON.stringify({triptable_settings:$scope.current_model_run}),
     function(err,res){

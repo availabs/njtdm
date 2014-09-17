@@ -1,5 +1,5 @@
 GENERATED_FILES = \
-	counties.json
+	counties36.json
 
 all: $(GENERATED_FILES)
 
@@ -23,9 +23,9 @@ build/tracts-unfiltered.shp: build/tl_2013_us_county.zip
 # strip water tracts
 build/tracts.shp: build/tracts-unfiltered.shp
 	rm -f -- $@
-	ogr2ogr -f 'ESRI Shapefile' -where 'STATEFP = "34"' $@ $<
+	ogr2ogr -f 'ESRI Shapefile' -where 'STATEFP = "36"' $@ $<
 
-counties.json: build/tracts.shp
+counties36.json: build/tracts.shp
 		topojson \
 		-o $@ \
 		-p geoid=+GEOID,name=+=NAMELSAD,area=+ALAND \

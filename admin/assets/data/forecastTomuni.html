@@ -1,0 +1,61 @@
+<script src="/lib/nvd3/lib/d3.v3.min.js"></script>
+<script>
+
+var sjrpc = [];
+var munis = {
+  "type": "FeatureCollection",
+  "features": []
+}
+d3.csv('2020/dvrpc.csv',function(dvrpc){
+	d3.csv('2020/sjrpc_emp.csv',function(emp){
+		d3.csv('2020/sjrpc_pop.csv',function(pop){
+			emp.forEach(function(input,i){
+				var muni = {}
+				if(emp[i].muni == pop[i].muni){
+					muni.mcd = emp[i].muni;
+					muni.pop2010 = pop[i]['2010']
+					muni.pop2020 = pop[i]['2020']
+					muni.emp2010 = emp[i]['2010']
+					muni.emp2020 = emp[i]['2020']
+					sjrpc.push(muni);
+				}else{
+					console.log(emp[i].muni,pop[i].muni);
+				}
+			})
+			console.log('dvrpc',dvrpc);
+			console.log('sjrpc',sjrpc);
+			console.log(dvrpc.length+sjrpc.length);
+			//---------------------------------------
+			// Data is Loaded, lets match to Geographies
+			//---------------------------------------
+			d3.json('nj_muni_wsg84.json',function(nj_muni){
+				console.log(nj_muni);
+				nj_muni.features.forEach(function(muni){
+					sjrpc.forEach(function(sjmuni){
+						if(sjmuni.pop2010 == muni.properties.POP2010){
+							muni.properties.emp2020_growth = ((sjmuni.emp2020-sjmuni.emp2010)/sjmuni.emp2010*100).toFixed(2);
+							muni.properties.pop2020_growth = ((sjmuni.pop2020-sjmuni.pop2010)/sjmuni.pop2010*100).toFixed(2);
+							console.log(sjmuni.mcd,'-',muni.properties.NAME,muni.properties.POP2010,muni.properties.emp2020_growth,muni.properties.pop2020_growth);
+							munis.features.push(muni);
+						}
+					})
+					dvrpc.forEach(function(dvmuni){
+						if(dvmuni.pop2010 == muni.properties.POP2010 && dvmuni.mcd[0] == muni.properties.NAME[0]){
+							muni.properties.emp2020_growth = ((dvmuni.emp2020-dvmuni.emp2010)/dvmuni.emp2010*100).toFixed(2);
+							muni.properties.pop2020_growth = ((dvmuni.pop2020-dvmuni.pop2010)/dvmuni.pop2010*100).toFixed(2);
+							console.log(dvmuni.mcd,'-',muni.properties.NAME,muni.properties.POP2010,muni.properties.emp2020_growth,muni.properties.pop2020_growth)
+							munis.features.push(muni);
+						}
+					})
+				})
+				console.log(munis.features.length)
+				console.log(JSON.stringify(munis));
+			})
+		});
+	})	
+})
+
+
+</script>
+<body>
+</body>

@@ -11,6 +11,8 @@
 
     var tracts;
     
+    var scope;
+
     var legendGroup;
 
     var margin = {top: 30};
@@ -27,7 +29,8 @@
 
     var clickedTract = null;
 
-    triptableMap.triptable = []
+    triptableMap.triptable = [];
+    triptableMap.selectedTract = {};
 
     function zoomed() {
         projection.scale(zoom.scale())
@@ -54,7 +57,8 @@
 
     var trafficType;
 
-    triptableMap.init = function(svgID,marketarea) {
+    triptableMap.init = function(svgID,marketarea,in_scope) {
+        scope = in_scope;
         width = $('.tab-content').width()-40;
         height =  width;
         //zoomToBounds(marketAreaTracts);
@@ -89,27 +93,27 @@
             .on('click',reset)
 
 
-            d3.json('/data/tracts.json', function(error, data) {
-                tracts = data;
-                tracts.features.forEach(function(feat){
-                    // if(marketarea.counties.indexOf(feat.properties.geoid.substring(0, 5)) !== -1){
-                        
-                    // }
-                    if(marketarea.zones.indexOf(feat.properties.geoid) !== -1){
-                        marketAreaTractsList.push(feat.properties.geoid);
-                        marketAreaTracts.features.push(feat);
-                        
-                    }
-                });
-                draw(marketAreaTracts, 'ma12','market');
-            });   
+        d3.json('/data/tracts.json', function(error, data) {
+            tracts = data;
+            tracts.features.forEach(function(feat){
+                // if(marketarea.counties.indexOf(feat.properties.geoid.substring(0, 5)) !== -1){
+                    
+                // }
+                if(marketarea.zones.indexOf(feat.properties.geoid) !== -1){
+                    marketAreaTractsList.push(feat.properties.geoid);
+                    marketAreaTracts.features.push(feat);
+                    
+                }
+            });
+            draw(marketAreaTracts, 'ma12','market');
+        });   
             
         
         var buttonWidth = 75,
             buttonHeight = 30;
 
         var data = [
-            {text: 'Outbound', id: 'outbound'}, 
+           {text: 'Outbound', id: 'outbound'}, 
            {text: 'Inbound', id: 'inbound'}
         ]
 
@@ -136,6 +140,36 @@
                     .style('text-anchor', 'middle');
             })
 
+        var data = [
+            {text: 'Employment', id: 'employment'}, 
+           {text: 'Population', id: 'population'}
+        ]
+
+        svg.selectAll('.forecast-button-group')
+            .data(data)
+            .enter().append('g')
+            .attr('class', 'forecast-button-group')
+            .attr('ng-show',"current_model_run.forecast != 'current'")
+            .attr('test','{{current_model_run.forecast}}')
+            .on('click', toggleDirectionButtons)
+            .each(function(d, i) {
+                var g = d3.select(this);
+
+                g.append('rect')
+                    .attr('id', function() { return 'forecast-button-'+d.id; })
+                    .attr('class', 'acs-button')
+                    .attr('y', function() { return 40 + buttonHeight*i; })
+                    .attr('x', function() { return 100; })
+                    .attr('width',  buttonWidth+20)
+                    .attr('height', buttonHeight);
+
+                g.append('text')
+                    .attr('x', 110 + buttonWidth/2)
+                    .attr('y', function() { return 40 + buttonHeight*i + buttonHeight/2; })
+                    .text(function() { return d.text; })
+                    //.style('fill', '#000')
+                    .style('text-anchor', 'middle');
+            })
         legendGroup = svg.append('g').attr('class','legend');    
         d3.select('.ctpp-button-group').each(toggleDirectionButtons);
         
@@ -146,12 +180,38 @@
         triptableMap.triptable = data;
         d3.select('.ctpp-button-group').each(toggleDirectionButtons);
     }
+
+    triptableMap.getForecastTracts = function(){
+        var output = {};
+        output.employment = {};
+        output.population = {};
+        marketAreaTracts.features.forEach(function(tract){
+            //console.log(tract);
+            output.employment[tract.properties.geoid] = tract.properties.emp2020_growth;
+            output.population[tract.properties.geoid] = tract.properties.pop2020_growth;
+
+        });
+        return output;
+    }
+
+    triptableMap.setForecastTracts = function(forecast){
+        marketAreaTracts.features.forEach(function(tract){
+            tract.properties.emp2020_growth = forecast.employment[tract.properties.geoid];
+            tract.properties.pop2020_growth = forecast.population[tract.properties.geoid];
+        });
+        reset();
+    }
  
     function toggleDirectionButtons(data) {
         d3.selectAll('.ctpp-button-group')
             .select('rect')
             .classed('acs-button-active', function(d, i) {
                 return 'ctpp-button-'+data.id == d3.select(this).attr('id');
+            });
+        d3.selectAll('.forecast-button-group')
+            .select('rect')
+            .classed('acs-button-active', function(d, i) {
+                return 'forecast-button-'+data.id == d3.select(this).attr('id');
             });
 
         trafficType = data.id;
@@ -235,17 +295,30 @@
 
             var colorDomain = [];
             var data = {};
-            var sumKey = 'from_geoid';
-            if(trafficType === 'inbound'){
-                sumKey = 'to_geoid';
-            }
-            triptableMap.triptable.forEach(function(trip){
-                if(typeof data[trip[sumKey]] == 'undefined'){
-                    data[trip[sumKey]] = 1;
-                }else{
-                    data[trip[sumKey]] += 1;
+            if(trafficType == 'employment' || trafficType == 'population' ){
+                
+                marketAreaTracts.features.forEach(function(tract){
+                    if(trafficType == 'employment'){
+                        data[tract.properties.geoid] = tract.properties.emp2020_growth;
+                    }else{
+                        data[tract.properties.geoid] = tract.properties.pop2020_growth;
+                    }
+                });
+
+            }else{
+
+                var sumKey = 'from_geoid';
+                if(trafficType === 'inbound'){
+                    sumKey = 'to_geoid';
                 }
-            })
+                triptableMap.triptable.forEach(function(trip){
+                    if(typeof data[trip[sumKey]] == 'undefined'){
+                        data[trip[sumKey]] = 1;
+                    }else{
+                        data[trip[sumKey]] += 1;
+                    }
+                })
+            }
 
             marketAreaTracts.features.forEach(function(d, i) {
                 marketAreaTracts.features[i].properties.numTrips = data[d.properties.geoid] || 0;
@@ -261,7 +334,7 @@
             svg.selectAll('path')
                 .classed('ctpp-tract-active', false)
                 .style('fill', function(d) {
-                    if (d.properties.numTrips === 0) {
+                    if (d.properties.numTrips === 0 && (trafficType === 'inbound' || trafficType === 'outbound')) {
                         return null;
                     }
                     return colorScale(d.properties.numTrips);
@@ -277,11 +350,27 @@
     function clicked(d) {
         if(triptableMap.triptable.length > 0){
             if (d) {
-                if (d.properties.numTrips === 0 || d === clickedTract) {
-                    reset();
-                    return;
+                if(trafficType == 'employment' || trafficType == 'population' ){
+                    if(d === clickedTract){
+                        scope.selectedTract = {};
+                        scope.$apply();
+                        reset();
+                        return;
+                    }
+                    clickedTract = d;
+                    scope.selectedTract = d;
+                    scope.$apply();
+                }else{
+                    if (d.properties.numTrips === 0 || d === clickedTract) {
+                        scope.selectedTract = {};
+                        scope.$apply();
+                        reset();
+                        return;
+                    }
+                    clickedTract = d;
+                    scope.selectedTract = d;
+                    scope.$apply();
                 }
-                clickedTract = d;
             }
 
             svg.selectAll('.temp-tract').remove();
@@ -295,22 +384,36 @@
 
             //d3.json('/marketarea/'+clickedTract.properties.geoid+'/'+trafficType+'/ctpp_travel_data', function(error, data) {
             var data = {};
-            var sumKey = 'from_geoid',
-                opposite = 'to_geoid';
-            if(trafficType === 'inbound'){
-                sumKey = 'to_geoid';
-                opposite = 'from_geoid';
-
-            }
-            triptableMap.triptable.forEach(function(trip){
-                if(trip[sumKey] == clickedTract.properties.geoid){
-                    if(typeof data[trip[opposite]] == 'undefined'){
-                        data[trip[opposite]] = 1;
+            
+            if(trafficType == 'employment' || trafficType == 'population' ){
+                console.log('forecast rest');
+                
+                marketAreaTracts.features.forEach(function(tract){
+                    if(trafficType == 'employment'){
+                        data[tract.properties.geoid] = tract.properties.emp2020_growth;
                     }else{
-                        data[trip[opposite]] += 1;
+                        data[tract.properties.geoid] = tract.properties.pop2020_growth;
                     }
+                });
+
+            }else{
+                var sumKey = 'from_geoid',
+                    opposite = 'to_geoid';
+                if(trafficType === 'inbound'){
+                    sumKey = 'to_geoid';
+                    opposite = 'from_geoid';
+
                 }
-            })
+                triptableMap.triptable.forEach(function(trip){
+                    if(trip[sumKey] == clickedTract.properties.geoid){
+                        if(typeof data[trip[opposite]] == 'undefined'){
+                            data[trip[opposite]] = 1;
+                        }else{
+                            data[trip[opposite]] += 1;
+                        }
+                    }
+                })
+            }
 
  
             var toTracts = {},
@@ -321,15 +424,6 @@
             for(key in data){
                 pushUnique(colorDomain, data[key]);
                 toTracts[key] = data[key];
-
-                // obj = {properties: {geoid: d.geoid}}
-                // tableData.push(obj);
-                // if (d.geoid in tractFeatures) {
-                //     tableData.push(tractFeatures[d.geoid]);
-                // }
-                // else {
-                //     tableData.push({properties: {geoid: d.geoid }});
-                // }
             }
 
             setColorScale(colorDomain)

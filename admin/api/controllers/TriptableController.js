@@ -182,41 +182,55 @@ module.exports = {
 					triptable.marketarea.id = -1
 				case 'regression':
 					//regression model
-					console.log('regression')
 					getCTTPTracts(triptable.datasources.ctpp_source,tracts,function(tractTrips){
 						getODPoints(triptable.od,triptable.datasources.gtfs_source,tracts,function(ODPoints){
 							tractTrips.forEach(function(tractPair){
 								if(typeof acs_data.acs[tractPair.home_tract] == 'undefined'){
 									//console.log(tractPair.home_tract)
 								}else{
+									var emp_growth = 1,
+										pop_growth = 1;
+									if(triptable.forecast != 'current'){
+										if(typeof triptable.tract_forecasts.population[tractPair.home_tract] != 'undefined'){
+											pop_growth = 1+(triptable.tract_forecasts.population[tractPair.home_tract]/100);
+										}
+										if(typeof triptable.tract_forecasts.employment[tractPair.work_tract] != 'undefined'){
+											pop_growth = 1+(triptable.tract_forecasts.employment[tractPair.work_tract]/100);
+										}
+									}
 									var time = getTimeMatrix(tractPair);
 									if(triptable.time == 'full'){
-
 										//am riderrs
 										var numTrips = parseInt(getRegressionTrips(tractPair,time,'am',triptable.marketarea.id)) || 0;
+										numTrips = Math.round((numTrips*pop_growth)*emp_growth);
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
 										}
 										//plus pm return trip riders
 										numTrips = parseInt(getRegressionTrips(tractPair,time,'pm',triptable.marketarea.id)) || 0;
+										numTrips = Math.round((numTrips*pop_growth)*emp_growth);
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'pm',output)
 										}
 										//plus pm to work riders
 										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										numTrips = Math.round((numTrips*pop_growth)*emp_growth);
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
 										}
 										//plus off peak riders
 										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										numTrips = Math.round((numTrips*pop_growth)*emp_growth);
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
 										}
 
 									}else if(triptable.time =='am'){
 										
+
 										//am riders
 										var numTrips = parseInt(getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										numTrips = Math.round((numTrips*pop_growth)*emp_growth);
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,triptable.time,output)
 										}
@@ -226,11 +240,13 @@ module.exports = {
 										
 										//pm return trip riders
 										var numTrips = parseInt(getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										numTrips = Math.round((numTrips*pop_growth)*emp_growth);										
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'pm',output)
 										}
 										//pm to work riders
 										var numTrips = parseInt((time.intime['pm']/acs_data.acs[tractPair.home_tract].bus_to_work)*getRegressionTrips(tractPair,time,triptable.time,triptable.marketarea.id));
+										numTrips = Math.round((numTrips*pop_growth)*emp_growth);
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,'am',output)
 										}
@@ -239,7 +255,7 @@ module.exports = {
 								//done send output
 									
 							});
-							console.log('regression done',output.tt.length);
+							console.log('triptable done',output.tt.length);
 							res.json(output);
 						})
 					});
@@ -309,12 +325,12 @@ function getRegressionTrips(tractPair,time,timeOfDay,marketarea){
 			regressionRiders += acs_data.acs[tractPair.home_tract].information*-0.7550878;
 			regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.00020453;
 		break;
-		case 7:
+		case 2:
 			regressionRiders =  acs_data.acs[tractPair.home_tract].car_0* 0.3400127;
 			regressionRiders += acs_data.acs[tractPair.home_tract].race_black*0.02379176;
 			regressionRiders += acs_data.acs[tractPair.home_tract].age25_29*0.07151607;
 		break;
-		case 6:
+		case 3:
 			regressionRiders = 44.0737;  
 			regressionRiders +=acs_data.acs[tractPair.home_tract].car_0* 0.226559;
 			regressionRiders += acs_data.acs[tractPair.home_tract].car_1*0.09415446;
@@ -339,8 +355,8 @@ function getTimeMatrix(tractPair){
 	output.intime['off']=0;
 
 	var amVars = ['6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt'],
-			pmVars = ['4_00pmpt'],
-			offPeakVars = ['5_00ampt','5_30ampt','11_00ampt','12_00ampt','12_00pmpt'];
+		pmVars = ['4_00pmpt'],
+		offPeakVars = ['5_00ampt','5_30ampt','11_00ampt','12_00ampt','12_00pmpt'];
 
 	amVars.forEach(function(timeVar){
 		output.intime['am'] += acs_data.acs[tractPair.home_tract][timeVar]*1;
