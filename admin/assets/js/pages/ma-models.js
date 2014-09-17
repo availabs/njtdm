@@ -48,7 +48,9 @@ function modelPageCtrl($scope){
     if(err){ console.log(err); }
     //console.log(res);
     $scope.triptable = res;
+
     console.log('triptable initial load',$scope.triptable)
+
     triptableMap.updateData(res.tt);
     $scope.$apply();
   });
@@ -200,14 +202,16 @@ function ReportCtrl( $scope,$http,$filter) {
   modelAnalysisRouteMap.append(routeLayer);
 
   $scope.loadModelData = function(){
+    d3.select('#s2id_model_run_select').selectAll('span').text(null)
   	var index = $('#model_run_select').val();
     $scope.loading = true;
     var v = -1;
+console.log($scope.finished_models)
     $scope.finished_models.forEach(function(model,i){
         if(model.id == index){ v = i;}
     });
     if(v !== -1){
-      console.log('loading this model',$scope.finished_models[v].ampm,index);
+//console.log('loading this model',$scope.finished_models[v].ampm,index);
       d3.json('/triptable/'+index+'/modeldata',
         function(err,data){
         console.log('loadModelData',data);
@@ -216,7 +220,7 @@ function ReportCtrl( $scope,$http,$filter) {
         $scope.finished_models.splice(v,1);
         $scope.loading=false;
         $scope.newData(data,$scope.loadedModels[$scope.loadedModels.length-1].name);
-        console.log('loaded models',$scope.loadedModels);
+//console.log('loaded models',$scope.loadedModels);
       });
     }
   };
@@ -253,24 +257,24 @@ function ReportCtrl( $scope,$http,$filter) {
 
     
      d3.json('/data/tracts.json', function(error, geo) {
-      tracts = geo;
-      var geoData = {
-        type: "FeatureCollection",
-        features: []
-      };
-      tracts.features.forEach(function(feat){
-          if($scope.marketarea.zones.indexOf(feat.properties.geoid) !== -1){
-             geoData.features.push(feat);
-          }
-      });
-      reportAnalyst.geoData = geoData;
-      reportAnalyst.update_data(data,name);
-      $scope.routes = []
-      reportAnalyst.modelRoutesGroup.all().reduce(function(one,two){$scope.routes.push(two.key)});
-      console.log($scope.routes);
-      $scope.$apply();
-      reportAnalyst.clearGraphs();
-      reportAnalyst.renderGraphs();
+          tracts = geo;
+          var geoData = {
+            type: "FeatureCollection",
+            features: []
+          };
+          tracts.features.forEach(function(feat){
+              if($scope.marketarea.zones.indexOf(feat.properties.geoid) !== -1){
+                 geoData.features.push(feat);
+              }
+          });
+          reportAnalyst.geoData = geoData;
+          reportAnalyst.add_data(data,name);
+          $scope.routes = []
+          reportAnalyst.modelRoutesGroup.all().reduce(function(one,two){$scope.routes.push(two.key)});
+          console.log($scope.routes);
+          $scope.$apply();
+          reportAnalyst.clearGraphs();
+          reportAnalyst.renderGraphs();
     });
   };
 
@@ -299,6 +303,28 @@ function ReportCtrl( $scope,$http,$filter) {
 
 
   $scope.removeModel = function(model) {
-      console.log(model);
+      console.log($scope.loadedModels, model);
+
+      var index;
+      for(index = 0; index < $scope.loadedModels.length; index++) {
+          if ($scope.loadedModels[index].$$hashKey == model.$$hashKey) {
+              break;
+          }
+      }
+
+      var removed = $scope.loadedModels.splice(index, 1);
+
+      $scope.finished_models.push(removed.pop());
+
+      reportAnalyst.remove_data(model.name);
+
+      $scope.routes = []
+      if (reportAnalyst.modelRoutesGroup.size()) {
+          reportAnalyst.modelRoutesGroup.all().reduce(function(one,two){$scope.routes.push(two.key)});
+      }
+
+      if (!$scope.routes.length) {
+        routeLayer.data([])();
+      }
   }
 }
