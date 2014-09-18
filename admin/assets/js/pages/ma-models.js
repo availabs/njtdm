@@ -105,11 +105,25 @@ function modelPageCtrl($scope){
         
         }
       }
-      console.log('flat forecast',$scope.flat_forecast)
+     
       triptableMap.setForecastTracts($scope.flat_forecast);
     }
 
   });
+  
+  $scope.$watch('current_model_run.forecast_emp_growth',function(){
+    for(key in $scope.mpo_forecast.employment){
+       $scope.flat_forecast.employment[key] = $scope.current_model_run.forecast_emp_growth;
+    }
+    triptableMap.setForecastTracts($scope.flat_forecast);
+  })
+
+  $scope.$watch('current_model_run.forecast_pop_growth',function(){
+    for(key in $scope.mpo_forecast.population){
+       $scope.flat_forecast.popu[key] = $scope.current_model_run.forecast_pop_growth;
+    }
+    triptableMap.setForecastTracts($scope.flat_forecast);
+  })
 
   $scope.$watch('current_model_run.forecast',function(){
     console.log('forecast changed');
