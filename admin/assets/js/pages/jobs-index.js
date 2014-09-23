@@ -17,13 +17,14 @@ function jobsController($scope) {
 	console.log($scope.jobs);
 
 	$scope.cancelJob=function(id){
-		//$scope.
-		delete $scope.current_jobs[id]
+		
 		d3.json('/job/'+id)
-		.post(JSON.stringify({isFinished:true,status:'Cancelled'}),function(err,data){
+		.post(JSON.stringify({isFinished:true,status:'Cancelled',pid:$scope.current_jobs[id].pid}),function(err,data){
 			console.log('return',data);
 			if(err){ console.log('error:',err);}
-			$scope.finished_jobs[data.id] = data;	
+			delete $scope.current_jobs[id]
+			$scope.finished_jobs[data.id] = data;
+			$scope.$apply();	
 		})
 
 	}

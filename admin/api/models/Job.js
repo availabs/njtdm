@@ -46,11 +46,15 @@ module.exports = {
     //If job is killed by user, kill the Process
     //-------------------------------------------
     if(values.status){
-      if(values.status == 'Cancelled' && values.pid){
+      if(values.status == 'Cancelled'){
         console.log('Job Update Cancelling');
-        kill(values.pid, 'SIGKILL');
+        if(typeof values.pid != 'undefined' && values.pid != null){
+          console.log('Job Update Killing', values.pid);
+          kill(values.pid, 'SIGKILL');
+        }
       }
     }
+    next();
   }
 
 };
