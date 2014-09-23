@@ -74,7 +74,7 @@
 			                   		<tr ng-repeat="job in finished_jobs | orderBy: 'start'">
 
 		                                <td>{{job.type}} <span ng-show="job.type == 'Model Run'"> - {{job.info[0].name}}</span></td> 
-		                                <td>{{job.start | date : ' M/d/yy h:mm a' }}</td>
+		                                <td>{{job.createdAt | date : ' M/d/yy h:mm a' }}</td>
 		                                <td>{{job.status}}</td>
 		                               
 			                           
