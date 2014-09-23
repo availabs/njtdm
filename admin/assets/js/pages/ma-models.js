@@ -162,11 +162,16 @@ function modelPageCtrl($scope){
     $scope.model.info = JSON.stringify($scope.current_model_run);
     $scope.model.marketareaId = $scope.marketarea.id;
     
-    $('#runModal').modal('hide');
-    io.socket.post('/triptable/run',{model:$scope.model},function(err,data){
+    $scope.model_processing = 'Processing Model...Please Wait'
+    io.socket.post('/triptable/run',{model:$scope.model},function(data){
       
-      if(err){console.log('ma models 105:error',err);}
-      console.log('run model',data);
+      
+      
+        $('#runModal').modal('hide');
+        $scope.model_processing = ''
+        //console.log('run model',data);
+      
+      
     })
   }
 }

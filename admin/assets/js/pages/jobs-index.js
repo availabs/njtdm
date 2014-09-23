@@ -23,7 +23,7 @@ function jobsController($scope) {
 		.post(JSON.stringify({isFinished:true,status:'Cancelled',pid:$scope.current_jobs[id].pid}),function(err,data){
 			console.log('return',data);
 			if(err){ console.log('error:',err);}
-			delete $scope.current_jobs[id]
+			delete $scope.current_jobs[id];
 			$scope.finished_jobs[data.id] = data;
 			$scope.$apply();	
 		})
