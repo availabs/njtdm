@@ -40,7 +40,7 @@ function spawnModelRun(job,triptable_id){
 	    console.log('child process exited with code ' + code);
 	    if(code == 0){
 	    		
-		    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Success'})
+		    Job.update({id:job.id},{isFinished:true,finished:new Date(),status:'Success'})
 			.exec(function(err,updated_job){
 				if(err){ console.log('job update error',error); }
 				sails.sockets.blast('job_updated',updated_job);		

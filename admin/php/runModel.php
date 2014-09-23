@@ -29,7 +29,7 @@
 
  ///echo "FINISHED $model_id";
  $sql = 'Update triptable set "isFinished" = true where id = '.$model_id;
- echo "status:Finishing";
+ echo "status:Success";
  pg_query($dbh, $sql) or die($sql.'\n'.pg_last_error());
  
  

@@ -7,6 +7,7 @@ function jobsController($scope) {
 	$scope.num_active = 0;
 	
 	$scope.jobs.forEach(function(job){
+		job.info = JSON.parse(job.info);
 		if(job.isFinished){
 			$scope.finished_jobs[job.id] = job;
 		}else{
