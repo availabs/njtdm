@@ -14,14 +14,24 @@ function jobsController($scope) {
 		}
 	})
 
-	$scope.cancel_job=function(id){
+	console.log($scope.jobs);
+
+	$scope.cancelJob=function(id){
 		//$scope.
+		delete $scope.current_jobs[id]
+		d3.json('/job/'+id)
+		.post(JSON.stringify({isFinished:true,status:'Cancelled'}),function(err,data){
+			console.log('return',data);
+			if(err){ console.log('error:',err);}
+			$scope.finished_jobs[data.id] = data;	
+		})
+
 	}
 
 	io.socket.on('connect',function(){
 
 		io.socket.on('job_created', function(data) {
-	      $scope.current_job[data.id] = data;
+	      $scope.current_jobs[data.id] = data;
 	    });
 
 	    io.socket.on('job_updated', function(data) {

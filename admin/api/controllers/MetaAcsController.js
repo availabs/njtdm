@@ -55,7 +55,7 @@ function spawnJob(job){
 		    .exec(function(err,newEntry){
 		    	if(err){ console.log('metaAcs create error',error);}
 					
-			    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Sucess'})
+			    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Success'})
 				.exec(function(err,updated_job){
 					if(err){ console.log('job update error',error); }
 					sails.sockets.blast('job_updated',updated_job);		
@@ -77,6 +77,12 @@ function spawnJob(job){
 	    	+' '+job.info[0].dataSource
 	    	+' '+job.info[0].year
 	    	+'\n');
+	    
+	    Job.update({id:job.id},{pid:terminal.pid}).exec(function(err,updated_job){
+	    	if(err){ console.log('job update error',error); }
+			sails.sockets.blast('job_updated',updated_job);		
+	    })
+
 	    terminal.stdin.end();
 	}, 1000);
 }

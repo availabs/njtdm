@@ -26,7 +26,6 @@
 			                        <th>Time Started</th>
 			                        <th>Status</th>
 			                        <th>Progress</th>
-
 			                        <th class="text-right"></th>
 			                    </tr>
 			                    </thead>
@@ -45,7 +44,7 @@
 			                                </div>
 			                            </td>
 			                           	<td class="chart-cell hidden-xs">
-			                               <a class="btn btn-danger">Cancel Job</a>
+			                               <a class="btn btn-danger" ng-click="cancelJob(job.id)">Cancel Job</a>
 			                            </td>
 			                   		</tr>
 			                    </tbody>
@@ -69,27 +68,16 @@
 			                        <th class="source-col-header">Type</th>
 			                        <th>Time Finished</th>
 			                        <th>Status</th>
-			                        <th>Message</th>
-
-			                        <th class="text-right"></th>
 			                    </tr>
 			                    </thead>
 			                    <tbody>
-			                   		<tr ng-repeat='job in finished_jobs'>
+			                   		<tr ng-repeat="job in finished_jobs | orderBy: 'start'">
 
 		                                <td>{{job.type}} <span ng-show="job.type == 'Model Run'"> - {{job.info[0].name}}</span></td> 
 		                                <td>{{job.start | date : ' M/d/yy h:mm a' }}</td>
 		                                <td>{{job.status}}</td>
-		                                <td> 
-			                                <div class="progress" ng-show="job.progress > 0" style='margin-bottom:0px'>
-			                                  <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="{{job.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%">
-			                                    <span class="sr-only">{{job.progress}}% Complete</span>
-			                                  </div>
-			                                </div>
-			                            </td>
-			                           	<td class="chart-cell hidden-xs">
-			                               
-			                            </td>
+		                               
+			                           
 			                   		</tr>
 			                    </tbody>
 			                </table>

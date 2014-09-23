@@ -40,7 +40,7 @@ function spawnModelRun(job,triptable_id){
 	    console.log('child process exited with code ' + code);
 	    if(code == 0){
 	    		
-		    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Sucess'})
+		    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Success'})
 			.exec(function(err,updated_job){
 				if(err){ console.log('job update error',error); }
 				sails.sockets.blast('job_updated',updated_job);		
@@ -60,6 +60,11 @@ function spawnModelRun(job,triptable_id){
 	    terminal.stdin.write('php -f php/runModel.php lor.availabs.org 5432 njtdmData postgres transit '
 	    	+triptable_id
 	    	+'\n');
+
+	    Job.update({id:job.id},{pid:terminal.pid}).exec(function(err,updated_job){
+	    	if(err){ console.log('job update error',error); }
+			sails.sockets.blast('job_updated',updated_job);		
+	    });
 
 	    terminal.stdin.end();
 	}, 1000);
