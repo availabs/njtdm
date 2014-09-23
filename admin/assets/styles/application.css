@@ -19595,9 +19595,9 @@ ol.text-list {
 }
 
 .market {
-  fill: #080;
-  fill-opacity: 0.5;
-  stroke: #080;
+  fill: none;
+  /*fill-opacity: 0.5;*/
+  stroke: #000;
   stroke-width: 1px;
 }
 .market:hover {

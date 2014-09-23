@@ -71,10 +71,10 @@
 			                    </tr>
 			                    </thead>
 			                    <tbody>
-			                   		<tr ng-repeat="job in finished_jobs | orderBy: 'start'">
+			                   		<tr ng-repeat="job in finished_jobs | orderBy : sortJob : true">
 
 		                                <td>{{job.type}} <span ng-show="job.type == 'Model Run'"> - {{job.info[0].name}}</span></td> 
-		                                <td>{{job.createdAt | date : ' M/d/yy h:mm a' }}</td>
+		                                <td>{{job.updatedAt | date : ' M/d/yy h:mm a' }}</td>
 		                                <td>{{job.status}}</td>
 		                               
 			                           

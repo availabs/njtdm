@@ -7,7 +7,7 @@ function jobsController($scope) {
 	$scope.num_active = 0;
 	
 	$scope.jobs.forEach(function(job){
-		job.info = JSON.parse(job.info);
+		//job.info = JSON.parse(job.info);
 		if(job.isFinished){
 			$scope.finished_jobs[job.id] = job;
 		}else{
@@ -15,7 +15,7 @@ function jobsController($scope) {
 		}
 	})
 
-	console.log($scope.jobs);
+	//console.log($scope.jobs);
 
 	$scope.cancelJob=function(id){
 		
@@ -29,6 +29,10 @@ function jobsController($scope) {
 		})
 
 	}
+	$scope.sortJob = function(job) {
+    	var date = new Date(job.createdAt);
+    	return date;
+	};
 
 	io.socket.on('connect',function(){
 
