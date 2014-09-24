@@ -166,7 +166,7 @@ function modelPageCtrl($scope){
     $scope.model.marketareaId = $scope.marketarea.id;
     
     $scope.model_processing = 'Processing Model...Please Wait'
-    d3.json('/triptable/run').post(json.stringify({model:$scope.model}),function(err,data){
+    d3.json('/triptable/run').post(JSON.stringify({model:$scope.model}),function(err,data){
         if(err){console.log(err);$scope.model_processing = err;}
         else{
       
