@@ -110,7 +110,7 @@ module.exports = {
 				return;
 			}
 			var info = JSON.parse(data.rows[0].info);
-			var routes = info.marketarea.routes.replace('[','(').replace(']',')').replace(/\"/g, "'");;
+			var routes = JSON.stringify(info.marketarea.routes).replace('[','(').replace(']',')').replace(/\"/g, "'");;
 			var gtfs_table = 'njtransit_bus_07-12-2013';//info.datasources.gtfs_source;
 			var sql ="SELECT a.trip_id,a.duration,a.distance,a.route,a.on_stop_code,a.gtfs_trip_id,a.off_stop_code,b.start_time,b.waiting_time,b.walk_distance,b.walking_time,	c.arrival_time,	d.arrival_time as trip_start_time,f.fare_zone as on_fare_zone,	g.fare_zone as off_fare_zone,e.geoid as on_tract, h.geoid as off_tract"
 			 		+" from model_legs a "
@@ -176,7 +176,7 @@ module.exports = {
 	},
 	calculateTripTable:function(req,res){
 		var triptable = req.param('triptable_settings');
-		var tracts = triptable.marketarea.zones.replace(/\"/g,"'").replace("[","(").replace("]",")");
+		var tracts = JSON.stringify(triptable.marketarea.zones).replace(/\"/g,"'").replace("[","(").replace("]",")");
 		var output = {tt:[],failed:[]};
 		//console.log('settings:',req.param('triptable_settings'));
 		getCensusData(tracts,triptable.datasources.acs_source,function(acs_tracts){
