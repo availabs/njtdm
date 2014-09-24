@@ -62,7 +62,6 @@
             .attr('fill', '#fff')
 
         marketarea.counties = marketarea.counties;
-        console.log(marketarea);
         d3.json ('/data/counties.json',function(err,counties){
             topojson.feature(counties, counties.objects.tracts)
             .features.forEach(function(county){
@@ -91,7 +90,7 @@
             .post(JSON.stringify({ routes: marketarea.routes }), function(error, routes) {
                 //console.log('routes topo',routes);
                 //routes = topojson.feature(routes, routes.objects.routes);
-                console.log('routes geo',routes);
+               // console.log('routes geo',routes);
                 draw(routes, 'routes12','route');
             })
     }

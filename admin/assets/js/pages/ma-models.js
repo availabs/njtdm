@@ -19,6 +19,8 @@ function modelPageCtrl($scope){
   $scope.model.name = '';
   $scope.triptable = {};
   $scope.temp_forecast = {};
+  $scope.mpo_forecast = {};
+
 
   $scope.current_model_run = {
     marketarea:$scope.marketarea,
