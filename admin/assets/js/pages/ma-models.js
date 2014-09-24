@@ -51,11 +51,12 @@ function modelPageCtrl($scope){
     //console.log(res);
     $scope.triptable = res;
 
-    console.log('triptable initial load',$scope.triptable)
+    //console.log('triptable initial load',$scope.triptable)
 
     triptableMap.updateData(res.tt);
     $scope.$apply();
   });
+
  $scope.numberOfPages=function(){
       if(typeof $scope.triptable.tt != 'undefined'){
         return Math.ceil($scope.triptable.tt.length/$scope.pageSize);
@@ -165,14 +166,11 @@ function modelPageCtrl($scope){
     $scope.model.marketareaId = $scope.marketarea.id;
     
     $scope.model_processing = 'Processing Model...Please Wait'
-    io.socket.post('/triptable/run',{model:$scope.model},function(data){
-      
-      
+    d3.json('/triptable/run').post(json.stringify({model:$scope.model}),function(data){
       
         $('#runModal').modal('hide');
         $scope.model_processing = ''
-        //console.log('run model',data);
-      
+        
       
     })
   }
