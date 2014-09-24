@@ -29,8 +29,8 @@ function OverviewController ($scope) {
   		$scope.routes[route.route_id] = route.route_short_name;
   	});
 
-  	$scope.marketarea.routes = JSON.parse($scope.marketarea.routes);
-  	$scope.marketarea.zones = JSON.parse($scope.marketarea.zones);
+  	$scope.marketarea.routes = $scope.marketarea.routes;
+  	$scope.marketarea.zones = $scope.marketarea.zones;
 
   	editmap.init('#new-market-svg',$scope.marketarea);
 
