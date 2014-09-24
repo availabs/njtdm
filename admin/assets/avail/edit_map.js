@@ -61,7 +61,7 @@
             .attr('height', height)
             .attr('fill', '#fff')
 
-        marketarea.counties = JSON.parse(marketarea.counties);
+        marketarea.counties = marketarea.counties;
         console.log(marketarea);
         d3.json ('/data/counties.json',function(err,counties){
             topojson.feature(counties, counties.objects.tracts)
