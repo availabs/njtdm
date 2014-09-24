@@ -5,7 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
-    "sails": "*",
+    "sails": "~0.10.5",
     "sails-disk": "~0.10.0",
     "sails-postgresql":"~0.10.0",
     "rc": "~0.3.3",

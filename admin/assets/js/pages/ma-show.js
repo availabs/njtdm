@@ -28,6 +28,7 @@ function OverviewController ($scope) {
   	window.server_routes.forEach(function(route){
   		$scope.routes[route.route_id] = route.route_short_name;
   	});
+    $scope.aboutMap = "About this Map"
 
   	$scope.marketarea.routes = $scope.marketarea.routes;
   	$scope.marketarea.zones = $scope.marketarea.zones;

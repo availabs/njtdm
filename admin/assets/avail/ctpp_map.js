@@ -90,8 +90,8 @@
 			buttonHeight = 30;
 
 		var data = [
-			{text: 'Outbound', id: 'outbound'},
-			{text: 'Inbound', id: 'inbound'}
+			{text: 'To Work', id: 'outbound'},
+			{text: 'To Home', id: 'inbound'}
 		]
 
 		svg.selectAll('.ctpp-button-group')

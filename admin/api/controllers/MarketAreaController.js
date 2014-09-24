@@ -61,7 +61,7 @@ function getCensusData(marketarea,table,cb){
 
     var sql = 'SELECT * FROM public.'+table+' where geoid in '+JSON.stringify(marketarea.zones).replace(/\"/g,"'").replace("[","(").replace("]",")");
     MarketArea.query(sql,{},function(err,data){
-      if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+      if (err) { return console.log(err,sql);}
       return cb(data.rows);
     });
 }
