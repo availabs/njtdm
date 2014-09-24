@@ -185,7 +185,7 @@
             paths
             .attr('class', function(d){
                 if(marketarea.zones.indexOf(d.properties.geoid) != -1){
-                    return 'market';
+                    return 'in-market';
                 }
                 return 'nonMarket'
             })
