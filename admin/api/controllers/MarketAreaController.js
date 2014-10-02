@@ -395,8 +395,24 @@ module.exports = {
           res.send(response);
       })
   },
-/*****************/
+  getCensus:function(req,res){
 
+    var cenData = 'acs5_34_2011_tracts';
+    //Allow user to specify census table
+    if(typeof req.param('census') !== 'undefined'){  cenData = req.param('census'); }
+    MarketArea.findOne(req.param('id')).exec(function(err,ma){
+      if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+      getOverviewData(ma,function(meta){
+        getCensusData(ma,cenData,function(census){
+          //console.log(census);
+          res.json({marketarea:ma,census:census})
+        })
+      })
+    })
+
+  },
+/*****************/
+  
   show:function(req,res){
     var cenData = 'acs5_34_2010_tracts';
     //Allow user to specify census table

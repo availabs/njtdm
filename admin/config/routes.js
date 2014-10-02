@@ -62,6 +62,7 @@ module.exports.routes = {
   '/marketarea/:id/tohome/lodes_travel_data': 'MarketAreaController.getLODEStohome',
 
   '/marketarea/:id/ma_route_data': 'MarketAreaController.getAllMARoutes',
+  '/marketarea/:id/census' : 'MarketAreaController.getCensus',
 
   //---------------------------------
   // Users Guide Pages

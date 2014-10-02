@@ -31,7 +31,8 @@
 		byDensity: false
 	}
 
-	var popup;
+	var popup,
+		table;
 
 	var colorScale = d3.scale.quantize()
 		.range(["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
@@ -55,9 +56,14 @@
 			.append('div')
 			.attr('id', 'overview-popup')
 
-		popup.append('table')
+		table = popup.append('table')
 			.attr('class', 'table table-striped table-condensed')
-			.append('tbody')
+			
+		table.append('thead').append('tr').append('th').attr('colspan','2')
+		
+		table.append('tbody')
+
+		popup.select('table')
 
 		svg = temp.append('g')
 			.attr('transform', 'translate(0, '+margin.top+')');
@@ -85,6 +91,8 @@
 	function showPopup(d) {
 		var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[d.properties.geoid][cat]; }).reduce(function(p, c) { return p+c; }, 0),
 			format = d3.format('>,.1%');
+
+		popup.select('table').select('thead').select('tr').select('th').text('geoid:' + d.properties.geoid);
 
 		var rows = popup.select('table').select('tbody')
 			.selectAll('tr')
