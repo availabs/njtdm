@@ -1,5 +1,5 @@
 <%- partial('../partials/nav') %>
-    <div class="wrap">
+    <div class="wrap" ng-controller="ACSController">
         <%- partial('../partials/header') %>
 		<div class="content container">
 		    <div class="row">
@@ -9,7 +9,10 @@
 		    </div>
 		    <%- partial('pages/acs-content') %>
 		</div>
-    
+     <%- partial('partials/deleteModal') %>
 
+<script>
+	datasets = <%- JSON.stringify(records) %>;
+</script>
 <script src="/lib/select2.js"></script>
 <script src="/js/pages/acs.js"></script>

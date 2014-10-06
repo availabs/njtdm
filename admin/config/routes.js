@@ -48,12 +48,14 @@ module.exports.routes = {
   '/marketarea/:id/models': 'MarketAreaController.models',
   '/marketarea/:id/:route/route_geo': 'MarketAreaController.getRouteGeo',
   '/marketarea/:id/routes_geo': 'MarketAreaController.getRouteGeo',
+  
   // CTPP routes
   '/marketarea/outbound/all_ctpp_data': 'MarketAreaController.getAllCTPPoutbound',
   '/marketarea/:id/outbound/ctpp_travel_data': 'MarketAreaController.getCTPPoutbound',
 
   '/marketarea/inbound/all_ctpp_data': 'MarketAreaController.getAllCTPPinbound',
   '/marketarea/:id/inbound/ctpp_travel_data': 'MarketAreaController.getCTPPinbound',
+  
   // LODES routes
   '/marketarea/towork/all_lodes_data': 'MarketAreaController.getAllLODEStowork',
   '/marketarea/:id/towork/lodes_travel_data': 'MarketAreaController.getLODEStowork',
@@ -90,7 +92,9 @@ module.exports.routes = {
   // Data Routes
   //---------------------------------
   '/gtfs/:id/routes' :'MetaGtfsController.getRoutes',
-  '/acs/load':'MetaAcsController.loadData'
+  '/acs/load':'MetaAcsController.loadData',
+  '/acs/delete/:id':'MetaAcsController.deleteACS'
+
   
   //----------------------------------
   //File Uploads

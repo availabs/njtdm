@@ -84,12 +84,11 @@ $values = "";
      echo "progress:". intval($count++/count($var_sets)*100).':';
 	}
 
- $columns = rtrim($columns, ",")."),";
+ $columns = rtrim($columns, ",").")";
  $inserts = '';
  foreach($values as $geoid => $value ){
-  $inserts .= "('$geoid',";
-
-    foreach(array_reverse($value) as $val){
+  $inserts .= "($geoid,";
+    foreach($value as $val){
       $inserts .= $val.",";
     }
   $inserts = rtrim($inserts, ",")."),";

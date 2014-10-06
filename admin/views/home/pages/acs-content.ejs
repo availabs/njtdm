@@ -22,13 +22,13 @@
                     <% 
                         records.forEach(function(rec){
                     %>
-                        <tr>
+                        <tr id="acs_<%- JSON.stringify(rec.id) %>">
                             <td><%= rec['stateFips'] %></td>
                             <td><%= rec['year'] %></td>
                             <td><%= rec['dataSource'] %></td>
                             <td><%= rec['sumlevel'] %></td>
                             <td>
-                            <button class="btn btn-danger btn-sm delete" ng-click="delete(<%=rec['id']%>)">
+                            <button class="btn btn-danger btn-sm delete" data-toggle="modal" data-target="#deleteModal" data-backdrop="false"  ng-click="deleteACS(<%- JSON.stringify(rec.id) %>)">
                                 <i class="fa fa-trash"></i>
                                 <span>Delete</span>
                             </button>
@@ -119,8 +119,8 @@
                                             required="required" class="col-xs-12 col-sm-6 chzn-select" name="dataSource">
                                         <option value=""></option>
                                         <option value="5">ACS 5 Year</option>
-                                        <option value="3">ACS 3 Year</option>
-                                        <option value="1">ACS 1 Year</option>
+                                        <!-- <option value="3">ACS 3 Year</option>
+                                        <option value="1">ACS 1 Year</option> -->
                                     </select>
                                 </div>
                             </div>

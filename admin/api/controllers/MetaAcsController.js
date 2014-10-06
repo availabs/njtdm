@@ -4,6 +4,12 @@
  * @description :: Server-side logic for managing tests
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
+var pg = require('pg'),
+	password = 'transit',
+	host = 'lor.availabs.org',
+	conString = "postgres://postgres:"+password+"@"+host+":5432/njtdmData",
+   	client = new pg.Client(conString);
+
 function spawnJob(job){
 	var terminal = require('child_process').spawn('bash');
 	var current_progress = 0;
@@ -88,6 +94,30 @@ function spawnJob(job){
 }
 
 module.exports = {
+
+	deleteACS:function(req,res){
+
+		MetaAcs.findOne(req.param('id')).exec(function(err,found){
+			
+			var query = 'DROP TABLE public."'+found.tableName+'"';
+			
+
+			MetaAcs.query(query,{} ,function(err, result) { 
+				if(err) { console.error('error running query:',query, err); }
+
+				MetaAcs.destroy(found.id).exec(function(err,destroyed){
+					if(err) { console.log(err); res.json({error:err}); }
+
+					res.json({'message':'Record '+found.id+' deleted.'})
+
+				});
+
+			});
+
+		});
+		
+	},
+
 	loadData:function(req,res){
 		var state=req.param('state'),
 		dataSource=req.param('dataSource'),
@@ -96,36 +126,56 @@ module.exports = {
 
 		console.log('MetaAcs.loadData',state,dataSource,year,sumlevel)
 		
-		Job.create({
-			isFinished:false,
-			type:'load ACS',
-			info:[{'state':state,'dataSource':dataSource,'year':year,'sumlevel':sumlevel}],
-			status:'Started'
-		})
-		.exec(function(err,job){
-			if(err){console.log('create job error',err)
+		MetaAcs //Check to see if this data set has been loaded
+		.find({ stateFips:state,dataSource:dataSource, year:year,sumlevel:sumlevel})
+		.exec(function(err,data){
+			console.log(data);
+			
+			if(data.length > 0){// the data source does exist, refuse to load.
+				var flashMessage = [{
+					name:"Data Exists",
+					message: "This dataset has already been loaded"
+				}];
+
 				req.session.flash = {
-					err: err
+					err: flashMessage
 				}
 				res.redirect('/data/acs');
-				return;
-			}
-			sails.sockets.blast('job_created',job);
-
-			var flashMessage = [{
-				name:"Test",
-				message: "job created "+job.id,
-			}];
-
-			spawnJob(job);
-
-			req.session.flash = {
-				err: flashMessage
-			}
-			res.redirect('/data/acs');
-			return;
 			
-		})
-			
+			}else{//the data source doesn't exists 
+
+				Job.create({
+					isFinished:false,
+					type:'load ACS',
+					info:[{'state':state,'dataSource':dataSource,'year':year,'sumlevel':sumlevel}],
+					status:'Started'
+				})
+				.exec(function(err,job){
+					if(err){console.log('create job error',err)
+						req.session.flash = {
+							err: err
+						}
+						res.redirect('/data/acs');
+						return;
+					}
+					sails.sockets.blast('job_created',job);
+
+					var flashMessage = [{
+						name:"Test",
+						message: "job created "+job.id,
+					}];
+
+					spawnJob(job);
+
+					req.session.flash = {
+						err: flashMessage
+					}
+					res.redirect('/data/acs');
+					return;
+					
+				})
+			}
+
+		})//Check for data source	
 	}
 };
