@@ -92,7 +92,7 @@
 		var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[d.properties.geoid][cat]; }).reduce(function(p, c) { return p+c; }, 0),
 			format = d3.format('>,.1%');
 
-		popup.select('table').select('thead').select('tr').select('th').text('geoid:' + d.properties.geoid);
+		popup.select('table').select('thead').select('tr').select('th').attr('colspan','3').attr('align','center').style('font-weight','bold').style('font-size','1.5em').html( "<center>"+d.properties.geoid+"</center>");
 
 		var rows = popup.select('table').select('tbody')
 			.selectAll('tr')
@@ -238,7 +238,7 @@
 				}
 				else {
 					value = (value/tractTotal)*100 || 0;
-					
+
 				}
 			}
 
