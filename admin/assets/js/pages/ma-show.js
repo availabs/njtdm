@@ -157,23 +157,23 @@ function OverviewController ($scope) {
 function downloadCSV(output,filename){
     var csvContent = "data:text/csv;charset=utf-8,"+output;
     
-    //if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1 ){
-      var encodedUri = encodeURI(csvContent);
-      var link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", filename);
-      link.setAttribute('target', '_blank');
-      link.click();
-    // }else{
+    // if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1 ){
     //   var encodedUri = encodeURI(csvContent);
-    //   //window.open(encodedUri);
-    //    $(container)
-    //         .attr({
-    //         'download': filename,
-    //         'href': encodedUri,
-    //         'target': '_blank'
-    //     });
-    // }
+    //   var link = document.createElement("a");
+    //   link.setAttribute("href", encodedUri);
+    //   link.setAttribute("download", filename);
+    //   link.setAttribute('target', '_blank');
+    //   link.click();
+    // }else{
+      var encodedUri = encodeURI(csvContent);
+      //window.open(encodedUri);
+       $("#downloadCSV")
+            .attr({
+            'download': filename,
+            'href': encodedUri,
+            'target': '_blank'
+        });
+    //}
   };
 
 function processCensusData(name) {
