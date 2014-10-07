@@ -232,13 +232,13 @@
 			else if (dataDomain.byPercent) {
 				var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[geoid][cat]; }).reduce(function(p, c) { return p+c || p }, 0);
 
-				//console.log('tractTotal',tractTotal);
+				
 				if (tractTotal === 0) {
 					value = 0;
 				}
 				else {
 					value = (value/tractTotal)*100 || 0;
-					console.log(value);
+					
 				}
 			}
 
