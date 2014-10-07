@@ -77,8 +77,8 @@
 			.projection(projection);
 
         d3.json('/data/tracts.json', function(error, data) {
-        	console.log('hi eric what does this say? -->',data,'or error',error);
-            if(typeof data != 'undefined'){
+        	if(error){ console.log('ACS Error',error); }
+        	if(typeof data != 'undefined'){
 	            data.features.forEach(function(feat){
 	                if(input_tracts.indexOf(feat.properties.geoid) !== -1){
 	                   	MAtracts.features.push(feat);
