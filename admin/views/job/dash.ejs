@@ -33,7 +33,7 @@
 			                   		<tr ng-repeat='job in current_jobs'>
 
 		                                <td>{{job.type}}  <span ng-show="job.type == 'Model Run'"> - {{job.info[0].name}}</span></td> 
-		                                <td>{{job.start | date : ' M/d/yy h:mm a' }}</td>
+		                                <td>{{job.createdAt | date : ' M/d/yy h:mm a' }}</td>
 		                                <td>{{job.status}}</td>
 		                                <td> 
 			                                <div class="progress" ng-show="job.progress > 0" style='margin-bottom:0px'>

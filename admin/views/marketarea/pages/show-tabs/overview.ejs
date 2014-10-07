@@ -42,7 +42,7 @@
             </h3>
             <div class="description">
                 Labor Force<br>
-                <small>Unemployment {{((census_vars['unemployment'].value/census_vars['employment'].value) *100).toFixed(2)+"%"}}</small>
+                <small>Unemployment {{((census_vars['unemployment'].value/(census_vars['employment'].value+census_vars['unemployment'].value)) *100).toFixed(2)+"%"}}</small>
             </div>
         </div>
     </div>

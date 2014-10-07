@@ -25,7 +25,7 @@
                         <tr id="acs_<%- JSON.stringify(rec.id) %>">
                             <td><%= rec['stateFips'] %></td>
                             <td><%= rec['year'] %></td>
-                            <td><%= rec['dataSource'] %></td>
+                            <td>ACS <%= rec['dataSource'] %> year</td>
                             <td><%= rec['sumlevel'] %></td>
                             <td>
                             <button class="btn btn-danger btn-sm delete" data-toggle="modal" data-target="#deleteModal" data-backdrop="false"  ng-click="deleteACS(<%- JSON.stringify(rec.id) %>)">
@@ -144,7 +144,7 @@
                                     <select id="sumlevel" data-placeholder="Sum Level"
                                             required="required" class="col-xs-12 col-sm-6 chzn-select" name="sumlevel">
                                         <option value="tracts">Tracts</option>
-                                        <option value="blockgroups">Block Groups</option>
+                                        <!-- <option value="blockgroups">Block Groups</option> -->
                                     </select>
                                 </div>
                             </div>
