@@ -4,11 +4,7 @@
  * @description :: Server-side logic for managing tests
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
-var pg = require('pg'),
-	password = 'transit',
-	host = 'lor.availabs.org',
-	conString = "postgres://postgres:"+password+"@"+host+":5432/njtdmData",
-   	client = new pg.Client(conString);
+
 
 function spawnJob(job){
 	var terminal = require('child_process').spawn('bash');
