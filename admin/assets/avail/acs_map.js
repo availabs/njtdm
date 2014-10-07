@@ -77,12 +77,14 @@
 			.projection(projection);
 
         d3.json('/data/tracts.json', function(error, data) {
-            data.features.forEach(function(feat){
-                if(input_tracts.indexOf(feat.properties.geoid) !== -1){
-                   	MAtracts.features.push(feat);
-                   	tractsAreas[feat.properties.geoid] = path.area(feat);
-                }
-            })
+            if(typeof data != 'undefined'){
+	            data.features.forEach(function(feat){
+	                if(input_tracts.indexOf(feat.properties.geoid) !== -1){
+	                   	MAtracts.features.push(feat);
+	                   	tractsAreas[feat.properties.geoid] = path.area(feat);
+	                }
+	            })
+	        }
 
 			callback();
         })
