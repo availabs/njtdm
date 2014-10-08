@@ -171,12 +171,14 @@ function downloadCSV(output,filename){
       var blob = new Blob([output], {
         "type": "text/csv;charset=utf8;"      
       });
-      link.setAttribute("href", "#");
-      link.addEventListener("click", function(event) {
-         console.log('ie is downloading')
-         navigator.msSaveBlob(blob, fileName);
-      }, false);
-      link.click();
+      console.log('IE is downloading!!')
+      navigator.msSaveBlob(blob, fileName);
+      
+      // link.addEventListener("click", function(event) {
+      //    console.log('ie is downloading')
+        
+      // }, false);
+      // link.click();
     }
     else{
       console.log('CSV Download not supported')
