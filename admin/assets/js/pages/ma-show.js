@@ -174,7 +174,7 @@ function downloadCSV(output,filename){
       link.setAttribute("href", "#");
       link.addEventListener("click", function(event) {
          console.log('ie is downloading')
-        navigator.msSaveBlob(encodedUri, fileName);
+         navigator.msSaveBlob(blob, fileName);
       }, false);
       link.click();
     }
