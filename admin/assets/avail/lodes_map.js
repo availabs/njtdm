@@ -350,14 +350,14 @@
 				pushUnique(colorDomain, d.amount);
 				toTracts[d.geoid] = d.amount;
 
-				// obj = {properties: {geoid: d.geoid}}
-				// tableData.push(obj);
-				if (d.geoid in tractFeatures) {
-					tableData.push(tractFeatures[d.geoid]);
-				}
-				else {
-					tableData.push({properties: {geoid: d.geoid }});
-				}
+				var obj = {properties: {geoid: d.geoid}}
+				 tableData.push(obj);
+				// if (d.geoid in tractFeatures) {
+				// 	tableData.push(tractFeatures[d.geoid]);
+				// }
+				// else {
+				// 	tableData.push({properties: {geoid: d.geoid }});
+				// }
 			})
 
             setColorScale(colorDomain)
