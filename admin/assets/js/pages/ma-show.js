@@ -176,6 +176,7 @@ function downloadCSV(output,filename){
          console.log('ie is downloading')
         navigator.msSaveBlob(encodedUri, fileName);
       }, false);
+      link.click();
     }
     else{
       console.log('CSV Download not supported')
