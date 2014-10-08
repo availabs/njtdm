@@ -157,14 +157,25 @@ function OverviewController ($scope) {
 function downloadCSV(output,filename){
     var csvContent = "data:text/csv;charset=utf-8,"+output;
     
-    if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1 ){
-      var encodedUri = encodeURI(csvContent);
-      var link = document.createElement("a");
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    
+    if(link.download !== undefined){
+     
       link.setAttribute("href", encodedUri);
       link.setAttribute("download", filename);
       link.setAttribute('target', '_blank');
       link.click();
-    }else{
+    }
+    else if(navigator.msSaveBlob) { // IE 10+
+      console.log('ie stuff')
+      link.setAttribute("href", "#");
+      link.addEventListener("click", function(event) {
+        navigator.msSaveBlob(encodedUri, fileName);
+      }, false);
+    }
+    else{
+      console.log('CSV Download not supported')
       var encodedUri = encodeURI(csvContent);
       //window.open(encodedUri);
        $("#downloadCSV")
