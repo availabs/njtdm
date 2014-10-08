@@ -59,9 +59,9 @@ function getOverviewData(marketarea,cb){
 
 function getCensusData(marketarea,table,cb){
 
-    var sql = 'SELECT * FROM public.'+table+' where geoid in '+marketarea.zones.replace(/\"/g,"'").replace("[","(").replace("]",")");
+    var sql = 'SELECT * FROM public.'+table+' where geoid in '+JSON.stringify(marketarea.zones).replace(/\"/g,"'").replace("[","(").replace("]",")");
     MarketArea.query(sql,{},function(err,data){
-      if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+      if (err) { return console.log(err,sql);}
       return cb(data.rows);
     });
 }
@@ -395,8 +395,24 @@ module.exports = {
           res.send(response);
       })
   },
-/*****************/
+  getCensus:function(req,res){
 
+    var cenData = 'acs5_34_2011_tracts';
+    //Allow user to specify census table
+    if(typeof req.param('census') !== 'undefined'){  cenData = req.param('census'); }
+    MarketArea.findOne(req.param('id')).exec(function(err,ma){
+      if (err) {res.send('{status:"error",message:"'+err+'"}',500); return console.log(err);}
+      getOverviewData(ma,function(meta){
+        getCensusData(ma,cenData,function(census){
+          //console.log(census);
+          res.json({marketarea:ma,census:census})
+        })
+      })
+    })
+
+  },
+/*****************/
+  
   show:function(req,res){
     var cenData = 'acs5_34_2010_tracts';
     //Allow user to specify census table

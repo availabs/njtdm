@@ -19,7 +19,7 @@ function getNavData(cb){
     var output = {};
     output.marketareas = [];
     ma.forEach(function(area){
-      output.marketareas.push({id:area.id,name:area.name,numTracts:JSON.parse(area.zones).length,numRoutes:JSON.parse(area.routes).length});
+      output.marketareas.push({id:area.id,name:area.name,numTracts:area.zones.length,numRoutes:area.routes.length});
     });
     return cb(output);
   });

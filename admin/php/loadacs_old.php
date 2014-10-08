@@ -3,6 +3,16 @@
 echo "status:Initializing";
 ini_set("memory_limit","1024M");
 ini_set('max_execution_time', 600);
+$conn_string = "host=lor.availabs.org port=5432 dbname=geocensus user=postgres password=transit";
+$inscon = pg_connect($conn_string);
+//$inscon = $test->connect();
+
+
+$sql = 'SELECT geoid from "tl_2013_'.$argv[6].'_tract" as a';
+
+$rs = pg_query($sql) or die($sql." ".pg_error());
+$num_rows =  pg_num_rows ($rs);
+//echo "num rows:$num_rows";
 
 $sources = Array('sf1','acs5');
 $handles = Array( 'sf1' =>Array('P0010001','P0030002','P0030003','P0030005'),'acs5' => Array('B23025_001E','B23025_002E','B08006_001E','B08006_002E','B08006_003E','B08006_004E','B08006_008E'));
@@ -30,76 +40,61 @@ $push_set = Array('B08132_053E','B08132_054E','B08132_055E','B08132_056E','B0813
 array_push($var_sets,$push_set);
 $push_set = Array('B08133_012E','B08133_013E','B08133_014E','B08133_015E','B08122_001E','B08122_002E','B08122_003E','B08122_004E','B08122_005E','B08122_006E','B08122_007E','B08122_008E','B08122_009E','B08122_010E','B08122_011E','B08122_012E','B08122_013E','B08122_014E','B08122_015E');
 array_push($var_sets,$push_set);
-$push_set = Array('B08122_016E','B08122_017E','B08122_018E','B08122_019E','B08122_020E','B08122_021E','B08122_022E','B08122_023E','B08122_024E','B08122_025E','B08122_026E','B08122_027E','B08122_028E');
+$push_set = Array('B08122_016E','B08122_017E','B08122_018E','B08122_019E','B08122_020E','B08122_021E','B08122_022E','B08122_023E','B08122_024E','B08122_025E','B08122_026E','B08122_027E','B08122_028E','B08136_001E','B08136_002E','B08136_003E','B08136_004E','B08136_005E','B08136_006E');
 array_push($var_sets,$push_set);
-$push_set = Array('B19001_001E','B19001_002E','B19001_003E','B19001_004E','B08126_046E','B08126_047E','B08126_048E','B08126_049E','B08126_050E','B08126_051E','B08126_052E','B08126_053E','B08126_054E');
+$push_set = Array('B08136_007E','B08136_008E','B08136_009E','B08136_010E','B08136_011E','B08136_012E','B19001_001E','B19001_002E','B19001_003E','B19001_004E','B08126_046E','B08126_047E','B08126_048E','B08126_049E','B08126_050E','B08126_051E','B08126_052E','B08126_053E','B08126_054E');
 array_push($var_sets,$push_set);
-$push_set = Array('B08126_055E','B08126_056E','B08126_057E','B08126_058E','B08126_059E','B08126_060E','B08519_001E','B08519_002E','B08519_003E','B08519_004E','B25001_001E','B08301_012E','B08301_015E');
+$push_set = Array('B08126_055E','B08126_056E','B08126_057E','B08126_058E','B08126_059E','B08126_060E','B08519_001E','B08519_002E','B08519_003E','B08519_004E','B25001_001E');
 array_push($var_sets,$push_set);
 $push_set = Array('B08519_005E','B08519_006E','B08519_007E','B08519_008E','B08519_009E','B08519_028E','B08519_029E','B08519_030E','B08519_031E','B08519_032E','B08519_033E','B08519_034E','B08519_035E','B08519_036E');
-array_push($var_sets,$push_set);
-$push_set = Array('B25044_003E','B25044_004E','B25044_005E','B25044_006E','B25044_007E','B25044_008E','B25044_010E','B25044_011E','B25044_012E','B25044_013E','B25044_014E','B25044_015E');
-array_push($var_sets,$push_set);
 
 $count = 0;
+pg_close($inscon);
 $conn_string = "host=".$argv[1]." port=".$argv[2]." dbname=".$argv[3]." user=".$argv[4]." password=".$argv[5];
 $inscon = pg_connect($conn_string);
 
-//$tableName = 'test';
 $tableName = "acs".$argv[7]."_".$argv[6]."_".$argv[8]."_tracts";
 echo "tableName:$tableName:";
 echo "status:Creating Table:";
 pg_query(createStatement($tableName,$var_sets)) or die($sql." ".pg_error());
 $values = "";
 
-  echo "status:Downloading:";
+echo "status:Downloading:";
+while($row = pg_fetch_array($rs)){
+    $properties = array();
+    $feature = array();
+    $geometry = array();
+    $columns = "(geoid,";
+    $values .= "(".$row['geoid'].",";
     
-  $year = $argv[8];
-  $columns = "(geoid,";
-  $values = Array();
+    
 
 	for($x = 0; $x < count($var_sets);$x++){
-	    $state = '34';//$argv[6];
-
-
+	    $state = substr($row['geoid'],0,2);
+	    $county = substr($row['geoid'],2,3);
+	    $tract = substr($row['geoid'],5,6);
 	    $source= 1;
 	    $vars = implode(",",$var_sets[$x]);
-	    $jURL = 'http://api.census.gov/data/'.$year.'/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:*&in=state:'.$state;
+	    $jURL = 'http://api.census.gov/data/'.$argv[8].'/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
 	    $cdata = curl_download($jURL);
 	    $foo =  utf8_encode($cdata); 
 	    $cdata = json_decode($foo, true);
-      //print_r($cdata);
-
+      
 	    for($i =0; $i < count($var_sets[$x]); $i++ ){
-	        $columns .= $var_sets[$x][$i].",";  
-          
-          for($y = 1; $y< count($cdata);$y++){
-            $geoid = $cdata[$y][count($cdata[$y])-3].$cdata[$y][count($cdata[$y])-2].$cdata[$y][count($cdata[$y])-1];
-            if($x == 0 && $i == 0){
-              $values[$geoid] = Array();
-            }
-            array_push($values[$geoid], intval($cdata[$y][$i]));
-          }
-	   }
-     echo "progress:". intval($count++/count($var_sets)*100).':';
+	        $columns .= $var_sets[$x][$i].",";
+          $values .= intval($cdata[1][$i]).",";
+	    }
+     
 	}
-
- $columns = rtrim($columns, ",").")";
- $inserts = '';
- foreach($values as $geoid => $value ){
-  $inserts .= "($geoid,";
-    foreach($value as $val){
-      $inserts .= $val.",";
-    }
-  $inserts = rtrim($inserts, ",")."),";
- }
- 
- $inserts = rtrim($inserts, ",");
- // echo $columns;
- // echo $inserts;
- 
+  $columns = rtrim($columns, ",").")";
+  $values = rtrim($values, ",")."),";
+  	
+  $count++;
+  echo "progress:". intval($count/$num_rows*100).':';
+}
+$values = rtrim($values, ",");
 echo "status:Inserting Data:";
-$sql = "Insert into $tableName $columns VALUES $inserts";
+$sql = "Insert into $tableName $columns VALUES $values";
 //echo $sql;
 $rs = pg_query($sql) or die($sql." ".pg_error());
 echo "status:Complete:";

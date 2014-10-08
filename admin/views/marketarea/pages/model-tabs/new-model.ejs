@@ -90,6 +90,7 @@
         </div>
         <div class="modal-footer">
             <input type="text" class="form-control md-col-4" ng-model='model.name' placeholder="Enter Model Name"><br>
+            {{model_processing}}
             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-info" ng-disabled="model.name.length < 5" ng-click="runModel()">Run Model</button>
         </div>

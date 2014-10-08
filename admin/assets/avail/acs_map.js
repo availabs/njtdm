@@ -31,7 +31,8 @@
 		byDensity: false
 	}
 
-	var popup;
+	var popup,
+		table;
 
 	var colorScale = d3.scale.quantize()
 		.range(["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
@@ -55,9 +56,14 @@
 			.append('div')
 			.attr('id', 'overview-popup')
 
-		popup.append('table')
+		table = popup.append('table')
 			.attr('class', 'table table-striped table-condensed')
-			.append('tbody')
+			
+		table.append('thead').append('tr').append('th').attr('colspan','2')
+		
+		table.append('tbody')
+
+		popup.select('table')
 
 		svg = temp.append('g')
 			.attr('transform', 'translate(0, '+margin.top+')');
@@ -71,12 +77,15 @@
 			.projection(projection);
 
         d3.json('/data/tracts.json', function(error, data) {
-            data.features.forEach(function(feat){
-                if(input_tracts.indexOf(feat.properties.geoid) !== -1){
-                   	MAtracts.features.push(feat);
-                   	tractsAreas[feat.properties.geoid] = path.area(feat);
-                }
-            })
+        	if(error){ console.log('ACS Error',error); }
+        	if(typeof data != 'undefined'){
+	            data.features.forEach(function(feat){
+	                if(input_tracts.indexOf(feat.properties.geoid) !== -1){
+	                   	MAtracts.features.push(feat);
+	                   	tractsAreas[feat.properties.geoid] = path.area(feat);
+	                }
+	            })
+	        }
 
 			callback();
         })
@@ -85,6 +94,8 @@
 	function showPopup(d) {
 		var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[d.properties.geoid][cat]; }).reduce(function(p, c) { return p+c; }, 0),
 			format = d3.format('>,.1%');
+
+		popup.select('table').select('thead').select('tr').select('th').attr('colspan','3').attr('align','center').style('font-weight','bold').style('font-size','1.5em').html( "<center>"+d.properties.geoid+"</center>");
 
 		var rows = popup.select('table').select('tbody')
 			.selectAll('tr')
@@ -222,13 +233,15 @@
 				value /= tractsAreas[geoid];
 			}
 			else if (dataDomain.byPercent) {
-				var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[geoid][cat]; }).reduce(function(p, c) { return p+c; }, 0);
+				var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[geoid][cat]; }).reduce(function(p, c) { return p+c || p }, 0);
 
+				
 				if (tractTotal === 0) {
 					value = 0;
 				}
 				else {
-					value = (value/tractTotal)*100;
+					value = (value/tractTotal)*100 || 0;
+
 				}
 			}
 

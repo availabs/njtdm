@@ -5,7 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
-    "sails": "*",
+    "sails": "~0.10.5",
     "sails-disk": "~0.10.0",
     "sails-postgresql":"~0.10.0",
     "rc": "~0.3.3",
@@ -15,6 +15,7 @@
     "topojson":"~1.6.15",
     "jquery-file-upload-middleware":"0.1.2",
     "grunt": "0.4.2",
+    "tree-kill":"*",
     "grunt-sync": "~0.0.4",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-clean": "~0.5.0",

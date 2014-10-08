@@ -1,4 +1,4 @@
-@charset "IBM866";
+.@charset "IBM866";
 @import url(/styles/fonts/fontello.css);
 @font-face {
   font-family: 'Open Sans';
@@ -19594,10 +19594,18 @@ ol.text-list {
   stroke-width: 5px;
 }
 
-.market {
+
+.in-market {
   fill: #080;
   fill-opacity: 0.5;
-  stroke: #080;
+  stroke: #000;
+  stroke-width: 1px;
+}
+
+.market {
+  fill: none;
+  /*fill-opacity: 0.5;*/
+  stroke: #000;
   stroke-width: 1px;
 }
 .market:hover {

@@ -19,6 +19,8 @@ function modelPageCtrl($scope){
   $scope.model.name = '';
   $scope.triptable = {};
   $scope.temp_forecast = {};
+  $scope.mpo_forecast = {};
+
 
   $scope.current_model_run = {
     marketarea:$scope.marketarea,
@@ -49,11 +51,12 @@ function modelPageCtrl($scope){
     //console.log(res);
     $scope.triptable = res;
 
-    console.log('triptable initial load',$scope.triptable)
+    //console.log('triptable initial load',$scope.triptable)
 
     triptableMap.updateData(res.tt);
     $scope.$apply();
   });
+
  $scope.numberOfPages=function(){
       if(typeof $scope.triptable.tt != 'undefined'){
         return Math.ceil($scope.triptable.tt.length/$scope.pageSize);
@@ -162,11 +165,15 @@ function modelPageCtrl($scope){
     $scope.model.info = JSON.stringify($scope.current_model_run);
     $scope.model.marketareaId = $scope.marketarea.id;
     
-    $('#runModal').modal('hide');
-    io.socket.post('/triptable/run',{model:$scope.model},function(err,data){
+    $scope.model_processing = 'Processing Model...Please Wait'
+    d3.json('/triptable/run').post(JSON.stringify({model:$scope.model}),function(err,data){
+        if(err){console.log(err);$scope.model_processing = err;}
+        else{
       
-      if(err){console.log('ma models 105:error',err);}
-      console.log('run model',data);
+          $('#runModal').modal('hide');
+          $scope.model_processing = '';
+        
+        }
     })
   }
 }

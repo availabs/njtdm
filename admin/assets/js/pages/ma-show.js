@@ -28,9 +28,10 @@ function OverviewController ($scope) {
   	window.server_routes.forEach(function(route){
   		$scope.routes[route.route_id] = route.route_short_name;
   	});
+    $scope.aboutMap = "About this Map"
 
-  	$scope.marketarea.routes = JSON.parse($scope.marketarea.routes);
-  	$scope.marketarea.zones = JSON.parse($scope.marketarea.zones);
+  	$scope.marketarea.routes = $scope.marketarea.routes;
+  	$scope.marketarea.zones = $scope.marketarea.zones;
 
   	editmap.init('#new-market-svg',$scope.marketarea);
 
@@ -156,17 +157,34 @@ function OverviewController ($scope) {
 function downloadCSV(output,filename){
     var csvContent = "data:text/csv;charset=utf-8,"+output;
     
-    if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1 ){
-      var encodedUri = encodeURI(csvContent);
-      var link = document.createElement("a");
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    
+    if(link.download !== undefined){
+     
       link.setAttribute("href", encodedUri);
       link.setAttribute("download", filename);
       link.setAttribute('target', '_blank');
       link.click();
-    }else{
+    }
+    else if(navigator.msSaveBlob) { // IE 10+
+      var blob = new Blob([output], {
+        "type": "text/csv;charset=utf8;"      
+      });
+      console.log('IE is downloading!!')
+      navigator.msSaveBlob(blob, fileName);
+      
+      // link.addEventListener("click", function(event) {
+      //    console.log('ie is downloading')
+        
+      // }, false);
+      // link.click();
+    }
+    else{
+      console.log('CSV Download not supported')
       var encodedUri = encodeURI(csvContent);
       //window.open(encodedUri);
-       $(container)
+       $("#downloadCSV")
             .attr({
             'download': filename,
             'href': encodedUri,
