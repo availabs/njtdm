@@ -168,9 +168,12 @@ function downloadCSV(output,filename){
       link.click();
     }
     else if(navigator.msSaveBlob) { // IE 10+
-      console.log('ie stuff')
+      var blob = new Blob([output], {
+        "type": "text/csv;charset=utf8;"      
+      });
       link.setAttribute("href", "#");
       link.addEventListener("click", function(event) {
+         console.log('ie is downloading')
         navigator.msSaveBlob(encodedUri, fileName);
       }, false);
     }
