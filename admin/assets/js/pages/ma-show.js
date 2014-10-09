@@ -172,7 +172,7 @@ function downloadCSV(output,filename){
         "type": "text/csv;charset=utf8;"      
       });
       console.log('IE is downloading!!')
-      navigator.msSaveBlob(blob, fileName);
+      navigator.msSaveBlob(blob, filename);
       
       // link.addEventListener("click", function(event) {
       //    console.log('ie is downloading')
