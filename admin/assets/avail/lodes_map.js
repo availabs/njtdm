@@ -62,7 +62,13 @@
 		path = d3.geo.path()
 			.projection(projection);
 
-        d3.json('/data/tracts.json', function(error, tractData) {
+        d3.json('/data/tracts.tjson', function(error, geodata) {
+        	var tractData = {};
+        	Object.keys(geodata.objects).forEach(function(key){
+		
+				tractData = topojson.feature(geodata, geodata.objects[key])
+			
+			});
             tractData.features.forEach(function(feat){
                 if(tractsGeoIDs.indexOf(feat.properties.geoid) !== -1){
                    	MAtracts.features.push(feat);

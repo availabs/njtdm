@@ -76,8 +76,14 @@
 		path = d3.geo.path()
 			.projection(projection);
 
-        d3.json('/data/tracts.json', function(error, data) {
+        d3.json('/data/tracts.tjson', function(error, geodata) {
         	if(error){ console.log('ACS Error',error); }
+        	var data = {};
+        	Object.keys(geodata.objects).forEach(function(key){
+		
+				data = topojson.feature(geodata, geodata.objects[key])
+			
+			});
         	if(typeof data != 'undefined'){
 	            data.features.forEach(function(feat){
 	                if(input_tracts.indexOf(feat.properties.geoid) !== -1){

@@ -56,7 +56,13 @@
             .attr('height', height)
             .attr('fill', '#fff')
 
-        d3.json('/data/tracts.json', function(error, data) {
+        d3.json('/data/tracts.tjson', function(error, geodata) {
+            var data = {};
+            Object.keys(geodata.objects).forEach(function(key){
+        
+                tractData = topojson.feature(geodata, geodata.objects[key])
+            
+            });
             tracts = data;
             tracts.features.forEach(function(feat){
                 if(marketarea.zones.indexOf(feat.properties.geoid) !== -1){

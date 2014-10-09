@@ -52,6 +52,7 @@ var jsFilesToInject = [
     "lib/jquery.ui.widget.js",
     //<!-- d3-->
     "lib/nvd3/lib/d3.v3.min.js",
+    "lib/topojson.js",
     
     //<!--backbone and friends -->
     "lib/backbone/underscore-min.js",
