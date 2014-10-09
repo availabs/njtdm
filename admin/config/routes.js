@@ -91,12 +91,16 @@ module.exports.routes = {
   //---------------------------------
   // Data Routes
   //---------------------------------
+  '/gtfs/upload':'MetaGtfsController.upload',
   '/gtfs/:id/routes' :'MetaGtfsController.getRoutes',
+  '/gtfs/delete/:id':'MetaGtfsController.deleteGtfs',
+
   '/acs/load':'MetaAcsController.loadData',
   '/acs/delete/:id':'MetaAcsController.deleteACS'
 
+
   
-  //----------------------------------
+  //----------------------------------/
   //File Uploads
   //----------------------------------
   //'/data/gtfs/upload':'UploadsController.gtfsupload'

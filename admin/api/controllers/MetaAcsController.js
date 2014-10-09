@@ -9,7 +9,7 @@
 function spawnJob(job){
 	var terminal = require('child_process').spawn('bash');
 	var current_progress = 0;
-	var acsEntry = { 
+	var GtfsEntry = { 
 		tableName:'',
   	 	stateFips:job.info[0].state,
 	 	dataSource: job.info[0].dataSource,
@@ -17,7 +17,7 @@ function spawnJob(job){
   	 	sumlevel:job.info[0].sumlevel
   	}
 
-	terminal.stdout.on('data', function (data) {
+  	terminal.stdout.on('data', function (data) {
 	    data = data+'';
 	    if(data.indexOf('tableName') !== -1){
 	    	console.log('table-name',data.split(":")[1]);
@@ -53,15 +53,25 @@ function spawnJob(job){
 		code = code*1;
 	    console.log('child process exited with code ' + code);
 	    if(code == 0){
-	    	MetaAcs.create(acsEntry)
-		    .exec(function(err,newEntry){
-		    	if(err){ console.log('metaAcs create error',error);}
-					
-			    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Success'})
-				.exec(function(err,updated_job){
-					if(err){ console.log('job update error',error); }
-					sails.sockets.blast('job_updated',updated_job);		
-				});
+	    	
+	    	Job.findOne(job.id).exec(function(err,newJob){
+	    		if(err){ console.log('Job check err',err);}
+	    		
+	    		if(newJob.status != 'Cancelled'){
+			    	
+			    	MetaAcs.create(acsEntry)
+				    .exec(function(err,newEntry){
+				    	if(err){ console.log('metaAcs create error',err);}
+							
+					    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Success'})
+						.exec(function(err,updated_job){
+							if(err){ console.log('job update error',err); }
+							sails.sockets.blast('job_updated',updated_job);		
+						});
+					});
+				}else{
+					console.log('Exit from Job Cancel');
+				}
 			});
 					
 		}else{

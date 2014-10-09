@@ -31,8 +31,11 @@
 			                    </thead>
 			                    <tbody>
 			                   		<tr ng-repeat='job in current_jobs'>
-
-		                                <td>{{job.type}}  <span ng-show="job.type == 'Model Run'"> - {{job.info[0].name}}</span></td> 
+			                   			
+		                                <td>{{job.type}}  
+		                                	<span ng-show="job.type == 'Model Run'"> - {{job.info[0].name}}</span>
+		                                	<span ng-show="job.type == 'load GTFS'"> - {{job.info[0].file.filename}}</span>
+		                                	</td> 
 		                                <td>{{job.createdAt | date : ' M/d/yy h:mm a' }}</td>
 		                                <td>{{job.status}}</td>
 		                                <td> 

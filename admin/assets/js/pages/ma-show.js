@@ -156,7 +156,6 @@ function OverviewController ($scope) {
 
 function downloadCSV(output,filename){
     var csvContent = "data:text/csv;charset=utf-8,"+output;
-    
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement("a");
     
@@ -173,15 +172,9 @@ function downloadCSV(output,filename){
       });
       console.log('IE is downloading!!')
       navigator.msSaveBlob(blob, filename);
-      
-      // link.addEventListener("click", function(event) {
-      //    console.log('ie is downloading')
-        
-      // }, false);
-      // link.click();
     }
     else{
-      console.log('CSV Download not supported')
+      console.log('CSV Maybe?')
       var encodedUri = encodeURI(csvContent);
       //window.open(encodedUri);
        $("#downloadCSV")
@@ -190,6 +183,7 @@ function downloadCSV(output,filename){
             'href': encodedUri,
             'target': '_blank'
         });
+        $("#downloadCSV").click();
     }
   };
 

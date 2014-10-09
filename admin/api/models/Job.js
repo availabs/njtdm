@@ -47,7 +47,7 @@ module.exports = {
     //-------------------------------------------
     if(values.status){
       if(values.status == 'Cancelled'){
-        console.log('Job Update Cancelling');
+        //console.log('Job Update Cancelling');
         if(typeof values.pid != 'undefined' && values.pid != null){
           console.log('Job Update Killing', values.pid);
           kill(values.pid, 'SIGKILL');

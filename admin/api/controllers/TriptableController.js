@@ -39,14 +39,25 @@ function spawnModelRun(job,triptable_id){
 		code = code*1;
 	    console.log('child process exited with code ' + code);
 	    if(code == 0){
+	    	
+	    	Job.findOne(job.id).exec(function(err,newJob){
+	    		if(err){ console.log('Job check err',err);}
 	    		
-		    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Success'})
-			.exec(function(err,updated_job){
-				if(err){ console.log('job update error',error); }
-				sails.sockets.blast('job_updated',updated_job);		
+
+	    		if(newJob.status != 'Cancelled'){
+
+				    Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Success'})
+					.exec(function(err,updated_job){
+						if(err){ console.log('job update error',error); }
+						sails.sockets.blast('job_updated',updated_job);		
+					});
+
+				}else{
+					console.log('Exit from Job Cancel');
+				}
+			
 			});
-		
-					
+
 		}else{
 			Job.update({id:job.id},{isFinished:true,finished:Date(),status:'Failure'})
 			.exec(function(err,updated_job){

@@ -1,5 +1,5 @@
 <%- partial('../partials/nav') %>
-    <div class="wrap">
+    <div class="wrap" ng-controller="GtfsController">
         <%- partial('../partials/header') %>
         <div class="content container">
             <div class="row">
@@ -9,7 +9,7 @@
             </div>
             <%- partial('pages/gtfs-content') %>
         </div>
-
+        <%- partial('partials/deleteGtfsModal') %>
 
 
 <script src="/lib/http_blueimp.github.io_JavaScript-Templates_js_tmpl.js"></script>
@@ -26,6 +26,9 @@
 
 
 
+<script>
+    datasets = <%- JSON.stringify(records) %>;
+</script>
 <script src="/js/pages/gtfs.js"></script>
 
 <script id="template-upload" type="text/template">

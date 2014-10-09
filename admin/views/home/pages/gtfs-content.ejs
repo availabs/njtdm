@@ -23,15 +23,15 @@
                     <% 
                         records.forEach(function(rec){
                     %>
-                        <tr>
+                        <tr id="gtfs_<%- JSON.stringify(rec.id) %>">
                             <td><%= rec['agency'] %></td>
                             <td><%= rec['startDate'] %></td>
                             <td><%= rec['endDate'] %></td>
                             <td><%= rec['numRoutes'] %></td>
                             <td><%= rec['numStops'] %></td>
                             <td>
-                            <button class="btn btn-danger btn-sm delete" ng-click="delete(<%=rec['id']%>)">
-                                <i class="fa fa-trash"></i>
+                            <button class="btn btn-danger btn-sm delete" data-toggle="modal" data-target="#deleteModal" data-backdrop="false"  ng-click="deleteGtfs(<%- JSON.stringify(rec.id) %>)">
+                              <i class="fa fa-trash"></i>
                                 <span>Delete</span>
                             </button>
                             </td>
@@ -73,7 +73,7 @@
                         <span class="btn btn-sm btn-default fileinput-button">
                                 <i class="fa fa-plus"></i>
                                 <span>Add files...</span>
-                                <input type="file" name="files[]" multiple="">
+                                <input name="files" multiple="" type="file">
                             </span>
                         <button type="submit" class="btn btn-primary btn-sm start">
                             <i class="fa fa-upload"></i>
