@@ -72,14 +72,14 @@
             if(marketAreaCounties.features.length > 0){
                 draw(marketAreaCounties, 'counties','county');
             }
-            d3.json('/data/tracts.json', function(error, geodata) {
+            d3.json('/data/tracts.tjson', function(error, geodata) {
                 var data = {};
                 Object.keys(geodata.objects).forEach(function(key){
             
                     data = topojson.feature(geodata, geodata.objects[key])
                 
                 });
-                
+
                 tracts = data;
                 tracts.features.forEach(function(feat){
                     if(marketarea.counties.indexOf(feat.properties.geoid.substring(0, 5)) !== -1){
