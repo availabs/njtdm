@@ -13,7 +13,7 @@
                 </ul>
             </header>
             <div class="body tab-content" style="overflow:hidden;">
-                <div id="overview" class="tab-pane clearfix" ng-controller="ReportCtrl">
+                <div id="overview" class="tab-pane clearfix">
                    <%- partial('model-tabs/analysis') %>
                 </div>
                 <div id="routes" class="tab-pane active">
@@ -190,6 +190,8 @@
                 </form>
             </div>
         </section>
+
+<!-- Model Analysis pane -->
         <section class="widget" ng-show="active_page == 'analysis'">
             <header>
                 <h5>
@@ -203,10 +205,30 @@
                     <a data-widgster="close" title="Close" href="#"><i class="glyphicon glyphicon-remove"></i></a>
                 </div>
             </header>
+
+
             <div class="body">
-                
+
+                <ul id="MA-Tab" class="nav nav-tabs">
+                    <li ng-repeat="model in loadedModels" ng-class="$index == 0 ? 'active' : ''"><a href="{{makeHREF(model)}}" data-toggle="tab" ng-style="{'background-color':colors[$index]}" ><span class="label">{{model.name.slice(0,5)}}</span></a></li>
+                </ul>
+                <div id="MA-Tab-Content" class="tab-content">
+                    <div ng-repeat="model in MA_Tab_data" ng-class="$index == 0 ? 'active in' : ''" class="tab-pane fade" id="{{makeID(model)}}">
+                         <div class="thumbnail" style="overflow:hidden;">
+                            <table class="table table-striped table-hover">
+                                <tr ng-repeat="obj in model.data" >
+                                    <td>{{obj.key}}</td> <td>{{obj.value}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
         </section>
+
+
         <%- partial('../guide/models-guide') %>
 
     </div>

@@ -171,7 +171,13 @@ console.log(reportAnalyst.dataset.length)
 
   },
   clearGraphs: function() {
-    d3.select('#graphDiv').selectAll('svg').remove();
+      d3.select('#myTabContent').selectAll('.graphDiv').selectAll('svg').remove();
+      d3.select("#boarding-choropleth").text(null);
+      d3.select("#alighting-choropleth").text(null);
+
+      d3.select('#model-analysis-routemap-svg')
+          .style('width', '0px')
+          .style('height', '0px')
   },
   RoutesTable:function() {
     var routeTable = d3.select('#route-count-table');
@@ -368,12 +374,15 @@ console.log(reportAnalyst.dataset.length)
       };
   },
   boardingChoropleth:function(){
+      d3.select("#boarding-choropleth").text("Boardings");
+      d3.select("#alighting-choropleth").text("Alightings");
+
+      var correctProject = getProjection(770,770,reportAnalyst.geoData);
     
       var censusTractBoarding = dc.geoChoroplethChart("#boarding-choropleth");
-      var correctProject = getProjection(390,600,reportAnalyst.geoData);
       censusTractBoarding
-        .width(390)
-        .height(600)
+        .width(770)
+        .height(770)
         .dimension(reportAnalyst.modelGeoIDBoarding)
         .group(reportAnalyst.modelGeoIDBoardingGroup)
         .colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
@@ -387,11 +396,11 @@ console.log(reportAnalyst.dataset.length)
               return "Censust Tract: " + d.key + "\n # Boarding: " + numberFormat(d.value ? d.value : 0);
         });
         censusTractBoarding.legend(dc.legend());
+
       var censusTractAlighting = dc.geoChoroplethChart("#alighting-choropleth");
-      
       censusTractAlighting
-        .width(390)
-        .height(600)
+        .width(770)
+        .height(770)
         .dimension(reportAnalyst.modelGeoIDAlighting)
         .group(reportAnalyst.modelGeoIDAlightingGroup)
         .colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
@@ -404,8 +413,6 @@ console.log(reportAnalyst.dataset.length)
         .title(function (d) {
               return "Censust Tract: " + d.key + "\n # Alighting: " + numberFormat(d.value ? d.value : 0);
         });
-      //censusTractBoarding.legend(dc.legend());
-
   },
   tripsGraph: function(){
     reportAnalyst.modelTripCountChart = dc.rowChart("#chart-model-trip-count");

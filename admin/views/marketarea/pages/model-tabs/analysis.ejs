@@ -36,19 +36,46 @@
             
             <ul id="myTab" class="nav nav-tabs">
                 <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+                <li class=""><a href="#distance" data-toggle="tab">Distances</a></li>
+                <li class=""><a href="#times" data-toggle="tab">Times</a></li>
+                <li class=""><a href="#choro" data-toggle="tab">Choropleths</a></li>
                 <li class=""><a href="#profile" data-toggle="tab">Routes</a></li>
                 
             </ul>
             <div id="myTabContent" class="tab-content">
                 <div class="tab-pane fade active in" id="home">
                      <div class="thumbnail" style="overflow:hidden;">
-                        <div id="graphDiv">
+                        <div class="graphDiv">
                             <div id="route-count"></div>
                             <div id="route-count-table"></div>
-                            <div id="start-time"></div>
-                            <div id="trip-duration"></div>
-                            <div id="trip-wait-time"></div>
+                            <!--<div id="start-time"></div>-->
+                            <!--<div id="trip-duration"></div>-->
+                            <!--<div id="trip-wait-time"></div>-->
+                            <!--<div id="trip-distance"></div>-->
+                            <!--<div id="boarding-choropleth"></div>-->
+                            <!--<div id="alighting-choropleth"></div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="distance">
+                     <div class="thumbnail" style="overflow:hidden;">
+                        <div class="graphDiv">
                             <div id="trip-distance"></div>
+                            <div id="trip-duration"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="times">
+                     <div class="thumbnail" style="overflow:hidden;">
+                        <div class="graphDiv">
+                            <div id="start-time"></div>
+                            <div id="trip-wait-time"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="choro">
+                     <div class="thumbnail" style="overflow:hidden;">
+                        <div class="graphDiv">
                             <div id="boarding-choropleth"></div>
                             <div id="alighting-choropleth"></div>
                         </div>

@@ -176,14 +176,6 @@ function modelPageCtrl($scope){
         }
     })
   }
-}
-
-function ReportCtrl( $scope,$http,$filter) {
-  
-  //-------------------------------------------------------
-  // Scope Setup
-  ///------------------------------------------------------
-  $scope.marketarea = window.server_marketarea;
   //$scope.api = 'http://localhost:1337/';
   $scope.colors = colorbrewer.Set1[5];
 
@@ -196,6 +188,7 @@ function ReportCtrl( $scope,$http,$filter) {
   
   $scope.loadedModels = [];
   $scope.loading = false;
+  $scope.MA_Tab_data = [];
   
   //-------------------------------------------------------
   // Interface functions
@@ -216,6 +209,8 @@ function ReportCtrl( $scope,$http,$filter) {
       .height(500);
 
   d3.select('#model-analysis-routemap-svg')
+      .style('width', '0px')
+      .style('height', '0px')
       .call(modelAnalysisRouteMap);
   
   var routeLayer = avlminimap.Layer();
@@ -227,17 +222,26 @@ function ReportCtrl( $scope,$http,$filter) {
   	var index = $('#model_run_select').val();
     $scope.loading = true;
     var v = -1;
-console.log($scope.finished_models)
+    //console.log($scope.finished_models)
     $scope.finished_models.forEach(function(model,i){
         if(model.id == index){ v = i;}
     });
     if(v !== -1){
-//console.log('loading this model',$scope.finished_models[v].ampm,index);
+      console.log('loading this model',$scope.finished_models[v],index);
       d3.json('/triptable/'+index+'/modeldata',
         function(err,data){
         console.log('loadModelData',data);
         //$scope.finished_models[v].info = JSON.parse($scope.finished_models[v].info);
+        
         $scope.loadedModels.push($scope.finished_models[v]);
+        var tData = [];
+        $scope.loadedModels.forEach(function(d) {
+            tData.push(tabData(d));
+        });
+        $scope.MA_Tab_data = tData;
+console.log($scope.MA_Tab_data)
+
+        console.log($scope.loadedModels)
         $scope.finished_models.splice(v,1);
         $scope.loading=false;
         $scope.newData(data,$scope.loadedModels[$scope.loadedModels.length-1].name);
@@ -269,6 +273,10 @@ console.log($scope.finished_models)
               modelAnalysisRouteMap.zoomToBounds(data);
               
               routeLayer.data([data])();
+
+              d3.select('#model-analysis-routemap-svg')
+                  .style('width', '750px')
+                  .style('height', '500px');
           })
   }
 
@@ -335,6 +343,13 @@ console.log($scope.finished_models)
 
       var removed = $scope.loadedModels.splice(index, 1);
 
+        var tData = [];
+        $scope.loadedModels.forEach(function(d) {
+            tData.push(tabData(d));
+        });
+        $scope.MA_Tab_data = tData;
+
+
       $scope.finished_models.push(removed.pop());
 
       reportAnalyst.remove_data(model.name);
@@ -347,5 +362,31 @@ console.log($scope.finished_models)
       if (!$scope.routes.length) {
         routeLayer.data([])();
       }
+  }
+
+  $scope.makeHREF = function(model) {
+     return '#MA-Tab-'+model.$$hashKey;
+  }
+
+  $scope.makeID = function(model) {
+     return 'MA-Tab-'+model.id;
+  }
+  tabData = function(model) {
+    var obj = {id: model.$$hashKey, data: []},
+      info = JSON.parse(model.info);
+
+    obj.data.push({key: "Model Name", value: model.name});
+    obj.data.push({key: "Marketarea Name", value: info.marketarea.name});
+    obj.data.push({key: "Time", value: info.time});
+    obj.data.push({key: "Forecast", value: info.forecast});
+    obj.data.push({key: "Type", value: info.type});
+    obj.data.push({key: "CTPP Source", value: info.datasources.ctpp_source});
+    obj.data.push({key: "GTFS Source", value: info.datasources.gtfs_source});
+
+    if (info.type == 'regression') {
+        obj.data.push({key: "ACS Source", value: info.datasources.acs_source});
+    }
+
+    return obj;
   }
 }
