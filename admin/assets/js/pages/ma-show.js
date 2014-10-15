@@ -194,17 +194,13 @@ function OverviewController ($scope) {
       for(key in $scope.census_vars){
         feature.properties[key] = 0;
          feature.properties[key] += acs_data.acs[temp.geoid][key];
-        // $scope.census_vars[key].vars.forEach(function(subkey){
-        //   console.log(subkey,acs_data.acs[temp.geoid][subkey]);
-        //  [subkey] || 0;
-        // });
       
       }
       
-      // feature.properties.emp_den = feature.properties.employment / (d3.geo.area(feature));
-      // feature.properties.pop_den = feature.properties.total_population / (d3.geo.area(feature));
-      // feature.properties.emp_den = feature.properties.emp_den / 15705369;
-      // feature.properties.pop_den = feature.properties.pop_den / 15705369; 
+      feature.properties.emp_den = feature.properties.employment / (d3.geo.area(feature));
+      feature.properties.pop_den = feature.properties.total_population / (d3.geo.area(feature));
+      feature.properties.emp_den = feature.properties.emp_den / 15705369;
+      feature.properties.pop_den = feature.properties.pop_den / 15705369; 
       output.features.push(feature);
  
     })
