@@ -37,9 +37,8 @@
 	var colorScale = d3.scale.quantize()
 		.range(["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
 
-	acsmap.init = function(svgID, input_tracts, acs_data, callback) {
-		tractsGeoIDs = input_tracts;
-
+	acsmap.init = function(svgID, marketArea, acs_data, callback) {
+		
 		ACSdata = acs_data.acs;
 		ACSgroups = acs_data.categories;
 
@@ -76,25 +75,14 @@
 		path = d3.geo.path()
 			.projection(projection);
 
-        d3.json('/data/tracts.tjson', function(error, geodata) {
-        	if(error){ console.log('ACS Error',error); }
-        	var data = {};
-        	Object.keys(geodata.objects).forEach(function(key){
+		MAtracts = marketArea.geoData;
+		tractsAreas = marketArea.tractFeatures;
+		Object.keys(tractsAreas).map(function(d){
+			tractsGeoIDs.push(d);
+		})
 		
-				data = topojson.feature(geodata, geodata.objects[key])
-			
-			});
-        	if(typeof data != 'undefined'){
-	            data.features.forEach(function(feat){
-	                if(input_tracts.indexOf(feat.properties.geoid) !== -1){
-	                   	MAtracts.features.push(feat);
-	                   	tractsAreas[feat.properties.geoid] = path.area(feat);
-	                }
-	            })
-	        }
-
-			callback();
-        })
+		callback();
+      
 	}
 
 	function showPopup(d) {

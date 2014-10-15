@@ -30,10 +30,10 @@ function OverviewController ($scope) {
   	});
     $scope.aboutMap = "About this Map"
 
-  	$scope.marketarea.routes = $scope.marketarea.routes;
-  	$scope.marketarea.zones = $scope.marketarea.zones;
+  	// $scope.marketarea.routes = $scope.marketarea.routes;
+  	// $scope.marketarea.zones = $scope.marketarea.zones;
 
-  	editmap.init('#new-market-svg',$scope.marketarea);
+  	
 
     $scope.active_category='Vehicles Available';
     $scope.isActive = function(name){
@@ -43,9 +43,35 @@ function OverviewController ($scope) {
       return false;
     };
 
-  	acsmap.init("#overview-map-svg", $scope.marketarea.zones, acs_data, function() { acsmap.draw(); acsmap.color(acs_data.categories[$scope.active_category][0], $scope.active_category); });
-  	ctppmap.init("#ctpp-svg", $scope.marketarea.zones);
-    lodesmap.init("#lodes-svg", $scope.marketarea.zones);
+
+    $scope.marketarea.geoData = { type:"FeatureCollection",features:[] };
+    $scope.marketarea.tractFeatures = {};
+    d3.json('/data/tracts.tjson', function(error, geodata) {
+      var tractData = {};
+      Object.keys(geodata.objects).forEach(function(key){
+        tractData = topojson.feature(geodata, geodata.objects[key])
+      });
+      
+      tractData.features.forEach(function(feat){
+          if($scope.marketarea.zones.indexOf(feat.properties.geoid) !== -1){
+              $scope.marketarea.geoData.features.push(feat);
+              $scope.marketarea.tractFeatures[feat.properties.geoid] = feat;
+          }
+      })
+      acsmap.init("#overview-map-svg", $scope.marketarea, acs_data, function() { 
+        acsmap.draw(); 
+        acsmap.color(acs_data.categories[$scope.active_category][0], $scope.active_category); 
+      });
+      ctppmap.init("#ctpp-svg", $scope.marketarea);
+      lodesmap.init("#lodes-svg", $scope.marketarea);
+      
+      $scope.drawGraph($scope.active_category, acs_data.categories[$scope.active_category]);
+
+    })
+
+
+    editmap.init('#new-market-svg',$scope.marketarea);
+  	
 
     $scope.colorMap = function(category) {
       $scope.current_map_variable = category;
@@ -135,14 +161,14 @@ function OverviewController ($scope) {
 		}
 		return false;
 	}
-	$scope.drawGraph($scope.active_category, acs_data.categories[$scope.active_category])
+	
 
   $scope.downloadData = function(id){
 
     //console.log($('#'+id).table2CSV({delivery:'value'}));
     var data = $('#'+id).table2CSV({delivery:'value'});
     var name = $scope.marketarea.name+"_"+$scope.active_category+".csv"
-    downloadCSV(data,name)
+    downloadFile("data:text/csv;charset=utf-8,",data,name,"#downloadCSV")
   
   };
 
@@ -151,11 +177,47 @@ function OverviewController ($scope) {
   $scope.setActiveOverviewTab = function(tab) {
       return tab === $scope.current_overview_tab;
   }
+  
+  $scope.downloadShape = function(){
+    var output = {
+      "type": "FeatureCollection",
+      "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+      "features": []
+    };
+    console.log(acs_data.acs,acs_data.census_vars )
+    $scope.marketarea.geoData.features.forEach(function(feature){
+      var temp = feature.properties;
+      feature.properties = {};
 
-};
+      
+      feature.properties.geoid = temp.geoid
+      for(key in $scope.census_vars){
+        feature.properties[key] = 0;
+         feature.properties[key] += acs_data.acs[temp.geoid][key];
+        // $scope.census_vars[key].vars.forEach(function(subkey){
+        //   console.log(subkey,acs_data.acs[temp.geoid][subkey]);
+        //  [subkey] || 0;
+        // });
+      
+      }
+      
+      // feature.properties.emp_den = feature.properties.employment / (d3.geo.area(feature));
+      // feature.properties.pop_den = feature.properties.total_population / (d3.geo.area(feature));
+      // feature.properties.emp_den = feature.properties.emp_den / 15705369;
+      // feature.properties.pop_den = feature.properties.pop_den / 15705369; 
+      output.features.push(feature);
+ 
+    })
+    console.log(output)
+    downloadFile("data:text/json;charset=utf-8,",JSON.stringify(output),$scope.marketarea.name+".geojson","#downloadGeo");
+  }
 
-function downloadCSV(output,filename){
-    var csvContent = "data:text/csv;charset=utf-8,"+output;
+};//end of controller
+
+
+
+function downloadFile(type,output,filename,elem){
+    var csvContent = type+output;
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement("a");
     
@@ -177,14 +239,15 @@ function downloadCSV(output,filename){
       console.log('CSV Maybe?')
       var encodedUri = encodeURI(csvContent);
       //window.open(encodedUri);
-       $("#downloadCSV")
+       $(elem)
             .attr({
             'download': filename,
             'href': encodedUri,
             'target': '_blank'
         });
-        $("#downloadCSV").click();
+        $(elem).click();
     }
+
   };
 
 function processCensusData(name) {

@@ -37,9 +37,8 @@
 
 	var trafficType;
 
-	lodesmap.init = function(svgID, input_tracts) {
-		tractsGeoIDs = input_tracts;
-
+	lodesmap.init = function(svgID, marketArea) {
+		
 		var temp = d3.select(svgID);
 
 		height = parseInt(temp.attr('height')) - margin.top;
@@ -62,23 +61,16 @@
 		path = d3.geo.path()
 			.projection(projection);
 
-        d3.json('/data/tracts.tjson', function(error, geodata) {
-        	var tractData = {};
-        	Object.keys(geodata.objects).forEach(function(key){
+        MAtracts = marketArea.geoData;
+	    tractsAreas = marketArea.tractFeatures;
 		
-				tractData = topojson.feature(geodata, geodata.objects[key])
-			
-			});
-            tractData.features.forEach(function(feat){
-                if(tractsGeoIDs.indexOf(feat.properties.geoid) !== -1){
-                   	MAtracts.features.push(feat);
-                   	tractFeatures[feat.properties.geoid] = feat;
-                }
-            })
-            lodesmap.draw();
+		Object.keys(tractsAreas).map(function(d){
+			tractsGeoIDs.push(d);
+		});
 
-			reset();
-        })
+        lodesmap.draw();
+		reset();
+       
 	}
 
 	lodesmap.draw = function() {

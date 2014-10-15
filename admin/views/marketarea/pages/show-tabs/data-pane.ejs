@@ -1,5 +1,5 @@
 <section class="widget" id="overview-data-pane">
-    <div ng-show="setActiveOverviewTab('ACS')" >
+    <div ng-show="setActiveOverviewTab('ACS')" style="padding-right:5px">
         <header>
             <h5>
                 <i class="fa fa-tasks"></i>
@@ -138,4 +138,10 @@
             </table>
         </div>
     </div>
+</section>
+
+<section class="widget" id="overview-data-pane" ng-show="setActiveOverviewTab('ACS')">
+        
+        <button type="button" class="btn btn-warning btn-lg btn-block" ng-click="downloadShape()" id="downloadGeo">Download Census GeoJson</button>
+
 </section>

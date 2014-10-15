@@ -37,8 +37,8 @@
 
 	var trafficType;
 
-	ctppmap.init = function(svgID, input_tracts) {
-		tractsGeoIDs = input_tracts;
+	ctppmap.init = function(svgID, marketArea) {
+		//tractsGeoIDs = input_tracts;
 
 		var temp = d3.select(svgID);
 
@@ -62,24 +62,17 @@
 		path = d3.geo.path()
 			.projection(projection);
 
-        d3.json('/data/tracts.tjson', function(error, geodata) {
-        	var tractData = {};
-        	Object.keys(geodata.objects).forEach(function(key){
+        MAtracts = marketArea.geoData;
+	    tractsAreas = marketArea.tractFeatures;
 		
-				tractData = topojson.feature(geodata, geodata.objects[key])
-			
-			});
+		Object.keys(tractsAreas).map(function(d){
+			tractsGeoIDs.push(d);
+		});
+        
+        ctppmap.draw();
 
-            tractData.features.forEach(function(feat){
-                if(tractsGeoIDs.indexOf(feat.properties.geoid) !== -1){
-                   	MAtracts.features.push(feat);
-                   	tractFeatures[feat.properties.geoid] = feat;
-                }
-            })
-            ctppmap.draw();
-
-			reset();
-        })
+		reset();
+       
 	}
 
 	ctppmap.draw = function() {
