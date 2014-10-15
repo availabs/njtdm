@@ -414,7 +414,7 @@ module.exports = {
 /*****************/
   
   show:function(req,res){
-    var cenData = 'acs5_34_2010_tracts';
+    var cenData = 'acs5_34_2011_tracts';
     //Allow user to specify census table
     if(typeof req.param('census') !== 'undefined'){  cenData = req.param('census'); }
 
