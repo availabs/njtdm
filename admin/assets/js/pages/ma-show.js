@@ -69,8 +69,18 @@ function OverviewController ($scope) {
 
     })
 
-
-    editmap.init('#new-market-svg',$scope.marketarea);
+    var editLoaded = false;
+    $scope.$watch('current_overview_tab',function(){
+      if($scope.current_overview_tab == 'EDIT' && !editLoaded){
+        
+        console.log('loading edit');
+        editmap.init('map',$scope.marketarea);
+        editLoaded = true;
+        console.log(editmap.map());
+        L.Util.requestAnimFrame(editmap.map().invalidateSize,editmap.map(),!1,editmap.map()._container);
+      
+      }
+    })
   	
 
     $scope.colorMap = function(category) {

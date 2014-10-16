@@ -7,7 +7,7 @@
                         <a href="#overview" data-toggle="tab" ng-click="current_overview_tab = 'ACS'">Overview</a>
                     </li>
                     <li>
-                        <a href="#routes" data-toggle="tab" ng-click="current_overview_tab = 'EDIT'">Edit</a>
+                        <a href="#edit-routes" data-toggle="tab" ng-click="current_overview_tab = 'EDIT'">Edit</a>
                     </li>
                 </ul>
             </header>
@@ -15,7 +15,7 @@
                 <div id="overview" class="tab-pane active clearfix" >
                    <%- partial('show-tabs/overview') %>
                 </div>
-                <div id="routes" class="tab-pane">
+                <div id="edit-routes" class="tab-pane">
                    <%- partial('show-tabs/edit') %>
                 </div>
             </div>

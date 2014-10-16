@@ -181,19 +181,24 @@ module.exports = {
                   routesCollection.features.push(routeFeature);
               });
 
-              // var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
-              //                                "quantization": 1e6});
-              // topology = topojson.simplify(topology, {"minimum-area":7e-6,
-              //                     "coordinate-system":"cartesian"});
+              var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
+                                             "quantization": 1e6});
+
+              var newJson = {type:'FeatureCollection',features:[]};
+              topology.objects.routes.geometries.forEach(function(d){
+                var routeSwap = {type: "GeometryCollection", geometries:[d]}
+                var test = topojson.mesh(topology, routeSwap, function(a, b) { return a.properties; });
+                var feature = {type:'Feature', properties:d.properties, geometry:{type:test.type, coordinates:test.coordinates}};
+                newJson.features.push(feature);
+              })
 
               //res.send(topology);
-              res.send(routesCollection);
+              res.send(newJson);
           });
       })
-      var preserveProperties = function(properties, key, value) {
-        properties[key] = value;
-        return true;
-      };
+      var preserveProperties = function(feature) {
+        return feature.properties;
+      }
   },
 
   getAllCTPPoutbound: function(req, res) {
