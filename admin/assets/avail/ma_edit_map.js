@@ -135,8 +135,9 @@
 
         d3.json(route, function(error, data) {
 
-          
+           console.log('route recieved',data);
            marketareaRoutes.features.push(data.features[0]);
+           console.log(marketareaRoutes.features.length)
            routesLayer.externalUpdate(marketareaRoutes);
 
         })
@@ -165,8 +166,7 @@
         marketarea.routes.splice(marketarea.routes.indexOf(routeID),1)
         
 
-        var b = d3.geo.bounds(marketAreaTracts);
-        var center = [(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];
+        
 
     }
     

@@ -88,6 +88,7 @@ function OverviewController ($scope) {
 
   	$scope.removeRoute = function(route){
       editmap.removeRoute(route);
+      
     }
 
     $scope.saveChanges = function(){
@@ -96,8 +97,8 @@ function OverviewController ($scope) {
       });
     }
     $('#add-route-btn').on('click',function(){
-      $('#new-market-error-div').hide();
-
+      
+      console.log('add route,',$('#routes-select').val())
       if($scope.marketarea.routes.indexOf($('#routes-select').val()) === -1){
           
           editmap.getRouteData($('#routes-select').val());
