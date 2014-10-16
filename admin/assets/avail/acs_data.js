@@ -59,7 +59,7 @@ acs_data = {
   "high_school":{"value":0,"vars":['b23006_009e'], "name":"High school graduate:"},
   "some_college":{"value":0,"vars":['b23006_016e'], "name":"Some college or associate's degree:"},
   "bachelors":{"value":0,"vars":['b23006_023e'], "name":"Bachelor's degree or higher:"},
-  "graduate":{"value":0,"vars":['B06009_006E'], "name":"Graduate or professional degree"},
+  "graduate":{"value":0,"vars":['b06009_006e'], "name":"Graduate or professional degree"},
   "foreign_born":{"value":0,"vars":['b05006_001e'], "name":"Foreign Born Population"},
   "spanish_speaking":{"value":0,"vars":['b06007_005e'], "name":"Spanish Speaking"},
   "other_language":{"value":0,"vars":['b06007_008e'], "name":"Other Language Speaking"},

@@ -213,7 +213,7 @@
 		acsmap.color(currentCategory, currentGroup);
 	}
 
-	acsmap.color = function(category, group) {
+	acsmap.color= function(category, group) {
 		currentCategory = category;
 		currentGroup = group;
 
@@ -224,7 +224,7 @@
 			var value = +ACSdata[geoid][category];
 
 			if (dataDomain.byDensity) {
-				value /= tractsAreas[geoid];
+				value /= path.area(tractsAreas[geoid]);
 			}
 			else if (dataDomain.byPercent) {
 				var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[geoid][cat]; }).reduce(function(p, c) { return p+c || p }, 0);
@@ -252,7 +252,7 @@
 			.classed('ma-active', true)
 			.style('fill', function(d) {
 				if (dataDomain.byDensity) {
-					return colorScale(ACSdata[d.properties.geoid][category]/tractsAreas[d.properties.geoid]);
+					return colorScale(ACSdata[d.properties.geoid][category]/path.area(tractsAreas[d.properties.geoid]));
 				}
 				else if (dataDomain.byPercent) {
 					var tractTotal = ACSgroups[currentGroup].map(function(cat) { return ACSdata[d.properties.geoid][cat]; }).reduce(function(p, c) { return p+c; }, 0);

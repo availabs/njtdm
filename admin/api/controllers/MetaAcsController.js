@@ -9,7 +9,7 @@
 function spawnJob(job){
 	var terminal = require('child_process').spawn('bash');
 	var current_progress = 0;
-	var GtfsEntry = { 
+	var acsEntry = { 
 		tableName:'',
   	 	stateFips:job.info[0].state,
 	 	dataSource: job.info[0].dataSource,
