@@ -59,7 +59,9 @@ function getOverviewData(marketarea,cb){
 
 function getCensusData(marketarea,table,cb){
 
-    var sql = 'SELECT * FROM public.'+table+' where geoid in '+JSON.stringify(marketarea.zones).replace(/\"/g,"'").replace("[","(").replace("]",")");
+    var sql = 'SELECT a.*,b.aland FROM public.'+table+' as a'
+          + ' join tl_2013_34_tract as b on a.geoid = b.geoid'
+          + ' where a.geoid in '+JSON.stringify(marketarea.zones).replace(/\"/g,"'").replace("[","(").replace("]",")");
     MarketArea.query(sql,{},function(err,data){
       if (err) { return console.log(err,sql);}
       return cb(data.rows);
@@ -109,7 +111,7 @@ module.exports = {
                   }else{
                     sql += "WHERE route_short_name = '" + route_id + "'";
                   }
-        
+
         MetaGtfs.query(sql,{},function(err,data){
             if (err) {
                 res.send('{status:"error",message:"'+err+'"}',500);

@@ -203,10 +203,8 @@ function OverviewController ($scope) {
       
       }
       
-      feature.properties.emp_den = feature.properties.employment / (d3.geo.area(feature));
-      feature.properties.pop_den = feature.properties.total_population / (d3.geo.area(feature));
-      feature.properties.emp_den = feature.properties.emp_den / 15705369;
-      feature.properties.pop_den = feature.properties.pop_den / 15705369; 
+      feature.properties.emp_den = feature.properties.employment / (feature.properties.aland*0.000000386102159);
+      feature.properties.pop_den = feature.properties.total_population / (feature.properties.aland*0.000000386102159);
       output.features.push(feature);
  
     })

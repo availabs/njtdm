@@ -150,7 +150,8 @@ acs_data = {
   '10_00ampt': {"value":0,"vars":['b08132_057e'],"name":'Public Transportation - 10:00 a.m. to 10:59 a.m.'},
   '11_00ampt': {"value":0,"vars":['b08132_058e'],"name":'Public Transportation - 11:00 a.m. to 11:59 a.m.'},
   '12_00pmpt': {"value":0,"vars":['b08132_059e'],"name":'Public Transportation - 12:00 p.m. to 3:59 p.m.'},
-  '4_00pmpt': {"value":0,"vars":['b08132_060e'],"name":'Public Transportation - 4:00 p.m. to 11:59 p.m.'}
+  '4_00pmpt': {"value":0,"vars":['b08132_060e'],"name":'Public Transportation - 4:00 p.m. to 11:59 p.m.'},
+  'aland': {"value":0,"vars":['aland'],'name':"Land Area (sq Meters)"}
 },
 categories : {
   "Population":["total_population"],

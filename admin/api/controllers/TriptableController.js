@@ -336,10 +336,12 @@ function getRegressionTrips(tractPair,time,timeOfDay,marketarea){
 	var regressionRiders = 0;
 	switch(marketarea){
 		case 1:
-			regressionRiders =  acs_data.acs[tractPair.home_tract].car_0* 0.5438445;
-			regressionRiders += acs_data.acs[tractPair.home_tract].car_1*0.135101;
-			regressionRiders += acs_data.acs[tractPair.home_tract].information*-0.7550878;
-			regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.00020453;
+			regressionRiders =  acs_data.acs[tractPair.home_tract].car_0_house* 0.5855778;
+			regressionRiders += acs_data.acs[tractPair.home_tract].arts*0.1868154;
+			regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.001229869;
+			regressionRiders += acs_data.acs[tractPair.home_tract].bachelors*-0.1180412;
+			regressionRiders += (acs_data.acs[tractPair.home_tract].total_population/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*-0.000485768;
+			
 		break;
 		case 2:
 			regressionRiders =  acs_data.acs[tractPair.home_tract].car_0* 0.3400127;
@@ -541,6 +543,7 @@ acs_data = {
   variables:{},
   census_vars:{
   "total_population":{"name":"Total Population","vars":['b01003_001e'],"value":0},
+  "total_households":{"name":"Total Households","vars":['b25001_001e'],"value":0},
   "employment":{"name":"Employed","vars":['b12006_005e','b12006_010e','b12006_016e','b12006_021e','b12006_027e','b12006_032e','b12006_038e','b12006_043e','b12006_049e','b12006_054e'],"value":0},
   "unemployment":{"name":"Unemployed","vars":['b12006_006e','b12006_011e','b12006_017e','b12006_022e','b12006_028e','b12006_033e','b12006_039e','b12006_044e','b12006_050e','b12006_055e'],"value":0},
   "travel_to_work_total":{"name":"Total","vars":['b08301_001e'],"value":0},
@@ -572,7 +575,7 @@ acs_data = {
   "other":{"value":0,"vars":['b08126_013e'], "name":"Other services (except public administration)"},
   "public_administration":{"value":0,"vars":['b08126_014e'], "name":"Public administration"},
   "armed_forces":{"value":0,"vars":['b08126_015e'], "name":"Armed forces "},
-  "under__10000":{"value":0,"vars":['b19001_002e'], "name":"Less than $10,000"},
+  "under_10000":{"value":0,"vars":['b19001_002e'], "name":"Less than $10,000"},
   "10000_14999":{"value":0,"vars":['b19001_003e'], "name":"$10,000 to $14,999"},
   "15000_19999":{"value":0,"vars":['b19001_004e'], "name":"$15,000 to $19,999"},
   "20000_24999":{"value":0,"vars":['b19001_005e'], "name":"$20,000 to $24,999"},
@@ -596,7 +599,7 @@ acs_data = {
   "high_school":{"value":0,"vars":['b23006_009e'], "name":"High school graduate:"},
   "some_college":{"value":0,"vars":['b23006_016e'], "name":"Some college or associate's degree:"},
   "bachelors":{"value":0,"vars":['b23006_023e'], "name":"Bachelor's degree or higher:"},
-  "graduate":{"value":0,"vars":['B06009_006E'], "name":"Graduate or professional degree"},
+  "graduate":{"value":0,"vars":['b06009_006e'], "name":"Graduate or professional degree"},
   "foreign_born":{"value":0,"vars":['b05006_001e'], "name":"Foreign Born Population"},
   "spanish_speaking":{"value":0,"vars":['b06007_005e'], "name":"Spanish Speaking"},
   "other_language":{"value":0,"vars":['b06007_008e'], "name":"Other Language Speaking"},
@@ -653,6 +656,12 @@ acs_data = {
   "car_3":{"value":0,"vars":['b08014_005e'], "name":"3 vehicles available"},
   "car_4":{"value":0,"vars":['b08014_006e'], "name":"4 vehicles available"},
   "car_5+":{"value":0,"vars":['b08014_007e'], "name":"5 or more vehicles available"},
+  "car_0_house":{"value":0,"vars":['b25044_003e','b25044_010e'], "name":"No vehicle available"},
+  "car_1_house":{"value":0,"vars":['b25044_004e','b25044_011e'], "name":"1 vehicle available"},
+  "car_2_house":{"value":0,"vars":['b25044_005e','b25044_012e'], "name":"2 vehicles available"},
+  "car_3_house":{"value":0,"vars":['b25044_006e','b25044_013e'], "name":"3 vehicles available"},
+  "car_4_house":{"value":0,"vars":['b25044_007e','b25044_014e'], "name":"4 vehicles available"},
+  "car_5+_house":{"value":0,"vars":['b25044_008e','b25044_015e'], "name":"5 or more vehicles available"},
   '12_00am': {"value":0,"vars":['b08132_002e'],"name":'12:00 a.m. to 4:59 a.m.'},
   's5_00am': {"value":0,"vars":['b08132_003e'],"name":'5:00 a.m. to 5:29 a.m.'},
   '5_30am': {"value":0,"vars":['b08132_004e'],"name":'5:30 a.m. to 5:59 a.m.'},
@@ -686,11 +695,11 @@ acs_data = {
 },
 categories : {
   "Population":["total_population"],
-  "Employment":["employment","unemployment"],
+  "Labor Force":["employment","unemployment"],
   "Journey To Work":["car_to_work","public_transportation_to_work","taxi_to_work","motorcycle_to_work","bicycle_to_work","walk_to_work","other_to_work","worked_at_home"],
   "Journey To Work - Public Transportation":['bus_to_work','streetcar_to_work','subway_to_work','train_to_work','ferry_to_work'],
   "Industry":["agriculture","construction","manufacturing","wholesale","retail","transportation","information","finance","professional","educational","arts","other","public_administration","armed_forces"],
-  "Income Categories":["10000_14999","15000_19999","20000_24999","25000_29999","30000_34999","35000_39999","40000_44999","45000_45999","50000_59999","60000_74999","75000_99999","100000_124999","125000_149999","150000_199999","200000+"],
+  "Income Categories":["under_10000","10000_14999","15000_19999","20000_24999","25000_29999","30000_34999","35000_39999","40000_44999","45000_45999","50000_59999","60000_74999","75000_99999","100000_124999","125000_149999","150000_199999","200000+"],
   "Median Income":['median_income'],
   "Poverty Status":["poverty_status"],
   "School Enrollment":["public_school","private_school"],
@@ -704,26 +713,28 @@ categories : {
   "Housing Occupied ":["occupied_housing","vacant_housing"],
   "Housing Ownership": ["occupancy_renter","occupancy_owner"], 
   "Vehicles Available" :["car_0","car_1","car_2","car_3", "car_4", "car_5+"],
+  "Household Vehicles Available" :["car_0_house","car_1_house","car_2_house","car_3_house", "car_4_house", "car_5+_house"],
   "Journey TW by Time":['12_00am','s5_00am','5_30am','6_00am','6_30am','7_00am','7_30am','8_00am','8_30am','9_00am','10_00am','11_00am','12_00pm','4_00pm'],
   "Journey TW by Time Public Trans.":['12_00ampt','5_00ampt','5_30ampt','6_00ampt','6_30ampt','7_00ampt','7_30ampt','8_00ampt','8_30ampt','9_00ampt','10_00ampt','11_00ampt','12_00pmpt','4_00pmpt']
 },
+
 update_data:function(tracts){
-	for (var census_var in acs_data.census_vars){
-	  acs_data.census_vars[census_var].value = 0;
-	}
-	tracts.forEach(function(tract){
-	  acs_data.acs[tract.geoid] = {};
-	  for (var census_var in acs_data.census_vars){
-		var value = 0;
+    for (var census_var in acs_data.census_vars){
+      acs_data.census_vars[census_var].value = 0;
+    }
+    tracts.forEach(function(tract){
+      acs_data.acs[tract.geoid] = {};
+      for (var census_var in acs_data.census_vars){
+        var value = 0;
 
-		for(var x = 0; x < acs_data.census_vars[census_var].vars.length; x++ ){
-		   value+=tract[acs_data.census_vars[census_var].vars[x]]*1;
-		}
+        for(var x = 0; x < acs_data.census_vars[census_var].vars.length; x++ ){
+           value+=tract[acs_data.census_vars[census_var].vars[x]]*1;
+        }
 
-		acs_data.acs[tract.geoid][census_var] = value;
-		acs_data.census_vars[census_var].value += acs_data.acs[tract.geoid][census_var];
-	  }
-	});
+        acs_data.acs[tract.geoid][census_var] = value;
+        acs_data.census_vars[census_var].value += acs_data.acs[tract.geoid][census_var];
+      }
+    });
   }
 };
 var farebox = {
