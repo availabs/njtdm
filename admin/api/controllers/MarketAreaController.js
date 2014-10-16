@@ -99,6 +99,7 @@ module.exports = {
       res.send({status: 500, error: 'You must supply a table ID and route ID'}, 500);
       return;
     }
+   
 
     MetaGtfs.findOne(gtfs_id).exec(function(err,mgtfs){
         var sql = "SELECT route_id, route_short_name, route_long_name, ST_AsGeoJSON(geom) as the_geom " +
@@ -106,9 +107,9 @@ module.exports = {
                   if(route_id instanceof Array){
                     sql += "WHERE route_short_name in " + JSON.stringify(route_id).replace(/\"/g,"'").replace("[","(").replace("]",")");
                   }else{
-                    sql += "WHERE route_id = '" + route_id + "'";
+                    sql += "WHERE route_short_name = '" + route_id + "'";
                   }
-
+        console.log(sql);
         MetaGtfs.query(sql,{},function(err,data){
             if (err) {
                 res.send('{status:"error",message:"'+err+'"}',500);

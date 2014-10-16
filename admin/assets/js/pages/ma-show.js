@@ -73,10 +73,8 @@ function OverviewController ($scope) {
     $scope.$watch('current_overview_tab',function(){
       if($scope.current_overview_tab == 'EDIT' && !editLoaded){
         
-        console.log('loading edit');
         editmap.init('map',$scope.marketarea);
         editLoaded = true;
-        console.log(editmap.map());
         L.Util.requestAnimFrame(editmap.map().invalidateSize,editmap.map(),!1,editmap.map()._container);
       
       }
@@ -91,24 +89,21 @@ function OverviewController ($scope) {
   	$scope.removeRoute = function(route){
       editmap.removeRoute(route);
     }
+
     $scope.saveChanges = function(){
       editmap.saveChanges(function(data){
-        console.log('Changes Saved');
+        ///console.log('Changes Saved');
       });
     }
     $('#add-route-btn').on('click',function(){
       $('#new-market-error-div').hide();
-      console.log('rotue added');
 
       if($scope.marketarea.routes.indexOf($('#routes-select').val()) === -1){
-          editmap.getRouteData($('#gtfs-select').val(), $('#routes-select').val(),function(tracts,center){
-              console.log('route returned');
-             // $scope.marketarea.zones = tracts;
-              //$scope.marketarea.center = center;
-              $scope.$apply();
-          });
+          
+          editmap.getRouteData($('#routes-select').val());
           
           $scope.marketarea.routes.push($('#routes-select').val());
+          
           $scope.$apply();
       }    
     })
@@ -194,7 +189,7 @@ function OverviewController ($scope) {
       "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
       "features": []
     };
-    console.log(acs_data.acs,acs_data.census_vars )
+    //console.log(acs_data.acs,acs_data.census_vars )
     $scope.marketarea.geoData.features.forEach(function(feature){
       var temp = feature.properties;
       feature.properties = {};
@@ -214,7 +209,7 @@ function OverviewController ($scope) {
       output.features.push(feature);
  
     })
-    console.log(output)
+    //console.log(output)
     downloadFile("data:text/json;charset=utf-8,",JSON.stringify(output),$scope.marketarea.name+".geojson","#downloadGeo");
   }
 
@@ -238,11 +233,9 @@ function downloadFile(type,output,filename,elem){
       var blob = new Blob([output], {
         "type": "text/csv;charset=utf8;"      
       });
-      console.log('IE is downloading!!')
       navigator.msSaveBlob(blob, filename);
     }
     else{
-      console.log('CSV Maybe?')
       var encodedUri = encodeURI(csvContent);
       //window.open(encodedUri);
        $(elem)
