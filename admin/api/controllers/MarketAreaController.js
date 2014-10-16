@@ -109,7 +109,7 @@ module.exports = {
                   }else{
                     sql += "WHERE route_short_name = '" + route_id + "'";
                   }
-        console.log(sql);
+        
         MetaGtfs.query(sql,{},function(err,data){
             if (err) {
                 res.send('{status:"error",message:"'+err+'"}',500);
