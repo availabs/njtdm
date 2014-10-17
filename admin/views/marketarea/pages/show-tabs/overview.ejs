@@ -63,7 +63,7 @@
                 {{census_vars['bus_to_work'].value | number}}
             </h3>
             <div class="description" style="margin-top:0px">
-            	%{{census_vars['bus_to_work'].value/census_vars['travel_to_work_total'].value | number}}<br>
+            	%{{census_vars['bus_to_work'].value/census_vars['travel_to_work_total'].value *100 | number}}<br>
                 Bus To Work
             </div>
         </div>
