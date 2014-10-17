@@ -314,19 +314,19 @@ console.log($scope.MA_Tab_data)
     $scope.finished_models = data;
     //console.log('trip tables',data);
     if($scope.marketarea.id == 1){
-      $scope.finished_models.push({id: 'acam', marketArea: 1,name:"AC AM Farebox",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'acammin', marketArea: 1,name:"AC AM Farebox Min",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'acammax', marketArea: 1,name:"AC AM Farebox Max",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'acpm', marketArea: 1,name:"AC PM Farebox",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'acpmmin', marketArea: 1,name:"AC PM Farebox Min",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'acpmmax', marketArea: 1,name:"AC PM Farebox Max",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'acam', marketArea: 1,name:"AC AM Farebox",ampm:'am',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'acammin', marketArea: 1,name:"AC AM Farebox Min",ampm:'am',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'acammax', marketArea: 1,name:"AC AM Farebox Max",ampm:'am',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'acpm', marketArea: 1,name:"AC PM Farebox",ampm:'pm',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'acpmmin', marketArea: 1,name:"AC PM Farebox Min",ampm:'pm',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'acpmmax', marketArea: 1,name:"AC PM Farebox Max",ampm:'pm',info:'{"name":"Farebox","datasource":"Farebox"}'});
     }else if($scope.marketarea.id == 2){
-      $scope.finished_models.push({id: 'princeam', marketArea: 2,name:"Princeton/Trenton AM Farebox",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'princeammin', marketArea: 2,name:"Princeton/Trenton AM Farebox Min",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'princeammax', marketArea: 2,name:"Princeton/Trenton AM Farebox Max",ampm:'am',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'princepm', marketArea: 2,name:"Princeton/Trenton PM Farebox",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'princepmmin', marketArea: 2,name:"Princeton/Trenton PM Farebox Min",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
-      $scope.finished_models.push({id: 'princepmmax', marketArea: 2,name:"Princeton/Trenton PM Farebox Max",ampm:'pm',info:"{name:'Farebox',datasource:'Farebox'}"});
+      $scope.finished_models.push({id: 'princeam', marketArea: 2,name:"Princeton/Trenton AM Farebox",ampm:'am',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'princeammin', marketArea: 2,name:"Princeton/Trenton AM Farebox Min",ampm:'am',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'princeammax', marketArea: 2,name:"Princeton/Trenton AM Farebox Max",ampm:'am',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'princepm', marketArea: 2,name:"Princeton/Trenton PM Farebox",ampm:'pm',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'princepmmin', marketArea: 2,name:"Princeton/Trenton PM Farebox Min",ampm:'pm',info:'{"name":"Farebox","datasource":"Farebox"}'});
+      $scope.finished_models.push({id: 'princepmmax', marketArea: 2,name:"Princeton/Trenton PM Farebox Max",ampm:'pm',info:'{"name":"Farebox","datasource":"Farebox"}'});
     }
   });
 
@@ -372,17 +372,20 @@ console.log($scope.MA_Tab_data)
      return 'MA-Tab-'+model.id;
   }
   tabData = function(model) {
-    var obj = {id: model.$$hashKey, data: []},
-      info = JSON.parse(model.info);
-
-    obj.data.push({key: "Model Name", value: model.name});
-    obj.data.push({key: "Marketarea Name", value: info.marketarea.name});
-    obj.data.push({key: "Time", value: info.time});
-    obj.data.push({key: "Forecast", value: info.forecast});
-    obj.data.push({key: "Type", value: info.type});
-    obj.data.push({key: "CTPP Source", value: info.datasources.ctpp_source});
-    obj.data.push({key: "GTFS Source", value: info.datasources.gtfs_source});
-
+    var obj = {id: model.$$hashKey, data: []};
+    console.log('model info',model)
+    var info = JSON.parse(model.info);
+    if(info.datasource == 'Farebox'){
+        obj.data.push({key: "Model Name", value: info.name});
+    }else{
+      obj.data.push({key: "Model Name", value: model.name});
+      obj.data.push({key: "Marketarea Name", value: info.marketarea.name});
+      obj.data.push({key: "Time", value: info.time});
+      obj.data.push({key: "Forecast", value: info.forecast});
+      obj.data.push({key: "Type", value: info.type});
+      obj.data.push({key: "CTPP Source", value: info.datasources.ctpp_source});
+      obj.data.push({key: "GTFS Source", value: info.datasources.gtfs_source});
+    }
     if (info.type == 'regression') {
         obj.data.push({key: "ACS Source", value: info.datasources.acs_source});
     }

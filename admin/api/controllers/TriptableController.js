@@ -152,7 +152,7 @@ module.exports = {
 	runModel:function(req,res){
 		var model=req.param('model');
 
-		//console.log('TriptableController.runModel',model);
+		console.log('TriptableController.runModel',model);
 		
 		Triptable.create(model).exec(function(err,tt){
 			if(err){console.log('tt create error',err)
