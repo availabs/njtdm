@@ -20,7 +20,7 @@ terminal.on('exit', function (code) {
 
 setTimeout(function() {
     var password = 'transit';
-    var conString = "postgres://postgres:"+password+"@lor.availabs.org:5432/njtdmData";
+    var conString = "postgres://postgres:"+password+"@lor.availabs.org:5432/gtfs";
     var client = new pg.Client(conString);
     
     client.connect(function(err) {
@@ -33,7 +33,7 @@ setTimeout(function() {
         client.query('CREATE SCHEMA "'+schemaName+'" ', function(err, result) { 
             if(err) { return console.error('error running query:', err); }
 
-            var destinationStream = __dirname + '/cdta_20140811_0109.zip';//+fileInfo.name;
+            var destinationStream = __dirname + '/mta-subway-9_19_14.zip';//+fileInfo.name;
             console.log("RUNNING:gtfsdb-load --database_url "+conString+" --schema="+schemaName+" --is_geospatial "+destinationStream);
             console.log('Sending stdin to terminal');
             terminal.stdin.write("gtfsdb-load --database_url "+conString+" --schema="+schemaName+" --is_geospatial "+destinationStream);        

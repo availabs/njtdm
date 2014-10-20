@@ -11,11 +11,12 @@ function getNavData(cb){
     var output = {};
     output.marketareas = [];
     ma.forEach(function(area){
-      output.marketareas.push({id:area.id,name:area.name});
+      output.marketareas.push({id:area.id,name:area.name,numTracts:area.zones.length,numRoutes:area.routes.length});
     });
     return cb(output);
   });
 }
+
 
 module.exports = {
 
@@ -27,6 +28,7 @@ module.exports = {
 	      // pass the array down to the /views/index.ejs page
 	      getNavData(function(navData){
 		      res.view({
+		      	marketarea:0,
 		        users: users,
 		        page:'userAdmin',
 		        panel:'none',

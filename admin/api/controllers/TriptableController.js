@@ -4,6 +4,7 @@
  * @description :: Server-side logic for managing triptables
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
+var userTT = {};
 
 function spawnModelRun(job,triptable_id){
 	var terminal = require('child_process').spawn('bash');
@@ -152,8 +153,10 @@ module.exports = {
 	runModel:function(req,res){
 		var model=req.param('model');
 
-		console.log('TriptableController.runModel',model);
-		
+		console.log('TriptableController.runModel',model,userTT[req.session.User.username].length,req.session.User.username,Object.keys(userTT));
+		model.trips = userTT[req.session.User.username];
+		console.log('set test',model.trips.length);
+
 		Triptable.create(model).exec(function(err,tt){
 			if(err){console.log('tt create error',err)
 					
@@ -271,7 +274,10 @@ module.exports = {
 								//done send output
 									
 							});
-							console.log('triptable done',output.tt.length);
+							console.log('triptable done',output.tt.length,req.session.User.username);
+
+							userTT[req.session.User.username] = output.tt; // Multiple people logged on to same account could confuse this.
+							
 							res.json(output);
 						})
 					});

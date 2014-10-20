@@ -161,11 +161,12 @@ function modelPageCtrl($scope){
   };
 
   $scope.runModel = function(){
-    $scope.model.trips = $scope.triptable.tt;
+    $scope.model.trips = [];///$scope.triptable.tt;
     $scope.model.info = JSON.stringify($scope.current_model_run);
     $scope.model.marketareaId = $scope.marketarea.id;
     
     $scope.model_processing = 'Processing Model...Please Wait'
+    console.log('running this model',JSON.stringify({model:$scope.model}))
     d3.json('/triptable/run').post(JSON.stringify({model:$scope.model}),function(err,data){
         if(err){console.log(err);$scope.model_processing = err;}
         else{
