@@ -81,6 +81,15 @@
       if(typeof layer_options.classed != 'undefined'){
         feature.attr('class',layer_options.classed);
       }
+      if(typeof layer_options.mouseoverFunction != 'undefined'){
+        feature.on("mouseover",layer_options.mouseoverFunction);
+      }
+      if(typeof layer_options.mouseoutFunction != 'undefined'){
+        feature.on("mouseout",layer_options.mouseoutFunction);
+      }
+      if(typeof layer_options.mousemoveFunction != 'undefined'){
+        feature.on("mousemove",layer_options.mousemoveFunction);
+      }
 
       if(typeof layer_options.mouseover !='undefined'){
        

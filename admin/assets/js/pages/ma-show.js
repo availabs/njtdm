@@ -58,10 +58,7 @@ function OverviewController ($scope) {
               $scope.marketarea.tractFeatures[feat.properties.geoid] = feat;
           }
       })
-      acsmap.init("#overview-map-svg", $scope.marketarea, acs_data, function() { 
-        acsmap.draw(); 
-        acsmap.color(acs_data.categories[$scope.active_category][0], $scope.active_category); 
-      });
+      
       ctppmap.init("#ctpp-svg", $scope.marketarea);
       lodesmap.init("#lodes-svg", $scope.marketarea);
       
@@ -76,10 +73,27 @@ function OverviewController ($scope) {
         editmap.init('map',$scope.marketarea);
         editLoaded = true;
         L.Util.requestAnimFrame(editmap.map().invalidateSize,editmap.map(),!1,editmap.map()._container);
-      
+        
       }
     })
-  	
+    var acsLoaded = false
+  	$scope.refreshMap = function(){
+      
+      if(!acsLoaded){
+        acsmap.init("#overview-map-svg", $scope.marketarea, acs_data, function() { 
+          
+          L.Util.requestAnimFrame(acsmap.map().invalidateSize,acsmap.map(),!1,acsmap.map()._container);
+          acsLoaded = true;
+          acsmap.color(acs_data.categories[$scope.active_category][0], $scope.active_category); 
+          
+          setTimeout(function(){
+            acsmap.map().fitBounds([d3.geo.bounds($scope.marketarea.geoData)[0].reverse(),d3.geo.bounds($scope.marketarea.geoData)[1].reverse()]);
+          },10)
+          
+        });
+        
+     }
+    }
 
     $scope.colorMap = function(category) {
       $scope.current_map_variable = category;
@@ -110,7 +124,9 @@ function OverviewController ($scope) {
     })
 
     $scope.drawGraph = function(name, vars) {
-      acsmap.color(vars[0], name)
+      if(acsLoaded){
+        acsmap.color(vars[0], name)
+      }
 
   		$scope.active_category= name;
 

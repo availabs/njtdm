@@ -121,7 +121,7 @@
                                 <a href="#chart_pane" data-toggle="tab">Chart</a>
                             </li>
                              <li>
-                                <a href="#map_pane" data-toggle="tab">Map</a>
+                                <a href="#map_pane" data-toggle="tab" ng-click="refreshMap()">Map</a>
                             </li>
                         </ul>
                         <div id="displayTabContent" class="tab-content">
@@ -131,9 +131,12 @@
                                 </div>
                             </div>
                             <div id="map_pane" class="tab-pane clearfix" >
-                                <div id="map">
-                                    <svg id="overview-map-svg" height="660px" width="580px"></svg>
+                                <div id="acs_map">
+                                 <div id="acs_buttons" style="width:75px;height:90px;position:relative;top:10px;left:10px;background-color:#fff;z-index:100">
+                                    <svg id="overview-map-svg"></svg>
+                                 </div>   
                                 </div>
+                                <svg id="acs_legend"></svg>
                             </div>
                         </div>
                     </div>
@@ -169,7 +172,7 @@
 
 <script type="text/javascript" src="/avail/ma_edit_map.js"></script>
 
-<script type="text/javascript" src="/avail/acs_map.js"></script>
+<script type="text/javascript" src="/avail/ma_acs_map.js"></script>
 <style>
    
     #map {
