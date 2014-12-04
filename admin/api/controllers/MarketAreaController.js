@@ -517,7 +517,7 @@ module.exports = {
         feat.properties.pop_den = feat.properties.total_population / (feat.properties.aland*0.000000386102159);
         finalGeo.features.push(feat);
       });
-      console.log(geoOutput.features[0].properties);
+      //console.log(geoOutput.features[0].properties);
 
       var ogr = ogr2ogr(finalGeo)
       var data = geoData.json;
@@ -529,7 +529,7 @@ module.exports = {
           } else {
               
               res.json({url:'/data/acs/'+geoData.name+'_'+geoData.outputName+'.zip'})
-              console.log('finished');
+              //console.log('finished');
           }
         }); 
        

@@ -281,7 +281,12 @@ function OverviewController ($scope) {
           if(err){ console.log('err',err); }
           console.log('got shapefile',JSON.parse(data.response).url,$('#downloadShp'));
           //downloadShp
-          $('#downloadShp').attr('href',JSON.parse(data.response).url)
+          $('#downloadShp')
+           .attr({
+            'download': $scope.marketarea.name+"_"+$scope.source_id+".zip",
+            'href': JSON.parse(data.response).url,
+            'target': '_blank'
+          });
           $('#downloadShp')[0].click();
 
 
