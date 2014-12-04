@@ -64,7 +64,9 @@ module.exports.routes = {
   '/marketarea/:id/tohome/lodes_travel_data': 'MarketAreaController.getLODEStohome',
 
   '/marketarea/:id/ma_route_data': 'MarketAreaController.getAllMARoutes',
-  '/marketarea/:id/census' : 'MarketAreaController.getCensus',
+  '/marketarea/:id/census/:tableName' : 'MarketAreaController.getCensus',
+  // Convert to shp
+  '/jsonToShp' : 'MarketAreaController.geojsonToShp',
 
   //---------------------------------
   // Users Guide Pages

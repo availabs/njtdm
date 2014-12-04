@@ -251,6 +251,10 @@ console.log($scope.MA_Tab_data)
     }
   };
 
+  $scope.showFarebox = function(){
+    reportAnalyst.showFarebox();
+  }
+
   $scope.filterRoute = function(route){
       reportAnalyst.modelRouteStartGroup = reportAnalyst.modelRouteStart.group(function(d){if(d.substring(0,3) == route){ return d;}});
       reportAnalyst.modelTripCountChart      

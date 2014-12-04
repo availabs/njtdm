@@ -31,7 +31,7 @@
         $( window ).resize(function() {
             $('#edit_map').height($(window).height() - 100);
         });
-        map = L.map("edit_map", {
+        map = new L.map("edit_map", {
           center: [39.8282, -98.5795],
           zoom: 4,
           layers: [mapquestOSM],
@@ -127,6 +127,15 @@
                 routesLayer = new L.GeoJSON.d3(routes,options)
                 map.addLayer( routesLayer );
                 //draw(routes, 'routes12','route');
+            })
+        d3.xhr('/marketarea/'+marketarea.origin_gtfs+'/ma_route_data')
+            .response(function(request) {
+                return JSON.parse(request.responseText);
+            })
+            .post(JSON.stringify({ routes: marketarea.routes,type:'stops' }), function(error, stops) {
+               
+                console.log('the stops',stops,error); 
+                
             })
     }
 

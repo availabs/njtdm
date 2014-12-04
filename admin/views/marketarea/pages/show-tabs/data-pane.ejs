@@ -145,7 +145,12 @@
 </section>
 
 <section class="widget" id="overview-data-pane" ng-show="setActiveOverviewTab('ACS')">
-        
-        <button type="button" class="btn btn-warning btn-lg btn-block" ng-click="downloadShape()" id="downloadGeo">Download Census GeoJson</button>
-
+        <center>
+            <div class="btn-group">                                
+                <button type="button" class="btn btn-warning " ng-click="downloadShape()" id="downloadGeo">Download Census GeoJson</button>
+                <BUTTON type='submit' class="btn btn-danger"  ng-click="downloadShape('shape')">Download Census Shapefile</BUTTON>
+                <a href="/data/acs/" target="_blank" id="downloadShp"> </a>
+            
+            </div>
+        </center>
 </section>

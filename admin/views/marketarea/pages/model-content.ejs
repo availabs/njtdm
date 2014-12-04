@@ -3,20 +3,20 @@
         <section class="widget widget-tabs">
             <header>
                 <ul class="nav nav-tabs">
-                    <li >
+                    <li class="active">
                         <a href="#overview" ng-click="setActivePage('analysis')" data-toggle="tab">Model Analysis</a>
                     </li>
-                    <li class="active">
+                    <li class="">
                         <a href="#routes" data-toggle="tab" ng-click="setActivePage('run')">New Model</a>
                     </li>
                    
                 </ul>
             </header>
             <div class="body tab-content" style="overflow:hidden;">
-                <div id="overview" class="tab-pane clearfix">
+                <div id="overview" class="tab-pane clearfix active">
                    <%- partial('model-tabs/analysis') %>
                 </div>
-                <div id="routes" class="tab-pane active">
+                <div id="routes" class="tab-pane ">
                    <%- partial('model-tabs/new-model') %>
                 </div>
             </div>

@@ -3,19 +3,31 @@ $(function(){
        
         //teach select2 to accept data-attributes
         $(".chzn-select").each(function(){
-            $(this).select2($(this).data());
+            //$(this).select2($(this).data());
         });
         
     }
     pageLoad();
-    PjaxApp.onPageLoad(pageLoad);
+    //PjaxApp.onPageLoad(pageLoad);
 });
 
 function OverviewController ($scope) {
     
-    $scope.source_id = 1;
+    $scope.source_id = 'acs5_34_2010_tracts';
+    
+    $scope.current_overview_tab = 'ACS';
+    $scope.jsonData = {
+        type: "FeatureCollection",
+        crs: { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+        features: []
+    };
+  
+
     $scope.datasources = {};    
-    d3.json('/metaAcs/',function(data){ $scope.datasources['ACS'] = data; });
+    d3.json('/metaAcs/',function(data){ $scope.datasources['ACS'] = data; 
+      $scope.updateJsonData();
+
+    });
     d3.json('/metaCtpp/',function(data){ $scope.datasources['CTPP'] = data; });
     d3.json('/metaLodes/',function(data){ $scope.datasources['LODES'] = data; });
 
@@ -33,7 +45,62 @@ function OverviewController ($scope) {
   	// $scope.marketarea.routes = $scope.marketarea.routes;
   	// $scope.marketarea.zones = $scope.marketarea.zones;
 
-  	
+  	$scope.isActiveDatasource = function(input){
+      if(input === $scope.source_id){
+        return true;
+      }
+      return false;
+    }
+
+    $scope.$watch('source_id',function(){
+      console.log('source changed',$scope.source_id);
+    
+      if( $scope.current_overview_tab === 'ACS'){
+        
+        var url = '/marketarea/'+$scope.marketarea.id+'/census/'+$scope.source_id;
+        console.log(url);
+
+        d3.json('/marketarea/'+$scope.marketarea.id+'/census/'+$scope.source_id,function(cenData){
+          console.log(cenData);
+          acs_data.update_data(cenData.census);
+          
+          //console.log(acs_data.acs,acs_data.census_vars )
+          $scope.updateJsonData();
+
+        });
+      
+      }
+    
+    });
+    $scope.updateJsonData = function(){
+      console.log('updateJson',$scope.census_vars)
+      $scope.jsonData = {
+        type: "FeatureCollection",
+        crs: { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+        features: []
+      };
+
+      $scope.marketarea.geoData.features.forEach(function(feature){
+        var temp = feature.properties;
+        feature.properties = {};
+
+        
+        feature.properties.geoid = temp.geoid
+        for(key in $scope.census_vars){
+          feature.properties[key] = 0;
+           feature.properties[key] += acs_data.acs[temp.geoid][key];
+        
+        }
+        
+        feature.properties.emp_den = feature.properties.employment / (feature.properties.aland*0.000000386102159);
+        feature.properties.pop_den = feature.properties.total_population / (feature.properties.aland*0.000000386102159);
+        $scope.jsonData.features.push(feature);
+ 
+      });
+      console.log('json data updatated',$scope.jsonData.features.length)
+      
+    };//end update JSON data
+
 
     $scope.active_category='Vehicles Available';
     $scope.isActive = function(name){
@@ -195,37 +262,40 @@ function OverviewController ($scope) {
   };
 
 
-  $scope.current_overview_tab = 'ACS';
   $scope.setActiveOverviewTab = function(tab) {
       return tab === $scope.current_overview_tab;
   }
   
-  $scope.downloadShape = function(){
-    var output = {
-      "type": "FeatureCollection",
-      "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-      "features": []
-    };
-    //console.log(acs_data.acs,acs_data.census_vars )
-    $scope.marketarea.geoData.features.forEach(function(feature){
-      var temp = feature.properties;
-      feature.properties = {};
+  $scope.downloadShape = function(type){
+    console.log($scope.jsonData);
+    // if($scope.jsonData.features.length == 0){
+    //   $scope.updateJsonData();
+    // }    
+    var output = $scope.jsonData;
 
+    if(type == 'shape'){
+      var geoData = {zones:$scope.marketarea.zones,outputName:$scope.source_id,name:$scope.marketarea.name};
+      console.log('shape download',geoData);
+      d3.xhr('/jsonToShp')
+        .post(JSON.stringify({geoData:geoData}),function(err,data){
+          if(err){ console.log('err',err); }
+          console.log('got shapefile',JSON.parse(data.response).url,$('#downloadShp'));
+          //downloadShp
+          $('#downloadShp').attr('href',JSON.parse(data.response).url)
+          $('#downloadShp')[0].click();
+
+
+      });
+     
       
-      feature.properties.geoid = temp.geoid
-      for(key in $scope.census_vars){
-        feature.properties[key] = 0;
-         feature.properties[key] += acs_data.acs[temp.geoid][key];
-      
-      }
-      
-      feature.properties.emp_den = feature.properties.employment / (feature.properties.aland*0.000000386102159);
-      feature.properties.pop_den = feature.properties.total_population / (feature.properties.aland*0.000000386102159);
-      output.features.push(feature);
- 
-    })
-    //console.log(output)
-    downloadFile("data:text/json;charset=utf-8,",JSON.stringify(output),$scope.marketarea.name+".geojson","#downloadGeo");
+
+    
+    }else{
+
+      downloadFile("data:text/json;charset=utf-8,",JSON.stringify(output),$scope.marketarea.name+".geojson","#downloadGeo");  
+    
+    }
+    
   }
 
 };//end of controller
@@ -238,8 +308,8 @@ function downloadFile(type,output,filename,elem){
     var link = document.createElement("a");
     
     if(link.download !== undefined){
-     
-      link.setAttribute("href", encodedUri);
+      console.log('download')
+      link.setAttribute("href", type+output);
       link.setAttribute("download", filename);
       link.setAttribute('target', '_blank');
       link.click();
@@ -251,6 +321,7 @@ function downloadFile(type,output,filename,elem){
       navigator.msSaveBlob(blob, filename);
     }
     else{
+      console.log('none')
       var encodedUri = encodeURI(csvContent);
       //window.open(encodedUri);
        $(elem)

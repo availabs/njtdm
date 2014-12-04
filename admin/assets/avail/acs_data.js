@@ -179,9 +179,13 @@ categories : {
 },
 
 update_data:function(tracts){
+    
+    //clear out all data
     for (var census_var in acs_data.census_vars){
       acs_data.census_vars[census_var].value = 0;
     }
+
+    //upload new data
     tracts.forEach(function(tract){
       acs_data.acs[tract.geoid] = {};
       for (var census_var in acs_data.census_vars){
@@ -195,5 +199,7 @@ update_data:function(tracts){
         acs_data.census_vars[census_var].value += acs_data.acs[tract.geoid][census_var];
       }
     });
-  }
-};
+
+  }//update data
+
+};//acs_data

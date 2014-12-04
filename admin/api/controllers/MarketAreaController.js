@@ -6,6 +6,11 @@
  */
 
 var topojson = require("topojson");
+var fs = require('fs');
+var ogr2ogr = require('ogr2ogr');
+var censusTracts = require('tracts.json')
+var acs_data = require('acs_data').acs_data;
+
 
 function getDatasources(cb){
   var datasources = {} 
@@ -142,7 +147,12 @@ module.exports = {
 
   getAllMARoutes: function(req,res) {
       var gtfs_id = req.param('id'),
-          shortNames = req.param('routes');
+          shortNames = req.param('routes'),
+          type = 'routes';
+
+      if(typeof req.param('type') != 'undefined'){
+        type = req.param('type');
+      }
 
       var routes_in = "(";
       shortNames.forEach(function(tract){
@@ -157,47 +167,80 @@ module.exports = {
 
       MetaGtfs.findOne(gtfs_id).exec(function(err, mgtfs){
 
-          var sql = 'SELECT ST_AsGeoJSON(geom) AS route_shape,route_id,route_short_name '+
-                    'FROM '+mgtfs.tableName+'.routes '+
-                    'WHERE route_short_name IN '+routes_in;
+          if(type == 'stops'){
+            var sql = 'SELECT ST_AsGeoJSON(stops.geom) stop_geom,a.stop_num,a.line,a.fare_zone,stops.stop_id '+
+                      'FROM fare_zones as a '+
+                      'join "njtransit_bus_07-12-2013".stops on a.stop_num = stops.stop_code '+
+                      'where a.line in '+routes_in;
+            MetaGtfs.query(sql,{},function(err,data){
+                if (err) {
+                    res.send({ status:500, error: err }, 500);
+                    return console.log(err);
+                }
+                var stops =[];
+                data.rows.forEach(function(stop){
+                  if(stops.indexOf(stop) == -1){
+                    var Feature = {};
+                    Feature.type="Feature";
+                    Feature.geometry = JSON.parse(stop.stop_geom);
+                    Feature.properties = {};
+                    Feature.properties.stop_code = stop.stop_code;
+                    Feature.properties.fare_zone = stop.fare_zone;
+                    Feature.properties.stop_id = stop.stop_id;
 
-          MetaGtfs.query(sql,{},function(err,data){
-              if (err) {
-                  res.send({ status:500, error: err }, 500);
-                  return console.log(err);
-              }
+                    routesCollection.features.push(Feature);
+                  }
 
-              data.rows.forEach(function(route){
-                  var routeFeature = {};
-                  routeFeature.type="Feature";
-                  routeFeature.geometry = JSON.parse(route.route_shape);
+                });
+                console.log(routesCollection);
+                res.json(routesCollection);
 
-                  routeFeature.geometry.type = 'LineString';
-                  routeFeature.geometry.coordinates = routeFeature.geometry.coordinates.reduce(function(a, b) { return a.length > b.lemgth ? a : b; }, []);
+            });
 
-                  routeFeature.properties = {};
-                  routeFeature.properties.route_id = route.route_id;
-                  routeFeature.properties.route_short_name = route.route_short_name;
-                  routeFeature.properties.route_long_name = route.route_long_name;
-                  routeFeature.properties.route_color = route.route_color;
+          }else{
 
-                  routesCollection.features.push(routeFeature);
-              });
+            var sql = 'SELECT ST_AsGeoJSON(geom) AS route_shape,route_id,route_short_name '+
+                      'FROM '+mgtfs.tableName+'.routes '+
+                      'WHERE route_short_name IN '+routes_in;
 
-              var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
-                                             "quantization": 1e6});
+            MetaGtfs.query(sql,{},function(err,data){
+                if (err) {
+                    res.send({ status:500, error: err }, 500);
+                    return console.log(err);
+                }
 
-              var newJson = {type:'FeatureCollection',features:[]};
-              topology.objects.routes.geometries.forEach(function(d){
-                var routeSwap = {type: "GeometryCollection", geometries:[d]}
-                var test = topojson.mesh(topology, routeSwap, function(a, b) { return a.properties; });
-                var feature = {type:'Feature', properties:d.properties, geometry:{type:test.type, coordinates:test.coordinates}};
-                newJson.features.push(feature);
-              })
+                data.rows.forEach(function(route){
+                    var routeFeature = {};
+                    routeFeature.type="Feature";
+                    routeFeature.geometry = JSON.parse(route.route_shape);
 
-              //res.send(topology);
-              res.send(newJson);
-          });
+                    routeFeature.geometry.type = 'LineString';
+                    routeFeature.geometry.coordinates = routeFeature.geometry.coordinates.reduce(function(a, b) { return a.length > b.lemgth ? a : b; }, []);
+
+                    routeFeature.properties = {};
+                    routeFeature.properties.route_id = route.route_id;
+                    routeFeature.properties.route_short_name = route.route_short_name;
+                    routeFeature.properties.route_long_name = route.route_long_name;
+                    routeFeature.properties.route_color = route.route_color;
+
+                    routesCollection.features.push(routeFeature);
+                });
+
+                var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
+                                               "quantization": 1e6});
+
+                var newJson = {type:'FeatureCollection',features:[]};
+                topology.objects.routes.geometries.forEach(function(d){
+                  var routeSwap = {type: "GeometryCollection", geometries:[d]}
+                  var test = topojson.mesh(topology, routeSwap, function(a, b) { return a.properties; });
+                  var feature = {type:'Feature', properties:d.properties, geometry:{type:test.type, coordinates:test.coordinates}};
+                  newJson.features.push(feature);
+                })
+
+                //res.send(topology);
+                res.send(newJson);
+            });
+          }
       })
       var preserveProperties = function(feature) {
         return feature.properties;
@@ -405,7 +448,10 @@ module.exports = {
   },
   getCensus:function(req,res){
 
-    var cenData = 'acs5_34_2011_tracts';
+    var cenData = 'acs5_34_2010_tracts';
+    if(typeof req.param('tableName') != 'undefined'){
+      cenData = req.param('tableName')
+    }
     //Allow user to specify census table
     if(typeof req.param('census') !== 'undefined'){  cenData = req.param('census'); }
     MarketArea.findOne(req.param('id')).exec(function(err,ma){
@@ -419,10 +465,84 @@ module.exports = {
     })
 
   },
+/************************/
+
+  geoJsonToShp:function(req,res){
+    var geoOutput = {
+      type:'FeatureCollection',
+      features:[]
+    },
+    finalGeo = {
+        type:'FeatureCollection',
+        features:[]
+    };
+    
+    if(typeof req.param('geoData') == 'undefined'){
+      console.log('no json');
+      res.json({responseText:'Error - no json specified'})
+    }
+    
+    var geoData = req.param('geoData');
+    censusTracts.features.forEach(function(feat){
+      if(geoData.zones.indexOf(feat.properties.geoid) > -1){
+        geoOutput.features.push(feat);
+      }
+    })
+    getCensusData(geoData,geoData.outputName,function(census){
+      var acs = {};
+      census.forEach(function(tract){
+        acs[tract.geoid] = {};
+        for (var census_var in acs_data.census_vars){
+          var value = 0;
+
+          for(var x = 0; x < acs_data.census_vars[census_var].vars.length; x++ ){
+             value+=tract[acs_data.census_vars[census_var].vars[x]]*1;
+          }
+
+          acs[tract.geoid][census_var] = value;
+        }
+      });
+     
+      geoOutput.features.forEach(function(feat,i){
+        for(key in acs_data.census_vars){
+          
+          feat.properties[key] = 0;
+          if(typeof acs[feat.properties.geoid] != 'undefined'){
+            feat.properties[key] += acs[feat.properties.geoid][key];
+          }
+          //else{ console.log('no census',feat.properties.geoid); }
+        
+        }
+        feat.properties.emp_den = feat.properties.employment / (feat.properties.aland*0.000000386102159);
+        feat.properties.pop_den = feat.properties.total_population / (feat.properties.aland*0.000000386102159);
+        finalGeo.features.push(feat);
+      });
+      console.log(geoOutput.features[0].properties);
+
+      var ogr = ogr2ogr(finalGeo)
+      var data = geoData.json;
+      ogr.format('shp').exec(function (er, buf) {
+        if (er) return res.json({ errors: er.message.replace('\n\n','').split('\n') })
+        fs.writeFile('.tmp/public/data/acs/'+geoData.name+'_'+geoData.outputName+'.zip', buf, function(err) {
+          if(err) {
+              console.log(err);
+          } else {
+              
+              res.json({url:'/data/acs/'+geoData.name+'_'+geoData.outputName+'.zip'})
+              console.log('finished');
+          }
+        }); 
+       
+      });
+    });  
+    
+    
+  },
+
 /*****************/
   
   show:function(req,res){
-    var cenData = 'acs5_34_2011_tracts';
+    var cenData = 'acs5_34_2010_tracts';
     //Allow user to specify census table
     if(typeof req.param('census') !== 'undefined'){  cenData = req.param('census'); }
 

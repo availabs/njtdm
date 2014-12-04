@@ -27,7 +27,9 @@
            <!--  <ol class="breadcrumb">
               <li><a href="#">{{marketAreas[activeMarket].name}}</a></li>
             </ol> -->
-
+            <div class="well">
+                <button class="btn btn-info" ng-click="showFarebox()">Show Farebox</button>
+            </div>
             <div class="well" ng-show='loadedModels.length > 0'>
                 <span class="label" ng-repeat="model in loadedModels" ng-style="{'background-color':colors[$index]}" style="margin-right:3px;">{{model.name}}
                     <div ng-click="removeModel(model)" class="label" style="cursor:pointer; margin-left:2px">X</div>

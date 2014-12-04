@@ -101,7 +101,7 @@
         </li>
         <li class="pull-right">
         <select class="form-control" style='width:200px;' id="datasource_select" ng-model="source_id">
-            <option ng-repeat="source in datasources[current_overview_tab]" value="{{source.id}}" selected>{{source.tableName}}</option>
+            <option ng-repeat="source in datasources[current_overview_tab]" value="{{source.tableName}}" ng-selected="isActiveDatasource(source.tableName)">{{source.tableName}}</option>
         </select>
         </li>
     </ul>
@@ -168,7 +168,7 @@
 <script type="text/javascript" src="/lib/table2csv.js"></script>
 <script type="text/javascript" src="/avail/acs_data.js"></script>
 <script type="text/javascript">
-	acs_data.update_data(JSON.parse("<%= JSON.stringify(census) %>".replace(/\&quot\;/g, "\"")));
+	acs_data.update_data(<%- JSON.stringify(census) %>);
 </script>
 
 <script type="text/javascript" src="/avail/ma_edit_map.js"></script>

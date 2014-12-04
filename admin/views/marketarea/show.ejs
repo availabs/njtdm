@@ -1,26 +1,30 @@
 <%- partial('../partials/nav') %>
-    <div class="wrap">
-        <%- partial('../partials/header') %>
-		<div class="content container">
-		    <div class="row">
-		        <div class="col-md-12">
-		            <h2 class="page-title"><%= marketarea.name %><small></small></h2>
-		        </div>
-		    </div>
-		    <%- partial('pages/show-content') %>
-		</div>
-	<script src="/lib/select2.js"></script>
-	<script src="/lib/leaflet.js"></script>
-	<script src="/lib/d3.leaflet.layers.js"></script>
-	<script src="/js/pages/ma-show.js"></script>
-	<script type="text/javascript">
-		server_marketarea = <%- JSON.stringify(marketarea) %>
-		server_routes = <%- JSON.stringify(meta.fullroutes) %>
-	</script>
-	<link rel="stylesheet" href="/lib/leaflet.css">
-	<style>
-	.cen-tabs li.active{
-		border:1px solid;
-		border-right:none;
-	}
-	</style>
+<div class="wrap">
+    <%- partial('../partials/header') %>
+	<div class="content container">
+	    <div class="row">
+	        <div class="col-md-12">
+	            <h2 class="page-title"><%= marketarea.name %><small></small></h2>
+	        </div>
+	    </div>
+	    <%- partial('pages/show-content') %>
+	</div>
+
+
+<script src="/lib/select2.js"></script>
+<script src="/lib/leaflet.js"></script>
+<script src="/lib/d3.leaflet.layers.js"></script>
+<script src="/controller/marketarea/show.js"></script>
+<script type="text/javascript">
+	server_marketarea = <%- JSON.stringify(marketarea) %>
+	server_routes = <%- JSON.stringify(meta.fullroutes) %>
+</script>
+
+
+<link rel="stylesheet" href="/lib/leaflet.css">
+<style>
+.cen-tabs li.active{
+	border:1px solid;
+	border-right:none;
+}
+</style>

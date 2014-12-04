@@ -11,6 +11,17 @@
 
 module.exports.http = {
 
+  bodyParser: (function () {
+    var opts = {limit:'10mb'};
+    var fn;
+
+    // Default to built-in bodyParser:
+    fn = require('skipper');
+    return fn(opts);
+
+  }),
+  
+
   middleware: {
 
     // The order in which middleware should be run for HTTP request.
@@ -36,6 +47,7 @@ module.exports.http = {
     // By default as of v0.10, Sails uses [skipper](http://github.com/balderdashy/skipper).
     // See http://www.senchalabs.org/connect/multipart.html for other options.
     // bodyParser: require('skipper')
+    
 
   },
 
