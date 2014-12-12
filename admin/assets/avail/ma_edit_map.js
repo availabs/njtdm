@@ -134,7 +134,7 @@
             })
             .post(JSON.stringify({ routes: marketarea.routes,type:'stops' }), function(error, stops) {
                
-                console.log('the stops',stops,error); 
+                //console.log('the stops',stops,error); 
                 
             })
     }
@@ -164,11 +164,13 @@
         
         var spliceIndex = -1;
         marketareaRoutes.features.forEach(function(d,i){
-           if(d.properties.short_name == routeID){
+            //console.log(d.properties);
+            //console.log(d.properties.route_short_name,routeID,d.properties.route_short_name == routeID)
+           if(d.properties.route_short_name == routeID){
                 spliceIndex = i;
            }
         })
-        
+        console.log('spliced',spliceIndex);
         marketareaRoutes.features.splice(spliceIndex,1);
         routesLayer.externalUpdate(marketareaRoutes);
 

@@ -10,6 +10,9 @@ var fs = require('fs');
 var ogr2ogr = require('ogr2ogr');
 var censusTracts = require('tracts.json')
 var acs_data = require('acs_data').acs_data;
+var preserveProperties = function(feature) {
+  return feature.properties;
+}
 
 
 function getDatasources(cb){
@@ -132,6 +135,9 @@ module.exports = {
                 routeFeature.type="Feature";
                       // retrieve geometry data
                 routeFeature.geometry = JSON.parse(route.the_geom);
+                
+                routeFeature.geometry.type = 'LineString';
+                routeFeature.geometry.coordinates = routeFeature.geometry.coordinates.reduce(function(a, b) { return a.length > b.lemgth ? a : b; }, []);
                       // retrieve properties
                 routeFeature.properties = {};
                 routeFeature.properties.route_id = route.route_id;
@@ -140,7 +146,18 @@ module.exports = {
                 routesCollection.features.push(routeFeature);
             });
 
-            res.send(routesCollection);
+            var topology = topojson.topology({routes: routesCollection},{"property-transform":preserveProperties,
+                                               "quantization": 1e6});
+
+            var newJson = {type:'FeatureCollection',features:[]};
+            topology.objects.routes.geometries.forEach(function(d){
+              var routeSwap = {type: "GeometryCollection", geometries:[d]}
+              var test = topojson.mesh(topology, routeSwap, function(a, b) { return a.properties; });
+              var feature = {type:'Feature', properties:d.properties, geometry:{type:test.type, coordinates:test.coordinates}};
+              newJson.features.push(feature);
+            })
+
+            res.send(newJson);
         });
     })
   },
@@ -192,7 +209,7 @@ module.exports = {
                   }
 
                 });
-                console.log(routesCollection);
+                //console.log(routesCollection);
                 res.json(routesCollection);
 
             });
@@ -242,9 +259,7 @@ module.exports = {
             });
           }
       })
-      var preserveProperties = function(feature) {
-        return feature.properties;
-      }
+      
   },
 
   getAllCTPPoutbound: function(req, res) {

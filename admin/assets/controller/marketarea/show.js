@@ -136,7 +136,7 @@ function OverviewController ($scope) {
     var editLoaded = false;
     $scope.$watch('current_overview_tab',function(){
       if($scope.current_overview_tab == 'EDIT' && !editLoaded){
-        
+        console.log('outside edit init');
         editmap.init('map',$scope.marketarea);
         editLoaded = true;
         L.Util.requestAnimFrame(editmap.map().invalidateSize,editmap.map(),!1,editmap.map()._container);
