@@ -1,0 +1,56 @@
+<%- partial('../partials/nav') %>
+    <div class="wrap">
+        <%- partial('../partials/header') %>
+		<div class="content container">
+		    <div class="row">
+		        <div class="col-md-12">
+		            <h2 class="page-title">Dashboard <small>Statistics and more</small></h2>
+		        </div>
+		    </div>
+		    <div class="row">
+			    <div class="col-md-8">        
+			        <section class="widget">
+			            <header>
+			                <h4>
+			                    Market Areas
+			                    <small>
+			                        GTFS subsets
+			                    </small>
+			                </h4>
+			            </header>
+			            <div class="body">
+			                <table class="table table-striped no-margin sources-table">
+			                    <thead>
+			                    <tr>
+			                        <th class="source-col-header">Name</th>
+			                        <th># of Routes</th>
+			                        <th># of Zones</th>
+			                        <th class="text-right"></th>
+			                    </tr>
+			                    </thead>
+			                    <tbody>
+			                    <% nav.marketareas.forEach(function(area){ %>                    
+			                        <tr>
+			                            <td><a href="/marketarea/<%= area.id %>"><%= area.name %></a></td>
+			                            <td><%= area.numRoutes %></td>
+			                            <td><%= area.numTracts %></td>
+			                            
+			                            <td class="chart-cell hidden-xs">
+			                               <a class="btn btn-warning" href='/map/#/<%= area.id %>' target="_blank">Map</a>
+			                            </td>
+			                        </tr>
+			                    <% }) %>
+			                    </tbody>
+			                </table>
+			                <div class="form-actions">
+			                    <a  class="btn btn-primary" href="/marketarea/new">Add New Market Area</a>
+			                </div>
+			            </div>
+			        </section>
+			    </div>
+			    <div class="col-md-4">
+			       
+			    </div>
+			</div>
+		</div>
+		    

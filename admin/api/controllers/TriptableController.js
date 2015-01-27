@@ -342,12 +342,12 @@ function getRegressionTrips(tractPair,time,timeOfDay,marketarea){
 	
 	var regressionRiders = 0;
 	switch(marketarea){
-		case 1:
-			regressionRiders =  acs_data.acs[tractPair.home_tract].car_0_house* 0.2728917;
-			regressionRiders += acs_data.acs[tractPair.home_tract].arts*0.186528;
-			regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.0814334;
-			regressionRiders += acs_data.acs[tractPair.home_tract].bachelors*-0.1128937;
-			regressionRiders += (acs_data.acs[tractPair.home_tract].total_population/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*-0.03049128;
+		case 1: // atlantic City
+			regressionRiders = -41.505 + acs_data.acs[tractPair.home_tract].car_0_house* 0.230;
+			regressionRiders += acs_data.acs[tractPair.home_tract].arts*0.163;
+			regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.019;
+			//regressionRiders += acs_data.acs[tractPair.home_tract].bachelors*-0.1128937;
+			//regressionRiders += (acs_data.acs[tractPair.home_tract].total_population/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*-0.03049128;
 			
 		break;
 		case 2:

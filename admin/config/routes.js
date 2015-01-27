@@ -65,6 +65,7 @@ module.exports.routes = {
 
   '/marketarea/:id/ma_route_data': 'MarketAreaController.getAllMARoutes',
   '/marketarea/:id/census/:tableName' : 'MarketAreaController.getCensus',
+  
   // Convert to shp
   '/jsonToShp' : 'MarketAreaController.geojsonToShp',
 
@@ -98,8 +99,12 @@ module.exports.routes = {
   '/gtfs/delete/:id':'MetaGtfsController.deleteGtfs',
 
   '/acs/load':'MetaAcsController.loadData',
-  '/acs/delete/:id':'MetaAcsController.deleteACS'
+  '/acs/delete/:id':'MetaAcsController.deleteACS',
 
+  //---------------------------------
+  // Regression Routes
+  //---------------------------------
+  '/regressions' : 'RegressionController.index'
 
   
   //----------------------------------/
