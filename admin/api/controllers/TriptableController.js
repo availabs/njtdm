@@ -85,7 +85,7 @@ function spawnModelRun(job,triptable_id){
 module.exports = {
 	finishedModels: function(req,res){
 		var marketareaId = req.param('marketarea');
-		var sql = 'SELECT id,name,info,updatedAt FROM triptable where  "isFinished" = true and "marketareaId" = '+marketareaId;
+		var sql = 'SELECT id,name,info,"updatedAt" FROM triptable where  "isFinished" = true and "marketareaId" = '+marketareaId;
 		///console.log('finished models',sql);
 		Triptable.query(sql,{},function(err,data){
 			if(err){
