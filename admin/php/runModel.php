@@ -54,6 +54,7 @@ function  planTrip($from_lat,$from_lon,$to_lat,$to_lon,$departure_time,$trip){
   	
   	//echo $otp_url.'<br>';
   // 	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
+  time_nanosleep ( 0 , 500000 );
 
   processTrip(json_decode(curl_download($otp_url),true),$from_lat,$from_lon,$to_lat,$to_lon);
 }

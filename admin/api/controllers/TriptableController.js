@@ -85,7 +85,7 @@ function spawnModelRun(job,triptable_id){
 module.exports = {
 	finishedModels: function(req,res){
 		var marketareaId = req.param('marketarea');
-		var sql = 'SELECT id,name,info FROM triptable where  "isFinished" = true and "marketareaId" = '+marketareaId;
+		var sql = 'SELECT id,name,info,updatedAt FROM triptable where  "isFinished" = true and "marketareaId" = '+marketareaId;
 		///console.log('finished models',sql);
 		Triptable.query(sql,{},function(err,data){
 			if(err){
@@ -193,7 +193,9 @@ module.exports = {
 		var triptable = req.param('triptable_settings');
 		var tracts = JSON.stringify(triptable.marketarea.zones).replace(/\"/g,"'").replace("[","(").replace("]",")");
 		var output = {tt:[],failed:[]};
-		//console.log('settings:',req.param('triptable_settings'));
+		var numTripsTotal = 0,
+			tractPairCount = 0;
+		console.log('settings:',req.param('triptable_settings').time,req.param('triptable_settings').type,'total_zones',triptable.marketarea.zones.length);
 		getCensusData(tracts,triptable.datasources.acs_source,function(acs_tracts){
 			acs_data.update_data(acs_tracts);
 
@@ -204,6 +206,7 @@ module.exports = {
 					//regression model
 					getCTTPTracts(triptable.datasources.ctpp_source,tracts,function(tractTrips){
 						getODPoints(triptable.od,triptable.datasources.gtfs_source,tracts,function(ODPoints){
+							console.log('tract Trips',tractTrips.length);
 							tractTrips.forEach(function(tractPair){
 								if(typeof acs_data.acs[tractPair.home_tract] == 'undefined'){
 									//console.log(tractPair.home_tract)
@@ -254,7 +257,12 @@ module.exports = {
 										for(var i = 0; i < numTrips;i++){
 											planTrip(tractPair,time.timeMatrix,ODPoints,triptable.time,output)
 										}
-									
+										//console.log('x',tractPair,numTrips);
+										tractPairCount++;
+										if(numTrips){
+											numTripsTotal+=numTrips;
+										}
+										
 									}
 									else if(triptable.time =='pm'){
 										
@@ -275,7 +283,7 @@ module.exports = {
 								//done send output
 									
 							});
-							console.log('triptable done',output.tt.length,req.session.User.username);
+							console.log('triptable done',output.tt.length,req.session.User.username,numTripsTotal,tractPairCount);
 
 							userTT[req.session.User.username] = output.tt; // Multiple people logged on to same account could confuse this.
 							
@@ -343,22 +351,42 @@ function getRegressionTrips(tractPair,time,timeOfDay,marketarea){
 	var regressionRiders = 0;
 	switch(marketarea){
 		case 1: // atlantic City
-			regressionRiders = -41.505 + acs_data.acs[tractPair.home_tract].car_0_house* 0.230;
-			regressionRiders += acs_data.acs[tractPair.home_tract].arts*0.163;
-			regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.019;
+			regressionRiders = acs_data.acs[tractPair.home_tract].bus_to_work;
+			// regressionRiders = -41.505 + acs_data.acs[tractPair.home_tract].car_0_house* 0.230;
+			// regressionRiders += acs_data.acs[tractPair.home_tract].arts*0.163;
+			// regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.019;
 			//regressionRiders += acs_data.acs[tractPair.home_tract].bachelors*-0.1128937;
 			//regressionRiders += (acs_data.acs[tractPair.home_tract].total_population/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*-0.03049128;
 			
 		break;
 		case 2:
-			regressionRiders =  acs_data.acs[tractPair.home_tract].car_0* 0.3400127;
-			regressionRiders += acs_data.acs[tractPair.home_tract].race_black*0.02379176;
-			regressionRiders += acs_data.acs[tractPair.home_tract].age25_29*0.07151607;
+			//regressionRiders =  acs_data.acs[tractPair.home_tract].car_0* 0.39500127;
+			//regressionRiders += acs_data.acs[tractPair.home_tract].age25_29*0.07151607;
+
+
+			// regressionRiders =  acs_data.acs[tractPair.home_tract].car_0* 0.3400127;
+			// regressionRiders += acs_data.acs[tractPair.home_tract].race_black*0.02379176;
+			// regressionRiders += acs_data.acs[tractPair.home_tract].age25_29*0.07151607;
+
+			regressionRiders =  acs_data.acs[tractPair.home_tract].spanish_speaking* 0.1013764;
+			regressionRiders += acs_data.acs[tractPair.home_tract].car_0_house*0.1371845;
+			regressionRiders += acs_data.acs[tractPair.home_tract].age25_29*0.0783507;
+			
+
+			// regressionRiders =  acs_data.acs[tractPair.home_tract].spanish_speaking* 0.1013764;
+			// regressionRiders += acs_data.acs[tractPair.home_tract].age25_29*0.0783507;
+			// regressionRiders += acs_data.acs[tractPair.home_tract].under_10000*0.123;
+			
 		break;
 		case 3:
-			regressionRiders = 44.0737;  
-			regressionRiders +=acs_data.acs[tractPair.home_tract].car_0* 0.226559;
-			regressionRiders += acs_data.acs[tractPair.home_tract].car_1*0.09415446;
+			// regressionRiders = 44.0737;  
+			// regressionRiders +=acs_data.acs[tractPair.home_tract].car_0* 0.226559;
+			// regressionRiders += acs_data.acs[tractPair.home_tract].car_1*0.09415446;
+
+			regressionRiders =acs_data.acs[tractPair.home_tract].arts* 0.389;
+			regressionRiders += acs_data.acs[tractPair.home_tract]["50+_units"]*0.147;
+			regressionRiders += (acs_data.acs[tractPair.home_tract].employment/(acs_data.acs[tractPair.home_tract].aland*0.000000386102159))*0.021;
+			
 			//regressionRiders += acs_data.acs[tractPair.home_tract].employment*7.;
 		break;
 		default:
